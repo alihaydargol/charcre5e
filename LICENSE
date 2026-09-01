@@ -23,5 +23,5 @@ SOFTWARE.
 ---
 
 NOT: Bu MIT lisansı yalnızca bu deponun KAYNAK KODUNU kapsar.
-`src/data/` altındaki oyun verisi SRD 5.1 kaynaklıdır ve CC-BY-4.0 ile
+`src/data/srd/` altındaki oyun verisi SRD 5.1 kaynaklıdır ve CC-BY-4.0 ile
 lisanslanmıştır. Ayrıntılar için ATTRIBUTION.md dosyasına bakın.

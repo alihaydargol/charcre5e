@@ -11,7 +11,7 @@ cihazında kalır.
 Proje aşamalı olarak geliştiriliyor.
 
 - [x] **Aşama 1** &mdash; İskelet ve GitHub Pages yayın hattı
-- [ ] **Aşama 2** &mdash; SRD 5.1 veri katmanı (ırk, sınıf, büyü, ekipman)
+- [x] **Aşama 2** &mdash; SRD 5.1 veri katmanı (ırk, sınıf, büyü, ekipman)
 - [ ] **Aşama 3** &mdash; Kural motoru (HP, AC, büyü slotları, seviye tabloları) + testler
 - [ ] **Aşama 4** &mdash; Karakter oluşturma sihirbazı
 - [ ] **Aşama 5** &mdash; Seviye atlama (1&ndash;20), ASI/feat, alt sınıflar

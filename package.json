@@ -11,7 +11,8 @@
     "lint": "eslint .",
     "typecheck": "tsc -b --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "build:data": "node scripts/build-srd-data.mjs"
   },
   "dependencies": {
     "react": "^19.1.1",

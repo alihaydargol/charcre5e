@@ -1,0 +1,821 @@
+[
+  {
+    "id": "light-armor",
+    "name": "Light Armor",
+    "source": "srd",
+    "type": "Armor",
+    "reference": "light-armor"
+  },
+  {
+    "id": "medium-armor",
+    "name": "Medium Armor",
+    "source": "srd",
+    "type": "Armor",
+    "reference": "medium-armor"
+  },
+  {
+    "id": "heavy-armor",
+    "name": "Heavy Armor",
+    "source": "srd",
+    "type": "Armor",
+    "reference": "heavy-armor"
+  },
+  {
+    "id": "all-armor",
+    "name": "All armor",
+    "source": "srd",
+    "type": "Armor",
+    "reference": "armor"
+  },
+  {
+    "id": "padded-armor",
+    "name": "Padded Armor",
+    "source": "srd",
+    "type": "Armor",
+    "reference": "padded-armor"
+  },
+  {
+    "id": "leather-armor",
+    "name": "Leather Armor",
+    "source": "srd",
+    "type": "Armor",
+    "reference": "leather-armor"
+  },
+  {
+    "id": "studded-leather-armor",
+    "name": "Studded Leather Armor",
+    "source": "srd",
+    "type": "Armor",
+    "reference": "studded-leather-armor"
+  },
+  {
+    "id": "hide-armor",
+    "name": "Hide Armor",
+    "source": "srd",
+    "type": "Armor",
+    "reference": "hide-armor"
+  },
+  {
+    "id": "chain-shirt",
+    "name": "Chain Shirt",
+    "source": "srd",
+    "type": "Armor",
+    "reference": "chain-shirt"
+  },
+  {
+    "id": "scale-mail",
+    "name": "Scale Mail",
+    "source": "srd",
+    "type": "Armor",
+    "reference": "scale-mail"
+  },
+  {
+    "id": "breastplate",
+    "name": "Breastplate",
+    "source": "srd",
+    "type": "Armor",
+    "reference": "breastplate"
+  },
+  {
+    "id": "half-plate-armor",
+    "name": "Half Plate Armor",
+    "source": "srd",
+    "type": "Armor",
+    "reference": "half-plate-armor"
+  },
+  {
+    "id": "ring-mail",
+    "name": "Ring Mail",
+    "source": "srd",
+    "type": "Armor",
+    "reference": "ring-mail"
+  },
+  {
+    "id": "chain-mail",
+    "name": "Chain Mail",
+    "source": "srd",
+    "type": "Armor",
+    "reference": "chain-mail"
+  },
+  {
+    "id": "splint-armor",
+    "name": "Splint Armor",
+    "source": "srd",
+    "type": "Armor",
+    "reference": "splint-armor"
+  },
+  {
+    "id": "plate-armor",
+    "name": "Plate Armor",
+    "source": "srd",
+    "type": "Armor",
+    "reference": "plate-armor"
+  },
+  {
+    "id": "shields",
+    "name": "Shields",
+    "source": "srd",
+    "type": "Armor",
+    "reference": "shield"
+  },
+  {
+    "id": "simple-weapons",
+    "name": "Simple Weapons",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "simple-weapons"
+  },
+  {
+    "id": "martial-weapons",
+    "name": "Martial Weapons",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "martial-weapons"
+  },
+  {
+    "id": "clubs",
+    "name": "Clubs",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "club"
+  },
+  {
+    "id": "daggers",
+    "name": "Daggers",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "dagger"
+  },
+  {
+    "id": "greatclubs",
+    "name": "Greatclubs",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "greatclub"
+  },
+  {
+    "id": "handaxes",
+    "name": "Handaxes",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "handaxe"
+  },
+  {
+    "id": "javelins",
+    "name": "Javelins",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "javelin"
+  },
+  {
+    "id": "light-hammers",
+    "name": "Light hammers",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "light-hammer"
+  },
+  {
+    "id": "maces",
+    "name": "Maces",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "mace"
+  },
+  {
+    "id": "quarterstaffs",
+    "name": "Quarterstaffs",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "quarterstaff"
+  },
+  {
+    "id": "sickles",
+    "name": "Sickles",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "sickle"
+  },
+  {
+    "id": "spears",
+    "name": "Spears",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "spear"
+  },
+  {
+    "id": "crossbows-light",
+    "name": "Crossbows, light",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "crossbow-light"
+  },
+  {
+    "id": "darts",
+    "name": "Darts",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "dart"
+  },
+  {
+    "id": "shortbows",
+    "name": "Shortbows",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "shortbow"
+  },
+  {
+    "id": "slings",
+    "name": "Slings",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "sling"
+  },
+  {
+    "id": "battleaxes",
+    "name": "Battleaxes",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "battleaxe"
+  },
+  {
+    "id": "flails",
+    "name": "Flails",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "flail"
+  },
+  {
+    "id": "glaives",
+    "name": "Glaives",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "glaive"
+  },
+  {
+    "id": "greataxes",
+    "name": "Greataxes",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "greataxe"
+  },
+  {
+    "id": "greatswords",
+    "name": "Greatswords",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "greatsword"
+  },
+  {
+    "id": "halberds",
+    "name": "Halberds",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "halberd"
+  },
+  {
+    "id": "lances",
+    "name": "Lances",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "lance"
+  },
+  {
+    "id": "longswords",
+    "name": "Longswords",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "longsword"
+  },
+  {
+    "id": "mauls",
+    "name": "Mauls",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "maul"
+  },
+  {
+    "id": "morningstars",
+    "name": "Morningstars",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "morningstar"
+  },
+  {
+    "id": "pikes",
+    "name": "Pikes",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "pike"
+  },
+  {
+    "id": "rapiers",
+    "name": "Rapiers",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "rapier"
+  },
+  {
+    "id": "scimitars",
+    "name": "Scimitars",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "scimitar"
+  },
+  {
+    "id": "shortswords",
+    "name": "Shortswords",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "shortsword"
+  },
+  {
+    "id": "tridents",
+    "name": "Tridents",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "trident"
+  },
+  {
+    "id": "war-picks",
+    "name": "War picks",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "war-pick"
+  },
+  {
+    "id": "warhammers",
+    "name": "Warhammers",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "warhammer"
+  },
+  {
+    "id": "whips",
+    "name": "Whips",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "whip"
+  },
+  {
+    "id": "blowguns",
+    "name": "Blowguns",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "blowgun"
+  },
+  {
+    "id": "hand-crossbows",
+    "name": "Hand crossbows",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "crossbow-hand"
+  },
+  {
+    "id": "crossbows-heavy",
+    "name": "Crossbows, heavy",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "crossbow-heavy"
+  },
+  {
+    "id": "longbows",
+    "name": "Longbows",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "longbow"
+  },
+  {
+    "id": "nets",
+    "name": "Nets",
+    "source": "srd",
+    "type": "Weapons",
+    "reference": "net"
+  },
+  {
+    "id": "alchemists-supplies",
+    "name": "Alchemist's Supplies",
+    "source": "srd",
+    "type": "Artisan's Tools",
+    "reference": "alchemists-supplies"
+  },
+  {
+    "id": "brewers-supplies",
+    "name": "Brewer's Supplies",
+    "source": "srd",
+    "type": "Artisan's Tools",
+    "reference": "brewers-supplies"
+  },
+  {
+    "id": "calligraphers-supplies",
+    "name": "Calligrapher's Supplies",
+    "source": "srd",
+    "type": "Artisan's Tools",
+    "reference": "calligraphers-supplies"
+  },
+  {
+    "id": "carpenters-tools",
+    "name": "Carpenter's Tools",
+    "source": "srd",
+    "type": "Artisan's Tools",
+    "reference": "carpenters-tools"
+  },
+  {
+    "id": "cartographers-tools",
+    "name": "Cartographer's Tools",
+    "source": "srd",
+    "type": "Artisan's Tools",
+    "reference": "cartographers-tools"
+  },
+  {
+    "id": "cobblers-tools",
+    "name": "Cobbler's Tools",
+    "source": "srd",
+    "type": "Artisan's Tools",
+    "reference": "cobblers-tools"
+  },
+  {
+    "id": "cooks-utensils",
+    "name": "Cook's utensils",
+    "source": "srd",
+    "type": "Artisan's Tools",
+    "reference": "cooks-utensils"
+  },
+  {
+    "id": "glassblowers-tools",
+    "name": "Glassblower's Tools",
+    "source": "srd",
+    "type": "Artisan's Tools",
+    "reference": "glassblowers-tools"
+  },
+  {
+    "id": "jewelers-tools",
+    "name": "Jeweler's Tools",
+    "source": "srd",
+    "type": "Artisan's Tools",
+    "reference": "jewelers-tools"
+  },
+  {
+    "id": "leatherworkers-tools",
+    "name": "Leatherworker's Tools",
+    "source": "srd",
+    "type": "Artisan's Tools",
+    "reference": "leatherworkers-tools"
+  },
+  {
+    "id": "masons-tools",
+    "name": "Mason's Tools",
+    "source": "srd",
+    "type": "Artisan's Tools",
+    "reference": "masons-tools"
+  },
+  {
+    "id": "painters-supplies",
+    "name": "Painter's Supplies",
+    "source": "srd",
+    "type": "Artisan's Tools",
+    "reference": "painters-supplies"
+  },
+  {
+    "id": "potters-tools",
+    "name": "Potter's Tools",
+    "source": "srd",
+    "type": "Artisan's Tools",
+    "reference": "potters-tools"
+  },
+  {
+    "id": "smiths-tools",
+    "name": "Smith's Tools",
+    "source": "srd",
+    "type": "Artisan's Tools",
+    "reference": "smiths-tools"
+  },
+  {
+    "id": "tinkers-tools",
+    "name": "Tinker's Tools",
+    "source": "srd",
+    "type": "Artisan's Tools",
+    "reference": "tinkers-tools"
+  },
+  {
+    "id": "weavers-tools",
+    "name": "Weaver's Tools",
+    "source": "srd",
+    "type": "Artisan's Tools",
+    "reference": "weavers-tools"
+  },
+  {
+    "id": "woodcarvers-tools",
+    "name": "Woodcarver's Tools",
+    "source": "srd",
+    "type": "Artisan's Tools",
+    "reference": "woodcarvers-tools"
+  },
+  {
+    "id": "disguise-kit",
+    "name": "Disguise Kit",
+    "source": "srd",
+    "type": "Artisan's Tools",
+    "reference": "disguise-kit"
+  },
+  {
+    "id": "forgery-kit",
+    "name": "Forgery Kit",
+    "source": "srd",
+    "type": "Artisan's Tools",
+    "reference": "forgery-kit"
+  },
+  {
+    "id": "dice-set",
+    "name": "Dice Set",
+    "source": "srd",
+    "type": "Gaming Sets",
+    "reference": "dice-set"
+  },
+  {
+    "id": "playing-card-set",
+    "name": "Playing Card Set",
+    "source": "srd",
+    "type": "Gaming Sets",
+    "reference": "playing-card-set"
+  },
+  {
+    "id": "bagpipes",
+    "name": "Bagpipes",
+    "source": "srd",
+    "type": "Musical Instruments",
+    "reference": "bagpipes"
+  },
+  {
+    "id": "drum",
+    "name": "Drum",
+    "source": "srd",
+    "type": "Musical Instruments",
+    "reference": "drum"
+  },
+  {
+    "id": "dulcimer",
+    "name": "Dulcimer",
+    "source": "srd",
+    "type": "Musical Instruments",
+    "reference": "dulcimer"
+  },
+  {
+    "id": "flute",
+    "name": "Flute",
+    "source": "srd",
+    "type": "Musical Instruments",
+    "reference": "flute"
+  },
+  {
+    "id": "lute",
+    "name": "Lute",
+    "source": "srd",
+    "type": "Musical Instruments",
+    "reference": "lute"
+  },
+  {
+    "id": "lyre",
+    "name": "Lyre",
+    "source": "srd",
+    "type": "Musical Instruments",
+    "reference": "lyre"
+  },
+  {
+    "id": "horn",
+    "name": "Horn",
+    "source": "srd",
+    "type": "Musical Instruments",
+    "reference": "horn"
+  },
+  {
+    "id": "pan-flute",
+    "name": "Pan flute",
+    "source": "srd",
+    "type": "Musical Instruments",
+    "reference": "pan-flute"
+  },
+  {
+    "id": "shawm",
+    "name": "Shawm",
+    "source": "srd",
+    "type": "Musical Instruments",
+    "reference": "shawm"
+  },
+  {
+    "id": "viol",
+    "name": "Viol",
+    "source": "srd",
+    "type": "Musical Instruments",
+    "reference": "viol"
+  },
+  {
+    "id": "herbalism-kit",
+    "name": "Herbalism Kit",
+    "source": "srd",
+    "type": "Other",
+    "reference": "herbalism-kit"
+  },
+  {
+    "id": "navigators-tools",
+    "name": "Navigator's Tools",
+    "source": "srd",
+    "type": "Other",
+    "reference": "navigators-tools"
+  },
+  {
+    "id": "poisoners-kit",
+    "name": "Poisoner's Kit",
+    "source": "srd",
+    "type": "Other",
+    "reference": "poisoners-kit"
+  },
+  {
+    "id": "thieves-tools",
+    "name": "Thieves' Tools",
+    "source": "srd",
+    "type": "Other",
+    "reference": "thieves-tools"
+  },
+  {
+    "id": "land-vehicles",
+    "name": "Land Vehicles",
+    "source": "srd",
+    "type": "Vehicles",
+    "reference": "land-vehicles"
+  },
+  {
+    "id": "water-vehicles",
+    "name": "Water Vehicles",
+    "source": "srd",
+    "type": "Vehicles",
+    "reference": "waterborne-vehicles"
+  },
+  {
+    "id": "saving-throw-str",
+    "name": "Saving Throw: STR",
+    "source": "srd",
+    "type": "Saving Throws",
+    "reference": "str"
+  },
+  {
+    "id": "saving-throw-dex",
+    "name": "Saving Throw: DEX",
+    "source": "srd",
+    "type": "Saving Throws",
+    "reference": "dex"
+  },
+  {
+    "id": "saving-throw-con",
+    "name": "Saving Throw: CON",
+    "source": "srd",
+    "type": "Saving Throws",
+    "reference": "con"
+  },
+  {
+    "id": "saving-throw-int",
+    "name": "Saving Throw: INT",
+    "source": "srd",
+    "type": "Saving Throws",
+    "reference": "int"
+  },
+  {
+    "id": "saving-throw-wis",
+    "name": "Saving Throw: WIS",
+    "source": "srd",
+    "type": "Saving Throws",
+    "reference": "wis"
+  },
+  {
+    "id": "saving-throw-cha",
+    "name": "Saving Throw: CHA",
+    "source": "srd",
+    "type": "Saving Throws",
+    "reference": "cha"
+  },
+  {
+    "id": "skill-acrobatics",
+    "name": "Skill: Acrobatics",
+    "source": "srd",
+    "type": "Skills",
+    "reference": "acrobatics"
+  },
+  {
+    "id": "skill-animal-handling",
+    "name": "Skill: Animal Handling",
+    "source": "srd",
+    "type": "Skills",
+    "reference": "animal-handling"
+  },
+  {
+    "id": "skill-arcana",
+    "name": "Skill: Arcana",
+    "source": "srd",
+    "type": "Skills",
+    "reference": "arcana"
+  },
+  {
+    "id": "skill-athletics",
+    "name": "Skill: Athletics",
+    "source": "srd",
+    "type": "Skills",
+    "reference": "athletics"
+  },
+  {
+    "id": "skill-deception",
+    "name": "Skill: Deception",
+    "source": "srd",
+    "type": "Skills",
+    "reference": "deception"
+  },
+  {
+    "id": "skill-history",
+    "name": "Skill: History",
+    "source": "srd",
+    "type": "Skills",
+    "reference": "history"
+  },
+  {
+    "id": "skill-insight",
+    "name": "Skill: Insight",
+    "source": "srd",
+    "type": "Skills",
+    "reference": "insight"
+  },
+  {
+    "id": "skill-intimidation",
+    "name": "Skill: Intimidation",
+    "source": "srd",
+    "type": "Skills",
+    "reference": "intimidation"
+  },
+  {
+    "id": "skill-investigation",
+    "name": "Skill: Investigation",
+    "source": "srd",
+    "type": "Skills",
+    "reference": "investigation"
+  },
+  {
+    "id": "skill-medicine",
+    "name": "Skill: Medicine",
+    "source": "srd",
+    "type": "Skills",
+    "reference": "medicine"
+  },
+  {
+    "id": "skill-nature",
+    "name": "Skill: Nature",
+    "source": "srd",
+    "type": "Skills",
+    "reference": "nature"
+  },
+  {
+    "id": "skill-perception",
+    "name": "Skill: Perception",
+    "source": "srd",
+    "type": "Skills",
+    "reference": "perception"
+  },
+  {
+    "id": "skill-performance",
+    "name": "Skill: Performance",
+    "source": "srd",
+    "type": "Skills",
+    "reference": "performance"
+  },
+  {
+    "id": "skill-persuasion",
+    "name": "Skill: Persuasion",
+    "source": "srd",
+    "type": "Skills",
+    "reference": "persuasion"
+  },
+  {
+    "id": "skill-religion",
+    "name": "Skill: Religion",
+    "source": "srd",
+    "type": "Skills",
+    "reference": "religion"
+  },
+  {
+    "id": "skill-sleight-of-hand",
+    "name": "Skill: Sleight of Hand",
+    "source": "srd",
+    "type": "Skills",
+    "reference": "sleight-of-hand"
+  },
+  {
+    "id": "skill-stealth",
+    "name": "Skill: Stealth",
+    "source": "srd",
+    "type": "Skills",
+    "reference": "stealth"
+  },
+  {
+    "id": "skill-survival",
+    "name": "Skill: Survival",
+    "source": "srd",
+    "type": "Skills",
+    "reference": "survival"
+  }
+]

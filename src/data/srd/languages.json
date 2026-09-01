@@ -1,0 +1,164 @@
+[
+  {
+    "id": "common",
+    "name": "Common",
+    "source": "srd",
+    "type": "Standard",
+    "script": "Common",
+    "typicalSpeakers": [
+      "Humans"
+    ]
+  },
+  {
+    "id": "dwarvish",
+    "name": "Dwarvish",
+    "source": "srd",
+    "type": "Standard",
+    "script": "Dwarvish",
+    "typicalSpeakers": [
+      "Dwarves"
+    ]
+  },
+  {
+    "id": "elvish",
+    "name": "Elvish",
+    "source": "srd",
+    "type": "Standard",
+    "script": "Elvish",
+    "typicalSpeakers": [
+      "Elves"
+    ]
+  },
+  {
+    "id": "giant",
+    "name": "Giant",
+    "source": "srd",
+    "type": "Standard",
+    "script": "Dwarvish",
+    "typicalSpeakers": [
+      "Ogres",
+      "Giants"
+    ]
+  },
+  {
+    "id": "gnomish",
+    "name": "Gnomish",
+    "source": "srd",
+    "type": "Standard",
+    "script": "Dwarvish",
+    "typicalSpeakers": [
+      "Gnomes"
+    ]
+  },
+  {
+    "id": "goblin",
+    "name": "Goblin",
+    "source": "srd",
+    "type": "Standard",
+    "script": "Dwarvish",
+    "typicalSpeakers": [
+      "Goblinoids"
+    ]
+  },
+  {
+    "id": "halfling",
+    "name": "Halfling",
+    "source": "srd",
+    "type": "Standard",
+    "script": "Common",
+    "typicalSpeakers": [
+      "Halflings"
+    ]
+  },
+  {
+    "id": "orc",
+    "name": "Orc",
+    "source": "srd",
+    "type": "Standard",
+    "script": "Dwarvish",
+    "typicalSpeakers": [
+      "Orcs"
+    ]
+  },
+  {
+    "id": "abyssal",
+    "name": "Abyssal",
+    "source": "srd",
+    "type": "Exotic",
+    "script": "Infernal",
+    "typicalSpeakers": [
+      "Demons"
+    ]
+  },
+  {
+    "id": "celestial",
+    "name": "Celestial",
+    "source": "srd",
+    "type": "Exotic",
+    "script": "Celestial",
+    "typicalSpeakers": [
+      "Celestials"
+    ]
+  },
+  {
+    "id": "draconic",
+    "name": "Draconic",
+    "source": "srd",
+    "type": "Exotic",
+    "script": "Draconic",
+    "typicalSpeakers": [
+      "Dragons",
+      "Dragonborn"
+    ]
+  },
+  {
+    "id": "deep-speech",
+    "name": "Deep Speech",
+    "source": "srd",
+    "type": "Exotic",
+    "typicalSpeakers": [
+      "Aboleths",
+      "Cloakers"
+    ]
+  },
+  {
+    "id": "infernal",
+    "name": "Infernal",
+    "source": "srd",
+    "type": "Exotic",
+    "script": "Infernal",
+    "typicalSpeakers": [
+      "Devils"
+    ]
+  },
+  {
+    "id": "primordial",
+    "name": "Primordial",
+    "source": "srd",
+    "type": "Exotic",
+    "script": "Dwarvish",
+    "typicalSpeakers": [
+      "Elementals"
+    ]
+  },
+  {
+    "id": "sylvan",
+    "name": "Sylvan",
+    "source": "srd",
+    "type": "Exotic",
+    "script": "Elvish",
+    "typicalSpeakers": [
+      "Fey creatures"
+    ]
+  },
+  {
+    "id": "undercommon",
+    "name": "Undercommon",
+    "source": "srd",
+    "type": "Exotic",
+    "script": "Elvish",
+    "typicalSpeakers": [
+      "Underdark traders"
+    ]
+  }
+]

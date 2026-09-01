@@ -1,0 +1,106 @@
+[
+  {
+    "id": "acid",
+    "name": "Acid",
+    "source": "srd",
+    "desc": [
+      "The corrosive spray of a black dragon's breath and the dissolving enzymes secreted by a black pudding deal acid damage."
+    ]
+  },
+  {
+    "id": "bludgeoning",
+    "name": "Bludgeoning",
+    "source": "srd",
+    "desc": [
+      "Blunt force attacks, falling, constriction, and the like deal bludgeoning damage."
+    ]
+  },
+  {
+    "id": "cold",
+    "name": "Cold",
+    "source": "srd",
+    "desc": [
+      "The infernal chill radiating from an ice devil's spear and the frigid blast of a white dragon's breath deal cold damage."
+    ]
+  },
+  {
+    "id": "fire",
+    "name": "Fire",
+    "source": "srd",
+    "desc": [
+      "Red dragons breathe fire, and many spells conjure flames to deal fire damage."
+    ]
+  },
+  {
+    "id": "force",
+    "name": "Force",
+    "source": "srd",
+    "desc": [
+      "Force is pure magical energy focused into a damaging form. Most effects that deal force damage are spells, including magic missile and spiritual weapon."
+    ]
+  },
+  {
+    "id": "lightning",
+    "name": "Lightning",
+    "source": "srd",
+    "desc": [
+      "A lightning bolt spell and a blue dragon's breath deal lightning damage."
+    ]
+  },
+  {
+    "id": "necrotic",
+    "name": "Necrotic",
+    "source": "srd",
+    "desc": [
+      "Necrotic damage, dealt by certain undead and a spell such as chill touch, withers matter and even the soul."
+    ]
+  },
+  {
+    "id": "piercing",
+    "name": "Piercing",
+    "source": "srd",
+    "desc": [
+      "Puncturing and impaling attacks, including spears and monsters' bites, deal piercing damage."
+    ]
+  },
+  {
+    "id": "poison",
+    "name": "Poison",
+    "source": "srd",
+    "desc": [
+      "Venomous stings and the toxic gas of a green dragon's breath deal poison damage."
+    ]
+  },
+  {
+    "id": "psychic",
+    "name": "Psychic",
+    "source": "srd",
+    "desc": [
+      "Mental abilities such as a psionic blast deal psychic damage."
+    ]
+  },
+  {
+    "id": "radiant",
+    "name": "Radiant",
+    "source": "srd",
+    "desc": [
+      "Radiant damage, dealt by a cleric's flame strike spell or an angel's smiting weapon, sears the flesh like fire and overloads the spirit with power."
+    ]
+  },
+  {
+    "id": "slashing",
+    "name": "Slashing",
+    "source": "srd",
+    "desc": [
+      "Swords, axes, and monsters' claws deal slashing damage."
+    ]
+  },
+  {
+    "id": "thunder",
+    "name": "Thunder",
+    "source": "srd",
+    "desc": [
+      "A concussive burst of sound, such as the effect of the thunderwave spell, deals thunder damage."
+    ]
+  }
+]

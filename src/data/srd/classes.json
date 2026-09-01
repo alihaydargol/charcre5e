@@ -1,0 +1,1641 @@
+[
+  {
+    "id": "barbarian",
+    "name": "Barbarian",
+    "source": "srd",
+    "hitDie": 12,
+    "savingThrows": [
+      "str",
+      "con"
+    ],
+    "proficiencies": [
+      "light-armor",
+      "medium-armor",
+      "shields",
+      "simple-weapons",
+      "martial-weapons",
+      "saving-throw-str",
+      "saving-throw-con"
+    ],
+    "skillChoice": {
+      "choose": 2,
+      "from": [
+        "animal-handling",
+        "athletics",
+        "intimidation",
+        "nature",
+        "perception",
+        "survival"
+      ]
+    },
+    "proficiencyChoices": [],
+    "subclasses": [
+      "berserker"
+    ],
+    "subclassLevel": 3,
+    "startingEquipment": [
+      {
+        "itemId": "explorers-pack",
+        "count": 1
+      },
+      {
+        "itemId": "javelin",
+        "count": 4
+      }
+    ],
+    "startingEquipmentChoices": [
+      {
+        "desc": "(a) a greataxe or (b) any martial melee weapon",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "item",
+            "itemId": "greataxe",
+            "count": 1
+          },
+          {
+            "kind": "choice",
+            "choose": 1,
+            "fromCategory": "martial-melee-weapons",
+            "label": "any martial melee weapon"
+          }
+        ]
+      },
+      {
+        "desc": "(a) two handaxes or (b) any simple weapon",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "item",
+            "itemId": "handaxe",
+            "count": 2
+          },
+          {
+            "kind": "choice",
+            "choose": 1,
+            "fromCategory": "simple-weapons",
+            "label": "any simple weapon"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "bard",
+    "name": "Bard",
+    "source": "srd",
+    "hitDie": 8,
+    "savingThrows": [
+      "dex",
+      "cha"
+    ],
+    "proficiencies": [
+      "light-armor",
+      "simple-weapons",
+      "longswords",
+      "rapiers",
+      "shortswords",
+      "hand-crossbows",
+      "saving-throw-dex",
+      "saving-throw-cha"
+    ],
+    "skillChoice": {
+      "choose": 3,
+      "from": [
+        "acrobatics",
+        "animal-handling",
+        "arcana",
+        "athletics",
+        "deception",
+        "history",
+        "insight",
+        "intimidation",
+        "investigation",
+        "medicine",
+        "nature",
+        "perception",
+        "performance",
+        "persuasion",
+        "religion",
+        "sleight-of-hand",
+        "stealth",
+        "survival"
+      ]
+    },
+    "proficiencyChoices": [
+      {
+        "choose": 3,
+        "from": [
+          "bagpipes",
+          "drum",
+          "dulcimer",
+          "flute",
+          "lute",
+          "lyre",
+          "horn",
+          "pan-flute",
+          "shawm",
+          "viol"
+        ]
+      }
+    ],
+    "subclasses": [
+      "lore"
+    ],
+    "subclassLevel": 3,
+    "spellcasting": {
+      "startLevel": 1,
+      "ability": "cha",
+      "pactMagic": false,
+      "info": [
+        {
+          "name": "Cantrips",
+          "desc": [
+            "You know two cantrips of your choice from the bard spell list. You learn additional bard cantrips of your choice at higher levels, as shown in the Cantrips Known column of the Bard table."
+          ]
+        },
+        {
+          "name": "Spell Slots",
+          "desc": [
+            "The Bard table shows how many spell slots you have to cast your spells of 1st level and higher. To cast one of these spells, you must expend a slot of the spell's level or higher. You regain all expended spell slots when you finish a long rest.",
+            "For example, if you know the 1st-level spell cure wounds and have a 1st-level and a 2nd-level spell slot available, you can cast cure wounds using either slot."
+          ]
+        },
+        {
+          "name": "Spells Known of 1st Level and Higher",
+          "desc": [
+            "You know four 1st-level spells of your choice from the bard spell list.",
+            "The Spells Known column of the Bard table shows when you learn more bard spells of your choice.",
+            "Each of these spells must be of a level for which you have spell slots, as shown on the table. For instance, when you reach 3rd level in this class, you can learn one new spell of 1st or 2nd level.",
+            "Additionally, when you gain a level in this class, you can choose one of the bard spells you know and replace it with another spell from the bard spell list, which also must be of a level for which you have spell slots."
+          ]
+        },
+        {
+          "name": "Spellcasting Ability",
+          "desc": [
+            "Charisma is your spellcasting ability for your bard spells. Your magic comes from the heart and soul you pour into the performance of your music or oration. You use your Charisma whenever a spell refers to your spellcasting ability. In addition, you use your Charisma modifier when setting the saving throw DC for a bard spell you cast and when making an attack roll with one.",
+            "Spell save DC = 8 + your proficiency bonus + your Charisma modifier.",
+            "Spell attack modifier = your proficiency bonus + your Charisma modifier."
+          ]
+        },
+        {
+          "name": "Ritual Casting",
+          "desc": [
+            "You can cast any bard spell you know as a ritual if that spell has the ritual tag."
+          ]
+        },
+        {
+          "name": "Spellcasting Focus",
+          "desc": [
+            "You can use a musical instrument (see Equipment) as a spellcasting focus for your bard spells."
+          ]
+        }
+      ]
+    },
+    "startingEquipment": [
+      {
+        "itemId": "leather-armor",
+        "count": 1
+      },
+      {
+        "itemId": "dagger",
+        "count": 1
+      }
+    ],
+    "startingEquipmentChoices": [
+      {
+        "desc": "(a) a rapier, (b) a longsword, or (c) any simple weapon",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "item",
+            "itemId": "rapier",
+            "count": 1
+          },
+          {
+            "kind": "item",
+            "itemId": "longsword",
+            "count": 1
+          },
+          {
+            "kind": "choice",
+            "choose": 1,
+            "fromCategory": "simple-weapons",
+            "label": "any simple weapon"
+          }
+        ]
+      },
+      {
+        "desc": "(a) a diplomat’s pack or (b) an entertainer’s pack",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "item",
+            "itemId": "diplomats-pack",
+            "count": 1
+          },
+          {
+            "kind": "item",
+            "itemId": "entertainers-pack",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "desc": "(a) a lute or (b) any other musical instrument",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "item",
+            "itemId": "lute",
+            "count": 1
+          },
+          {
+            "kind": "choice",
+            "choose": 1,
+            "fromCategory": "musical-instruments",
+            "label": "any other musical instrument"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "cleric",
+    "name": "Cleric",
+    "source": "srd",
+    "hitDie": 8,
+    "savingThrows": [
+      "wis",
+      "cha"
+    ],
+    "proficiencies": [
+      "light-armor",
+      "medium-armor",
+      "shields",
+      "simple-weapons",
+      "saving-throw-wis",
+      "saving-throw-cha"
+    ],
+    "skillChoice": {
+      "choose": 2,
+      "from": [
+        "history",
+        "insight",
+        "medicine",
+        "persuasion",
+        "religion"
+      ]
+    },
+    "proficiencyChoices": [],
+    "subclasses": [
+      "life"
+    ],
+    "subclassLevel": 1,
+    "spellcasting": {
+      "startLevel": 1,
+      "ability": "wis",
+      "pactMagic": false,
+      "info": [
+        {
+          "name": "Cantrips",
+          "desc": [
+            "At 1st level, you know three cantrips of your choice from the cleric spell list. You learn additional cleric cantrips of your choice at higher levels, as shown in the Cantrips Known column of the Cleric table."
+          ]
+        },
+        {
+          "name": "Preparing and Casting Spells",
+          "desc": [
+            "The Cleric table shows how many spell slots you have to cast your spells of 1st level and higher. To cast one of these spells, you must expend a slot of the spell's level or higher. You regain all expended spell slots when you finish a long rest.",
+            "You prepare the list of cleric spells that are available for you to cast, choosing from the cleric spell list. When you do so, choose a number of cleric spells equal to your Wisdom modifier + your cleric level (minimum of one spell). The spells must be of a level for which you have spell slots.",
+            "For example, if you are a 3rd-level cleric, you have four 1st-level and two 2nd-level spell slots. With a Wisdom of 16, your list of prepared spells can include six spells of 1st or 2nd level, in any combination. If you prepare the 1st-level spell cure wounds, you can cast it using a 1st-level or 2nd-level slot. Casting the spell doesn't remove it from your list of prepared spells.",
+            "You can change your list of prepared spells when you finish a long rest. Preparing a new list of cleric spells requires time spent in prayer and meditation: at least 1 minute per spell level for each spell on your list."
+          ]
+        },
+        {
+          "name": "Spellcasting Ability",
+          "desc": [
+            "Wisdom is your spellcasting ability for your cleric spells. The power of your spells comes from your devotion to your deity. You use your Wisdom whenever a cleric spell refers to your spellcasting ability. In addition, you use your Wisdom modifier when setting the saving throw DC for a cleric spell you cast and when making an attack roll with one.",
+            "Spell save DC = 8 + your proficiency bonus + your Wisdom modifier",
+            "Spell attack modifier = your proficiency bonus + your Wisdom modifier"
+          ]
+        },
+        {
+          "name": "Ritual Casting",
+          "desc": [
+            "You can cast a cleric spell as a ritual if that spell has the ritual tag and you have the spell prepared."
+          ]
+        },
+        {
+          "name": "Spellcasting Focus",
+          "desc": [
+            "You can use a holy symbol (see Equipment) as a spellcasting focus for your cleric spells."
+          ]
+        }
+      ]
+    },
+    "startingEquipment": [
+      {
+        "itemId": "shield",
+        "count": 1
+      }
+    ],
+    "startingEquipmentChoices": [
+      {
+        "desc": "(a) a mace or (b) a warhammer (if proficient)",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "item",
+            "itemId": "mace",
+            "count": 1
+          },
+          {
+            "kind": "item",
+            "itemId": "warhammer",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "desc": "(a) scale mail, (b) leather armor, or (c) chain mail (if proficient)",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "item",
+            "itemId": "scale-mail",
+            "count": 1
+          },
+          {
+            "kind": "item",
+            "itemId": "leather-armor",
+            "count": 1
+          },
+          {
+            "kind": "item",
+            "itemId": "chain-mail",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "desc": "(a) a light crossbow and 20 bolts or (b) any simple weapon",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "bundle",
+            "items": [
+              {
+                "kind": "item",
+                "itemId": "crossbow-light",
+                "count": 1
+              },
+              {
+                "kind": "item",
+                "itemId": "crossbow-bolt",
+                "count": 20
+              }
+            ]
+          },
+          {
+            "kind": "choice",
+            "choose": 1,
+            "fromCategory": "simple-weapons",
+            "label": "any simple weapon"
+          }
+        ]
+      },
+      {
+        "desc": "(a) a priest’s pack or (b) an explorer’s pack",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "item",
+            "itemId": "priests-pack",
+            "count": 1
+          },
+          {
+            "kind": "item",
+            "itemId": "explorers-pack",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "desc": "holy symbol",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "choice",
+            "choose": 1,
+            "fromCategory": "holy-symbols",
+            "label": "holy symbol"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "druid",
+    "name": "Druid",
+    "source": "srd",
+    "hitDie": 8,
+    "savingThrows": [
+      "int",
+      "wis"
+    ],
+    "proficiencies": [
+      "light-armor",
+      "medium-armor",
+      "shields",
+      "clubs",
+      "daggers",
+      "javelins",
+      "maces",
+      "quarterstaffs",
+      "sickles",
+      "spears",
+      "darts",
+      "slings",
+      "scimitars",
+      "herbalism-kit",
+      "saving-throw-int",
+      "saving-throw-wis"
+    ],
+    "skillChoice": {
+      "choose": 2,
+      "from": [
+        "arcana",
+        "animal-handling",
+        "insight",
+        "medicine",
+        "nature",
+        "perception",
+        "religion",
+        "survival"
+      ]
+    },
+    "proficiencyChoices": [],
+    "subclasses": [
+      "land"
+    ],
+    "subclassLevel": 2,
+    "spellcasting": {
+      "startLevel": 1,
+      "ability": "wis",
+      "pactMagic": false,
+      "info": [
+        {
+          "name": "Cantrips",
+          "desc": [
+            "At 1st level, you know two cantrips of your choice from the druid spell list. You learn additional druid cantrips of your choice at higher levels, as shown in the Cantrips Known column of the Druid table."
+          ]
+        },
+        {
+          "name": "Preparing and Casting Spells",
+          "desc": [
+            "The Druid table shows how many spell slots you have to cast your spells of 1st level and higher. To cast one of these druid spells, you must expend a slot of the spell's level or higher. You regain all expended spell slots when you finish a long rest.",
+            "You prepare the list of druid spells that are available for you to cast, choosing from the druid spell list. When you do so, choose a number of druid spells equal to your Wisdom modifier + your druid level (minimum of one spell). The spells must be of a level for which you have spell slots.",
+            "For example, if you are a 3rd-level druid, you have four 1st-level and two 2nd-level spell slots. With a Wisdom of 16, your list of prepared spells can include six spells of 1st or 2nd level, in any combination. If you prepare the 1st-level spell cure wounds, you can cast it using a 1st-level or 2nd-level slot. Casting the spell doesn't remove it from your list of prepared spells.",
+            "You can also change your list of prepared spells when you finish a long rest. Preparing a new list of druid spells requires time spent in prayer and meditation: at least 1 minute per spell level for each spell on your list."
+          ]
+        },
+        {
+          "name": "Spellcasting Ability",
+          "desc": [
+            "Wisdom is your spellcasting ability for your druid spells, since your magic draws upon your devotion and attunement to nature. You use your Wisdom whenever a spell refers to your spellcasting ability. In addition, you use your Wisdom modifier when setting the saving throw DC for a druid spell you cast and when making an attack roll with one.",
+            "Spell save DC = 8 + your proficiency bonus + your Wisdom modifier.",
+            "Spell attack modifier = your proficiency bonus + your Wisdom modifier."
+          ]
+        },
+        {
+          "name": "Ritual Casting",
+          "desc": [
+            "You can cast a druid spell as a ritual if that spell has the ritual tag and you have the spell prepared."
+          ]
+        },
+        {
+          "name": "Spellcasting Focus",
+          "desc": [
+            "You can use a druidic focus (see chapter 5, \"Equipment\") as a spellcasting focus for your druid spells."
+          ]
+        }
+      ]
+    },
+    "startingEquipment": [
+      {
+        "itemId": "leather-armor",
+        "count": 1
+      },
+      {
+        "itemId": "explorers-pack",
+        "count": 1
+      }
+    ],
+    "startingEquipmentChoices": [
+      {
+        "desc": "(a) a wooden shield or (b) any simple weapon",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "item",
+            "itemId": "shield",
+            "count": 1
+          },
+          {
+            "kind": "choice",
+            "choose": 1,
+            "fromCategory": "simple-weapons",
+            "label": "any simple weapon"
+          }
+        ]
+      },
+      {
+        "desc": "(a) a scimitar or (b) any simple melee weapon",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "item",
+            "itemId": "scimitar",
+            "count": 1
+          },
+          {
+            "kind": "choice",
+            "choose": 1,
+            "fromCategory": "simple-melee-weapons",
+            "label": "any simple melee weapon"
+          }
+        ]
+      },
+      {
+        "desc": "druidic focus",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "choice",
+            "choose": 1,
+            "fromCategory": "druidic-foci",
+            "label": "druidic focus"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "fighter",
+    "name": "Fighter",
+    "source": "srd",
+    "hitDie": 10,
+    "savingThrows": [
+      "str",
+      "con"
+    ],
+    "proficiencies": [
+      "all-armor",
+      "shields",
+      "simple-weapons",
+      "martial-weapons",
+      "saving-throw-str",
+      "saving-throw-con"
+    ],
+    "skillChoice": {
+      "choose": 2,
+      "from": [
+        "acrobatics",
+        "animal-handling",
+        "athletics",
+        "history",
+        "insight",
+        "intimidation",
+        "perception",
+        "survival"
+      ]
+    },
+    "proficiencyChoices": [],
+    "subclasses": [
+      "champion"
+    ],
+    "subclassLevel": 3,
+    "startingEquipment": [],
+    "startingEquipmentChoices": [
+      {
+        "desc": "(a) chain mail or (b) leather armor, longbow, and 20 arrows",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "item",
+            "itemId": "chain-mail",
+            "count": 1
+          },
+          {
+            "kind": "bundle",
+            "items": [
+              {
+                "kind": "item",
+                "itemId": "leather-armor",
+                "count": 1
+              },
+              {
+                "kind": "item",
+                "itemId": "longbow",
+                "count": 1
+              },
+              {
+                "kind": "item",
+                "itemId": "arrow",
+                "count": 20
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "desc": "(a) a martial weapon and a shield or (b) two martial weapons",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "bundle",
+            "items": [
+              {
+                "kind": "choice",
+                "choose": 1,
+                "fromCategory": "martial-weapons",
+                "label": "a martial weapon"
+              },
+              {
+                "kind": "item",
+                "itemId": "shield",
+                "count": 1
+              }
+            ]
+          },
+          {
+            "kind": "choice",
+            "choose": 2,
+            "fromCategory": "martial-weapons",
+            "label": "two martial weapons"
+          }
+        ]
+      },
+      {
+        "desc": "(a) a light crossbow and 20 bolts or (b) two handaxes",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "bundle",
+            "items": [
+              {
+                "kind": "item",
+                "itemId": "crossbow-light",
+                "count": 1
+              },
+              {
+                "kind": "item",
+                "itemId": "crossbow-bolt",
+                "count": 20
+              }
+            ]
+          },
+          {
+            "kind": "item",
+            "itemId": "handaxe",
+            "count": 2
+          }
+        ]
+      },
+      {
+        "desc": "(a) a dungeoneer’s pack or (b) an explorer’s pack",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "item",
+            "itemId": "dungeoneers-pack",
+            "count": 1
+          },
+          {
+            "kind": "item",
+            "itemId": "explorers-pack",
+            "count": 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "monk",
+    "name": "Monk",
+    "source": "srd",
+    "hitDie": 8,
+    "savingThrows": [
+      "str",
+      "dex"
+    ],
+    "proficiencies": [
+      "simple-weapons",
+      "shortswords",
+      "saving-throw-dex",
+      "saving-throw-str"
+    ],
+    "skillChoice": {
+      "choose": 2,
+      "from": [
+        "acrobatics",
+        "athletics",
+        "history",
+        "insight",
+        "religion",
+        "stealth"
+      ]
+    },
+    "proficiencyChoices": [
+      {
+        "choose": 1,
+        "from": []
+      }
+    ],
+    "subclasses": [
+      "open-hand"
+    ],
+    "subclassLevel": 3,
+    "startingEquipment": [
+      {
+        "itemId": "dart",
+        "count": 10
+      }
+    ],
+    "startingEquipmentChoices": [
+      {
+        "desc": "(a) a shortsword or (b) any simple weapon",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "item",
+            "itemId": "shortsword",
+            "count": 1
+          },
+          {
+            "kind": "choice",
+            "choose": 1,
+            "fromCategory": "simple-weapons",
+            "label": "any simple weapon"
+          }
+        ]
+      },
+      {
+        "desc": "(a) a dungeoneer’s pack or (b) an explorer’s pack",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "item",
+            "itemId": "dungeoneers-pack",
+            "count": 1
+          },
+          {
+            "kind": "item",
+            "itemId": "explorers-pack",
+            "count": 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "paladin",
+    "name": "Paladin",
+    "source": "srd",
+    "hitDie": 10,
+    "savingThrows": [
+      "wis",
+      "cha"
+    ],
+    "proficiencies": [
+      "all-armor",
+      "shields",
+      "simple-weapons",
+      "martial-weapons",
+      "saving-throw-wis",
+      "saving-throw-cha"
+    ],
+    "skillChoice": {
+      "choose": 2,
+      "from": [
+        "athletics",
+        "insight",
+        "intimidation",
+        "medicine",
+        "persuasion",
+        "religion"
+      ]
+    },
+    "proficiencyChoices": [],
+    "subclasses": [
+      "devotion"
+    ],
+    "subclassLevel": 3,
+    "spellcasting": {
+      "startLevel": 2,
+      "ability": "cha",
+      "pactMagic": false,
+      "info": [
+        {
+          "name": "Preparing and Casting Spells",
+          "desc": [
+            "The Paladin table shows how many spell slots you have to cast your spells. To cast one of your paladin spells of 1st level or higher, you must expend a slot of the spell's level or higher. You regain all expended spell slots when you finish a long rest.",
+            "You prepare the list of paladin spells that are available for you to cast, choosing from the paladin spell list. When you do so, choose a number of paladin spells equal to your Charisma modifier + half your paladin level, rounded down (minimum of one spell). The spells must be of a level for which you have spell slots.",
+            "For example, if you are a 5th-level paladin, you have four 1st-level and two 2nd-level spell slots. With a Charisma of 14, your list of prepared spells can include four spells of 1st or 2nd level, in any combination. If you prepare the 1st-level spell cure wounds, you can cast it using a 1st-level or a 2nd- level slot. Casting the spell doesn't remove it from your list of prepared spells.",
+            "You can change your list of prepared spells when you finish a long rest. Preparing a new list of paladin spells requires time spent in prayer and meditation: at least 1 minute per spell level for each spell on your list."
+          ]
+        },
+        {
+          "name": "Spellcasting Ability",
+          "desc": [
+            "Charisma is your spellcasting ability for your paladin spells, since their power derives from the strength of your convictions. You use your Charisma whenever a spell refers to your spellcasting ability. In addition, you use your Charisma modifier when setting the saving throw DC for a paladin spell you cast and when making an attack roll with one.",
+            "Spell save DC = 8 + your proficiency bonus + your Charisma modifier.",
+            "Spell attack modifier = your proficiency bonus + your Charisma modifier."
+          ]
+        },
+        {
+          "name": "Spellcasting Focus",
+          "desc": [
+            "You can use a holy symbol as a spellcasting focus for your paladin spells."
+          ]
+        }
+      ]
+    },
+    "startingEquipment": [
+      {
+        "itemId": "chain-mail",
+        "count": 1
+      }
+    ],
+    "startingEquipmentChoices": [
+      {
+        "desc": "(a) a martial weapon and a shield or (b) two martial weapons",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "bundle",
+            "items": [
+              {
+                "kind": "choice",
+                "choose": 1,
+                "fromCategory": "martial-weapons",
+                "label": "a martial weapon"
+              },
+              {
+                "kind": "item",
+                "itemId": "shield",
+                "count": 1
+              }
+            ]
+          },
+          {
+            "kind": "choice",
+            "choose": 2,
+            "fromCategory": "martial-weapons",
+            "label": "two martial weapons"
+          }
+        ]
+      },
+      {
+        "desc": "(a) five javelins or (b) any simple melee weapon",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "item",
+            "itemId": "javelin",
+            "count": 5
+          },
+          {
+            "kind": "choice",
+            "choose": 1,
+            "fromCategory": "simple-weapons",
+            "label": "any simple weapon"
+          }
+        ]
+      },
+      {
+        "desc": "(a) a priest’s pack or (b) an explorer’s pack",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "item",
+            "itemId": "priests-pack",
+            "count": 1
+          },
+          {
+            "kind": "item",
+            "itemId": "explorers-pack",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "desc": "holy symbol",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "choice",
+            "choose": 1,
+            "fromCategory": "holy-symbols",
+            "label": "holy symbol"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ranger",
+    "name": "Ranger",
+    "source": "srd",
+    "hitDie": 10,
+    "savingThrows": [
+      "str",
+      "dex"
+    ],
+    "proficiencies": [
+      "light-armor",
+      "medium-armor",
+      "shields",
+      "simple-weapons",
+      "martial-weapons",
+      "saving-throw-dex",
+      "saving-throw-str"
+    ],
+    "skillChoice": {
+      "choose": 3,
+      "from": [
+        "animal-handling",
+        "athletics",
+        "insight",
+        "investigation",
+        "nature",
+        "perception",
+        "stealth",
+        "survival"
+      ]
+    },
+    "proficiencyChoices": [],
+    "subclasses": [
+      "hunter"
+    ],
+    "subclassLevel": 3,
+    "spellcasting": {
+      "startLevel": 2,
+      "ability": "wis",
+      "pactMagic": false,
+      "info": [
+        {
+          "name": "Spell Slots",
+          "desc": [
+            "The Ranger table shows how many spell slots you have to cast your spells of 1st level and higher. To cast one of these spells, you must expend a slot of the spell's level or higher. You regain all expended spell slots when you finish a long rest.",
+            "For example, if you know the 1st-level spell animal friendship and have a 1st-level and a 2nd-level spell slot available, you can cast animal friendship using either slot."
+          ]
+        },
+        {
+          "name": "Spells Known of 1st Level and Higher",
+          "desc": [
+            "You know two 1st-level spells of your choice from the ranger spell list.",
+            "The Spells Known column of the Ranger table shows when you learn more ranger spells of your choice. Each of these spells must be of a level for which you have spell slots. For instance, when you reach 5th level in this class, you can learn one new spell of 1st or 2nd level.",
+            "Additionally, when you gain a level in this class, you can choose one of the ranger spells you know and replace it with another spell from the ranger spell list, which also must be of a level for which you have spell slots."
+          ]
+        },
+        {
+          "name": "Spellcasting Ability",
+          "desc": [
+            "Wisdom is your spellcasting ability for your ranger spells, since your magic draws on your attunement to nature. You use your Wisdom whenever a spell refers to your spellcasting ability. In addition, you use your Wisdom modifier when setting the saving throw DC for a ranger spell you cast and when making an attack roll with one.",
+            "Spell save DC = 8 + your proficiency bonus + your Wisdom modifier.",
+            "Spell attack modifier = your proficiency bonus + your Wisdom modifier."
+          ]
+        }
+      ]
+    },
+    "startingEquipment": [
+      {
+        "itemId": "longbow",
+        "count": 1
+      },
+      {
+        "itemId": "arrow",
+        "count": 20
+      }
+    ],
+    "startingEquipmentChoices": [
+      {
+        "desc": "(a) scale mail or (b) leather armor",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "item",
+            "itemId": "scale-mail",
+            "count": 1
+          },
+          {
+            "kind": "item",
+            "itemId": "leather-armor",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "desc": "(a) two shortswords or (b) two simple melee weapons",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "item",
+            "itemId": "shortsword",
+            "count": 2
+          },
+          {
+            "kind": "choice",
+            "choose": 2,
+            "fromCategory": "simple-melee-weapons",
+            "label": "two simple melee weapons"
+          }
+        ]
+      },
+      {
+        "desc": "(a) a dungeoneer’s pack or (b) an explorer’s pack",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "item",
+            "itemId": "dungeoneers-pack",
+            "count": 1
+          },
+          {
+            "kind": "item",
+            "itemId": "explorers-pack",
+            "count": 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rogue",
+    "name": "Rogue",
+    "source": "srd",
+    "hitDie": 8,
+    "savingThrows": [
+      "dex",
+      "int"
+    ],
+    "proficiencies": [
+      "light-armor",
+      "simple-weapons",
+      "longswords",
+      "rapiers",
+      "shortswords",
+      "hand-crossbows",
+      "thieves-tools",
+      "saving-throw-dex",
+      "saving-throw-int"
+    ],
+    "skillChoice": {
+      "choose": 4,
+      "from": [
+        "acrobatics",
+        "athletics",
+        "deception",
+        "insight",
+        "intimidation",
+        "investigation",
+        "perception",
+        "performance",
+        "persuasion",
+        "sleight-of-hand",
+        "stealth"
+      ]
+    },
+    "proficiencyChoices": [],
+    "subclasses": [
+      "thief"
+    ],
+    "subclassLevel": 3,
+    "startingEquipment": [
+      {
+        "itemId": "leather-armor",
+        "count": 1
+      },
+      {
+        "itemId": "dagger",
+        "count": 2
+      },
+      {
+        "itemId": "thieves-tools",
+        "count": 1
+      }
+    ],
+    "startingEquipmentChoices": [
+      {
+        "desc": "(a) a rapier or (b) a shortsword",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "item",
+            "itemId": "rapier",
+            "count": 1
+          },
+          {
+            "kind": "item",
+            "itemId": "shortsword",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "desc": "(a) a shortbow and quiver of 20 arrows or (b) a shortsword",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "bundle",
+            "items": [
+              {
+                "kind": "item",
+                "itemId": "shortbow",
+                "count": 1
+              },
+              {
+                "kind": "item",
+                "itemId": "arrow",
+                "count": 20
+              }
+            ]
+          },
+          {
+            "kind": "item",
+            "itemId": "shortsword",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "desc": "(a) a burglar’s pack, (b) a dungeoneer’s pack, or (c) an explorer’s pack",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "item",
+            "itemId": "burglars-pack",
+            "count": 1
+          },
+          {
+            "kind": "item",
+            "itemId": "dungeoneers-pack",
+            "count": 1
+          },
+          {
+            "kind": "item",
+            "itemId": "explorers-pack",
+            "count": 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "sorcerer",
+    "name": "Sorcerer",
+    "source": "srd",
+    "hitDie": 6,
+    "savingThrows": [
+      "con",
+      "cha"
+    ],
+    "proficiencies": [
+      "daggers",
+      "darts",
+      "slings",
+      "quarterstaffs",
+      "crossbows-light",
+      "saving-throw-con",
+      "saving-throw-cha"
+    ],
+    "skillChoice": {
+      "choose": 2,
+      "from": [
+        "arcana",
+        "deception",
+        "insight",
+        "intimidation",
+        "persuasion",
+        "religion"
+      ]
+    },
+    "proficiencyChoices": [],
+    "subclasses": [
+      "draconic"
+    ],
+    "subclassLevel": 1,
+    "spellcasting": {
+      "startLevel": 1,
+      "ability": "cha",
+      "pactMagic": false,
+      "info": [
+        {
+          "name": "Cantrips",
+          "desc": [
+            "At 1st level, you know four cantrips of your choice from the sorcerer spell list. You learn additional sorcerer cantrips of your choice at higher levels, as shown in the Cantrips Known column of the Sorcerer table."
+          ]
+        },
+        {
+          "name": "Spell Slots",
+          "desc": [
+            "The Sorcerer table shows how many spell slots you have to cast your spells of 1st level and higher. To cast one of these sorcerer spells, you must expend a slot of the spell's level or higher. You regain all expended spell slots when you finish a long rest.",
+            "For example, if you know the 1st-level spell burning hands and have a 1st-level and a 2nd-level spell slot available, you can cast burning hands using either slot."
+          ]
+        },
+        {
+          "name": "Spells Known of 1st Level and Higher",
+          "desc": [
+            "You know two 1st-level spells of your choice from the sorcerer spell list.",
+            "The Spells Known column of the Sorcerer table shows when you learn more sorcerer spells of your choice. Each of these spells must be of a level for which you have spell slots. For instance, when you reach 3rd level in this class, you can learn one new spell of 1st or 2nd level. ",
+            "Additionally, when you gain a level in this class, you can choose one of the sorcerer spells you know and replace it with another spell from the sorcerer spell list, which also must be of a level for which you have spell slots."
+          ]
+        },
+        {
+          "name": "Spellcasting Ability",
+          "desc": [
+            "Charisma is your spellcasting ability for your sorcerer spells, since the power of your magic relies on your ability to project your will into the world. You use your Charisma whenever a spell refers to your spellcasting ability. In addition, you use your Charisma modifier when setting the saving throw DC for a sorcerer spell you cast and when making an attack roll with one.",
+            "Spell save DC = 8 + your proficiency bonus + your Charisma modifier.",
+            "Spell attack modifier = your proficiency bonus + your Charisma modifier."
+          ]
+        },
+        {
+          "name": "Spellcasting Focus",
+          "desc": [
+            "You can use an arcane focus as a spellcasting focus for your sorcerer spells."
+          ]
+        }
+      ]
+    },
+    "startingEquipment": [
+      {
+        "itemId": "dagger",
+        "count": 2
+      }
+    ],
+    "startingEquipmentChoices": [
+      {
+        "desc": "(a) a light crossbow and 20 bolts or (b) any simple weapon",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "bundle",
+            "items": [
+              {
+                "kind": "item",
+                "itemId": "crossbow-light",
+                "count": 1
+              },
+              {
+                "kind": "item",
+                "itemId": "crossbow-bolt",
+                "count": 20
+              }
+            ]
+          },
+          {
+            "kind": "choice",
+            "choose": 1,
+            "fromCategory": "simple-weapons",
+            "label": "any simple weapon"
+          }
+        ]
+      },
+      {
+        "desc": "(a) a component pouch or (b) an arcane focus",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "item",
+            "itemId": "component-pouch",
+            "count": 1
+          },
+          {
+            "kind": "choice",
+            "choose": 1,
+            "fromCategory": "arcane-foci",
+            "label": "arcane focus"
+          }
+        ]
+      },
+      {
+        "desc": "(a) a dungeoneer’s pack or (b) an explorer’s pack",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "item",
+            "itemId": "dungeoneers-pack",
+            "count": 1
+          },
+          {
+            "kind": "item",
+            "itemId": "explorers-pack",
+            "count": 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "warlock",
+    "name": "Warlock",
+    "source": "srd",
+    "hitDie": 8,
+    "savingThrows": [
+      "wis",
+      "cha"
+    ],
+    "proficiencies": [
+      "light-armor",
+      "simple-weapons",
+      "saving-throw-wis",
+      "saving-throw-cha"
+    ],
+    "skillChoice": {
+      "choose": 2,
+      "from": [
+        "arcana",
+        "deception",
+        "history",
+        "intimidation",
+        "investigation",
+        "nature",
+        "religion"
+      ]
+    },
+    "proficiencyChoices": [],
+    "subclasses": [
+      "fiend"
+    ],
+    "subclassLevel": 1,
+    "spellcasting": {
+      "startLevel": 1,
+      "ability": "cha",
+      "pactMagic": true,
+      "info": [
+        {
+          "name": "Cantrips",
+          "desc": [
+            "You know two cantrips of your choice from the warlock spell list. You learn additional warlock cantrips of your choice at higher levels, as shown in the Cantrips Known column of the Warlock table."
+          ]
+        },
+        {
+          "name": "Spell Slots",
+          "desc": [
+            "The Warlock table shows how many spell slots you have. The table also shows what the level of those slots is; all of your spell slots are the same level. To cast one of your warlock spells of 1st level or higher, you must expend a spell slot. You regain all expended spell slots when you finish a short or long rest.",
+            "For example, when you are 5th level, you have two 3rd-level spell slots. To cast the 1st-level spell thunderwave, you must spend one of those slots, and you cast it as a 3rd-level spell."
+          ]
+        },
+        {
+          "name": "Spells Known of 1st Level and Higher",
+          "desc": [
+            "At 1st level, you know two 1st-level spells of your choice from the warlock spell list.",
+            "The Spells Known column of the Warlock table shows when you learn more warlock spells of your choice of 1st level and higher. ",
+            "A spell you choose must be of a level no higher than what's shown in the table's Slot Level column for your level. When you reach 6th level, for example, you learn a new warlock spell, which can be 1st, 2nd, or 3rd level.",
+            "Additionally, when you gain a level in this class, you can choose one of the warlock spells you know and replace it with another spell from the warlock spell list, which also must be of a level for which you have spell slots."
+          ]
+        },
+        {
+          "name": "Spellcasting Ability",
+          "desc": [
+            "Charisma is your spellcasting ability for your warlock spells, so you use your Charisma whenever a spell refers to your spellcasting ability. In addition, you use your Charisma modifier when setting the saving throw DC for a warlock spell you cast and when making an attack roll with one.",
+            "Spell save DC = 8 + your proficiency bonus + your Charisma modifier.",
+            "Spell attack modifier = your proficiency bonus + your Charisma modifier."
+          ]
+        },
+        {
+          "name": "Spellcasting Focus",
+          "desc": [
+            "You can use an arcane focus as a spellcasting focus for your warlock spells."
+          ]
+        }
+      ]
+    },
+    "startingEquipment": [
+      {
+        "itemId": "dagger",
+        "count": 2
+      },
+      {
+        "itemId": "leather-armor",
+        "count": 1
+      }
+    ],
+    "startingEquipmentChoices": [
+      {
+        "desc": "(a) a light crossbow and 20 bolts or (b) any simple weapon",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "bundle",
+            "items": [
+              {
+                "kind": "item",
+                "itemId": "crossbow-light",
+                "count": 1
+              },
+              {
+                "kind": "item",
+                "itemId": "crossbow-bolt",
+                "count": 20
+              }
+            ]
+          },
+          {
+            "kind": "choice",
+            "choose": 1,
+            "fromCategory": "simple-weapons",
+            "label": "any simple weapon"
+          }
+        ]
+      },
+      {
+        "desc": "(a) a component pouch or (b) an arcane focus",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "item",
+            "itemId": "component-pouch",
+            "count": 1
+          },
+          {
+            "kind": "choice",
+            "choose": 1,
+            "fromCategory": "arcane-foci",
+            "label": "arcane focus"
+          }
+        ]
+      },
+      {
+        "desc": "(a) a scholar’s pack or (b) a dungeoneer’s pack",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "item",
+            "itemId": "scholars-pack",
+            "count": 1
+          },
+          {
+            "kind": "item",
+            "itemId": "dungeoneers-pack",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "desc": "any simple weapon",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "choice",
+            "choose": 1,
+            "fromCategory": "simple-weapons",
+            "label": "any simple weapon"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "wizard",
+    "name": "Wizard",
+    "source": "srd",
+    "hitDie": 6,
+    "savingThrows": [
+      "int",
+      "wis"
+    ],
+    "proficiencies": [
+      "daggers",
+      "darts",
+      "slings",
+      "quarterstaffs",
+      "crossbows-light",
+      "saving-throw-int",
+      "saving-throw-wis"
+    ],
+    "skillChoice": {
+      "choose": 2,
+      "from": [
+        "arcana",
+        "history",
+        "insight",
+        "investigation",
+        "medicine",
+        "religion"
+      ]
+    },
+    "proficiencyChoices": [],
+    "subclasses": [
+      "evocation"
+    ],
+    "subclassLevel": 2,
+    "spellcasting": {
+      "startLevel": 1,
+      "ability": "int",
+      "pactMagic": false,
+      "info": [
+        {
+          "name": "Cantrips",
+          "desc": [
+            "At 1st level, you know three cantrips of your choice from the wizard spell list. You learn additional wizard cantrips of your choice at higher levels, as shown in the Cantrips Known column of the Wizard table."
+          ]
+        },
+        {
+          "name": "Spellbook",
+          "desc": [
+            "At 1st level, you have a spellbook containing six 1st- level wizard spells of your choice. Your spellbook is the repository of the wizard spells you know, except your cantrips, which are fixed in your mind."
+          ]
+        },
+        {
+          "name": "Preparing and Casting Spells",
+          "desc": [
+            "The Wizard table shows how many spell slots you have to cast your spells of 1st level and higher. To cast one of these spells, you must expend a slot of the spell's level or higher. You regain all expended spell slots when you finish a long rest.",
+            "You prepare the list of wizard spells that are available for you to cast. To do so, choose a number of wizard spells from your spellbook equal to your Intelligence modifier + your wizard level (minimum of one spell). The spells must be of a level for which you have spell slots.",
+            "For example, if you're a 3rd-level wizard, you have four 1st-level and two 2nd-level spell slots. With an Intelligence of 16, your list of prepared spells can include six spells of 1st or 2nd level, in any combination, chosen from your spellbook. If you prepare the 1st-level spell magic missile, you can cast it using a 1st-level or a 2nd-level slot. Casting the spell doesn't remove it from your list of prepared spells.",
+            "You can change your list of prepared spells when you finish a long rest. Preparing a new list of wizard spells requires time spent studying your spellbook and memorizing the incantations and gestures you must make to cast the spell: at least 1 minute per spell level for each spell on your list."
+          ]
+        },
+        {
+          "name": "Spellcasting Ability",
+          "desc": [
+            "Intelligence is your spellcasting ability for your wizard spells, since you learn your spells through dedicated study and memorization. You use your Intelligence whenever a spell refers to your spellcasting ability. In addition, you use your Intelligence modifier when setting the saving throw DC for a wizard spell you cast and when making an attack roll with one.",
+            "Spell save DC = 8 + your proficiency bonus + your Intelligence modifier.",
+            "Spell attack modifier = your proficiency bonus + your Intelligence modifier."
+          ]
+        },
+        {
+          "name": "Ritual Casting",
+          "desc": [
+            "You can cast a wizard spell as a ritual if that spell has the ritual tag and you have the spell in your spellbook. You don't need to have the spell prepared."
+          ]
+        },
+        {
+          "name": "Spellcasting Focus",
+          "desc": [
+            "You can use an arcane focus as a spellcasting focus for your wizard spells."
+          ]
+        }
+      ]
+    },
+    "startingEquipment": [
+      {
+        "itemId": "spellbook",
+        "count": 1
+      }
+    ],
+    "startingEquipmentChoices": [
+      {
+        "desc": "(a) a quarterstaff or (b) a dagger",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "item",
+            "itemId": "quarterstaff",
+            "count": 1
+          },
+          {
+            "kind": "item",
+            "itemId": "dagger",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "desc": "(a) a component pouch or (b) an arcane focus",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "item",
+            "itemId": "component-pouch",
+            "count": 1
+          },
+          {
+            "kind": "choice",
+            "choose": 1,
+            "fromCategory": "arcane-foci",
+            "label": "arcane focus"
+          }
+        ]
+      },
+      {
+        "desc": "(a) a scholar’s pack or (b) an explorer’s pack",
+        "choose": 1,
+        "options": [
+          {
+            "kind": "item",
+            "itemId": "scholars-pack",
+            "count": 1
+          },
+          {
+            "kind": "item",
+            "itemId": "explorers-pack",
+            "count": 1
+          }
+        ]
+      }
+    ]
+  }
+]

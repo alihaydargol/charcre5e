@@ -184,7 +184,9 @@ export function createEmptyCharacter(id: string, now = new Date().toISOString())
     updatedAt: now,
     raceAbilityChoice: [],
     classes: [],
-    abilities: { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
+    // Varsayılan yöntem point-buy; o da 8'den başlar (27 puanın tamamı elde).
+    // 10'dan başlamak 12 puanı peşinen harcanmış gösterirdi.
+    abilities: { str: 8, dex: 8, con: 8, int: 8, wis: 8, cha: 8 },
     abilityMethod: 'pointbuy',
     levelChoices: [],
     hp: { method: 'average', rolls: [] },

@@ -8,6 +8,7 @@ import HomePage from './routes/HomePage.tsx'
  * (registry) import ettiği için, ana sayfaya gelen biri onlarca kilobayt oyun
  * verisini boşuna indirmez.
  */
+const WizardPage = lazy(() => import('./features/wizard/WizardPage.tsx'))
 const ContentPage = lazy(() => import('./routes/ContentPage.tsx'))
 const AboutPage = lazy(() => import('./routes/AboutPage.tsx'))
 
@@ -22,6 +23,14 @@ export default function App() {
       <Routes>
         <Route element={<Layout />}>
           <Route index element={<HomePage />} />
+          <Route
+            path="olustur"
+            element={
+              <Suspense fallback={<PageLoading />}>
+                <WizardPage />
+              </Suspense>
+            }
+          />
           <Route
             path="icerik"
             element={

@@ -21,6 +21,9 @@ export default function Layout() {
             <NavLink to="/" end className={navLinkClass}>
               Karakterlerim
             </NavLink>
+            <NavLink to="/olustur" className={navLinkClass}>
+              Karakter Oluştur
+            </NavLink>
             <NavLink to="/icerik" className={navLinkClass}>
               SRD İçeriği
             </NavLink>

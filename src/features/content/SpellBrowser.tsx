@@ -111,6 +111,20 @@ export default function SpellBrowser({ spells }: { spells: Collection<Spell> }) 
         {matches.length > 0 && ` · sayfa ${currentPage}/${pageCount}`}
       </p>
 
+      {/* Aradığı büyüyü bulamayan kullanıcı bunun bir hata olduğunu sanmasın. */}
+      <details className="rounded-md bg-slate-100 px-3 py-2 text-xs text-slate-600">
+        <summary className="cursor-pointer font-medium">
+          Aradığın büyüyü bulamıyor musun?
+        </summary>
+        <p className="mt-2 leading-relaxed">
+          Bu liste <strong>SRD 5.1</strong> büyülerini içerir: 319 büyü.{' '}
+          <em>Player&rsquo;s Handbook</em>&rsquo;taki büyülerin bir kısmı SRD&rsquo;ye
+          alınmamıştır ve telif nedeniyle buraya eklenemez &mdash; örneğin{' '}
+          <em>Thorn Whip</em>, <em>Toll the Dead</em>, <em>Absorb Elements</em>. Eksik bir
+          büyüyü kendi cihazında tanımlayabilmen için homebrew desteği planlanıyor.
+        </p>
+      </details>
+
       {matches.length === 0 ? (
         <p className="rounded-lg border border-dashed border-slate-300 p-6 text-center text-sm text-slate-500">
           Bu filtrelere uyan büyü yok. Aramayı veya filtreleri gevşetmeyi dene.

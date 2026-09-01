@@ -3,6 +3,7 @@ import {
   classes,
   feats,
   languages,
+  proficiencies,
   races,
   skills,
   subclasses,
@@ -217,9 +218,11 @@ export function getValidChoices(character: Character, point: DecisionPoint): Val
       return {
         choose: trait.proficiencyChoice.choose,
         applicable: true,
+        // İsim önce beceri, sonra yeterlilik kaydından alınır; ikisi de yoksa
+        // id okunabilir hâle getirilir. Aksi hâlde "smiths tools" gibi görünür.
         options: trait.proficiencyChoice.from.map((id) => ({
           id,
-          name: skills.get(id)?.name ?? id.replaceAll('-', ' '),
+          name: skills.get(id)?.name ?? proficiencies.get(id)?.name ?? id.replaceAll('-', ' '),
         })),
       }
     }

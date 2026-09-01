@@ -7,6 +7,7 @@ const roadmap = [
   { label: 'Karakter sayfası, yazdırma, JSON aktarımı', done: false },
   { label: 'Rastgele karakter oluşturma', done: false },
   { label: 'Homebrew içerik desteği', done: false },
+  { label: 'Görsel tasarım ve arayüz yenilemesi', done: false },
 ]
 
 export default function HomePage() {

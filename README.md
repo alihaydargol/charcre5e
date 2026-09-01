@@ -20,6 +20,7 @@ Proje aşamalı olarak geliştiriliyor.
 - [ ] **Aşama 8** &mdash; Mobil uyum, erişilebilirlik, tema
 - [ ] **Aşama 9** &mdash; Rastgele karakter oluşturma (yeni başlayanlar için tek tuş)
 - [ ] **Aşama 10** &mdash; Homebrew içerik (kendi ırk/sınıf/büyü/eşyanı tanımla)
+- [ ] **Aşama 11** &mdash; Görsel tasarım ve arayüz yenilemesi
 
 Aşama 9 ve 10 sonraya bırakıldı, ancak veri ve kural katmanı baştan bunları
 kaldıracak şekilde tasarlanıyor &mdash; ayrıntılar için [CLAUDE.md](./CLAUDE.md).

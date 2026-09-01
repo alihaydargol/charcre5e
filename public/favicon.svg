@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Yirmi yüzlü zar">
+  <title>Karakter Oluşturucu</title>
+  <path d="M16 1.5 29.5 9v14L16 30.5 2.5 23V9z" fill="#b0402f"/>
+  <path d="M16 1.5 29.5 9 16 16.5 2.5 9z" fill="#d1573f"/>
+  <path d="M16 16.5 29.5 9v14z" fill="#8f3225"/>
+  <path d="M16 16.5v14L2.5 23V9z" fill="#9c3829"/>
+  <text x="16" y="21" font-family="Georgia, serif" font-size="11" font-weight="bold"
+        text-anchor="middle" fill="#fdf6ec">20</text>
+</svg>

@@ -1,16 +1,10 @@
 import { useEffect, useState } from 'react'
-import {
-  classes,
-  getClassLevel,
-  loadEquipment,
-  loadSpells,
-  races,
-  subraces,
-} from '../data/registry.ts'
-import type { Equipment, Spell } from '../data/schema.ts'
+import { classes, getClassLevel, loadEquipment, loadSpells, races, subraces } from '../data/registry.ts'
+import SpellBrowser from '../features/content/SpellBrowser.tsx'
+import EquipmentBrowser from '../features/content/EquipmentBrowser.tsx'
 
 /**
- * SRD içeriğini gözden geçirmek için basit bir tarayıcı.
+ * SRD içeriğini gözden geçirmek için tarayıcı.
  *
  * Bu sayfa aynı zamanda veri katmanının uçtan uca çalıştığını doğrular: eager
  * koleksiyonlar (ırk, sınıf) anında gelir; büyü ve ekipman ise sekmeye
@@ -34,8 +28,8 @@ export default function ContentPage() {
       <header className="space-y-2">
         <h1 className="text-2xl font-semibold tracking-tight">SRD içeriği</h1>
         <p className="text-sm text-slate-600">
-          Uygulamanın kullandığı SRD 5.1 verisi. Oyun terimleri özgün
-          İngilizce hâliyle bırakılmıştır.
+          Uygulamanın kullandığı SRD 5.1 verisi. Oyun terimleri özgün İngilizce hâliyle
+          bırakılmıştır. Ayrıntı için kartlara tıkla.
         </p>
       </header>
 
@@ -60,13 +54,21 @@ export default function ContentPage() {
 
       {tab === 'races' && <RaceList />}
       {tab === 'classes' && <ClassList />}
-      {tab === 'spells' && <SpellList />}
-      {tab === 'equipment' && <EquipmentList />}
+      {tab === 'spells' && <LazySpells />}
+      {tab === 'equipment' && <LazyEquipment />}
     </div>
   )
 }
 
-function Card({ title, subtitle, children }: { title: string; subtitle?: string; children?: React.ReactNode }) {
+function Card({
+  title,
+  subtitle,
+  children,
+}: {
+  title: string
+  subtitle?: string
+  children?: React.ReactNode
+}) {
   return (
     <li className="rounded-lg border border-slate-200 bg-white p-4">
       <div className="flex items-baseline justify-between gap-3">
@@ -110,8 +112,7 @@ function ClassList() {
     <ul className="grid gap-3 sm:grid-cols-2">
       {classes.all().map((cls) => {
         const saves = cls.savingThrows.map((s) => s.toUpperCase()).join(', ')
-        const level20 = getClassLevel(cls.id, 20)
-        const topSlot = level20?.spellcasting?.spellSlots.reduce(
+        const topSlot = getClassLevel(cls.id, 20)?.spellcasting?.spellSlots.reduce(
           (max, count, i) => (count > 0 ? i + 1 : max),
           0,
         )
@@ -156,99 +157,19 @@ function useLazy<T>(load: () => Promise<T>) {
 
 function Loading({ error }: { error?: string }) {
   if (error) return <p className="text-sm text-accent">Veri yüklenemedi: {error}</p>
-  return <p className="text-sm text-slate-500">Yükleniyor…</p>
-}
-
-function SpellList() {
-  const { value: spells, error } = useLazy(loadSpells)
-  const [query, setQuery] = useState('')
-
-  if (!spells) return <Loading error={error} />
-
-  const matches = spells
-    .all()
-    .filter((s: Spell) => s.name.toLowerCase().includes(query.toLowerCase()))
-
   return (
-    <div className="space-y-3">
-      <label className="block">
-        <span className="sr-only">Büyü ara</span>
-        <input
-          type="search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Büyü ara (ör. Fireball)"
-          className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
-        />
-      </label>
-      <p className="text-xs text-slate-500">
-        {matches.length} / {spells.size} büyü
-      </p>
-      <ul className="grid gap-3 sm:grid-cols-2">
-        {matches.slice(0, 60).map((spell) => (
-          <Card
-            key={spell.id}
-            title={spell.name}
-            subtitle={spell.level === 0 ? 'Cantrip' : `${spell.level}. seviye`}
-          >
-            <p className="capitalize">
-              {spell.school} · {spell.castingTime} · {spell.range}
-              {spell.concentration ? ' · Concentration' : ''}
-              {spell.ritual ? ' · Ritual' : ''}
-            </p>
-            <p className="mt-1 text-slate-500">{spell.classes.join(', ')}</p>
-          </Card>
-        ))}
-      </ul>
-      {matches.length > 60 && (
-        <p className="text-xs text-slate-500">İlk 60 sonuç gösteriliyor; aramayı daraltın.</p>
-      )}
-    </div>
+    <p role="status" className="text-sm text-slate-500">
+      Yükleniyor…
+    </p>
   )
 }
 
-function EquipmentList() {
-  const { value: equipment, error } = useLazy(loadEquipment)
+function LazySpells() {
+  const { value, error } = useLazy(loadSpells)
+  return value ? <SpellBrowser spells={value} /> : <Loading error={error} />
+}
 
-  if (!equipment) return <Loading error={error} />
-
-  const describe = (item: Equipment) => {
-    switch (item.category) {
-      case 'weapon':
-        return `${item.weaponCategory} ${item.weaponRange}${
-          item.damage ? ` · ${item.damage.dice} ${item.damage.type}` : ''
-        }`
-      case 'armor':
-        return `${item.armorCategory} · AC ${item.armorClass.base}${
-          item.armorClass.dexBonus
-            ? ` + DEX${item.armorClass.maxDexBonus !== null ? ` (en fazla ${item.armorClass.maxDexBonus})` : ''}`
-            : ''
-        }`
-      default:
-        return item.gearCategory?.replaceAll('-', ' ') ?? item.category
-    }
-  }
-
-  const armorAndWeapons = equipment
-    .all()
-    .filter((i) => i.category === 'armor' || i.category === 'weapon')
-
-  return (
-    <div className="space-y-3">
-      <p className="text-xs text-slate-500">
-        {armorAndWeapons.length} silah ve zırh (toplam {equipment.size} eşya)
-      </p>
-      <ul className="grid gap-3 sm:grid-cols-2">
-        {armorAndWeapons.map((item) => (
-          <Card
-            key={item.id}
-            title={item.name}
-            subtitle={item.cost ? `${item.cost.quantity} ${item.cost.unit}` : undefined}
-          >
-            {describe(item)}
-          </Card>
-        ))}
-      </ul>
-    </div>
-  )
+function LazyEquipment() {
+  const { value, error } = useLazy(loadEquipment)
+  return value ? <EquipmentBrowser equipment={value} /> : <Loading error={error} />
 }

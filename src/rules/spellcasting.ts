@@ -1,4 +1,5 @@
-import { classes, getClassLevel } from '../data/registry.ts'
+import { classes } from '../data/registry.ts'
+import { getClassLevel } from '../data/classLevels.ts'
 import type { AbilityId } from '../data/schema.ts'
 import type { Character } from './character.ts'
 import { abilityModifiers } from './abilities.ts'

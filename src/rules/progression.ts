@@ -1,4 +1,5 @@
-import { classes, getClassLevel, getClassLevelsUpTo } from '../data/registry.ts'
+import { classes } from '../data/registry.ts'
+import { getClassLevel, getClassLevelsUpTo } from '../data/classLevels.ts'
 import { subclassOf, totalLevel, type Character, type LevelChoice } from './character.ts'
 
 /**

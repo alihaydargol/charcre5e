@@ -1,4 +1,5 @@
-import { classes, getClassLevel } from '../../data/registry.ts'
+import { classes } from '../../data/registry.ts'
+import { getClassLevel } from '../../data/classLevels.ts'
 import { getValidChoices } from '../../rules/choices.ts'
 import type { Character } from '../../rules/character.ts'
 import { useCharacterStore } from '../../state/characterStore.ts'

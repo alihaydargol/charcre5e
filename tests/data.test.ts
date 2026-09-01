@@ -1,26 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import {
-  abilities,
-  backgrounds,
-  classes,
-  conditions,
-  damageTypes,
-  feats,
-  getClassLevel,
-  getClassLevelsUpTo,
-  languages,
-  loadEquipment,
-  loadFeatures,
-  loadSpells,
-  magicSchools,
-  proficiencies,
-  races,
-  skills,
-  subclasses,
-  subraces,
-  traits,
-  weaponProperties,
-} from '../src/data/registry.ts'
+import { abilities, backgrounds, classes, conditions, damageTypes, feats, languages, loadEquipment, loadFeatures, loadSpells, magicSchools, proficiencies, races, skills, subclasses, subraces, traits, weaponProperties } from '../src/data/registry.ts'
+import { getClassLevel, getClassLevelsUpTo } from '../src/data/classLevels.ts'
 
 /**
  * Bu testler iki işi yapar:

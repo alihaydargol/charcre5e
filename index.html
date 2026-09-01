@@ -9,9 +9,26 @@
       content="D&D 5e (SRD 5.1) kurallarına göre seviye 1-20 karakter oluşturma aracı. Tarayıcıda çalışır, veriler cihazınızda kalır."
     />
     <title>Karakter Oluşturucu — D&D 5e</title>
+    <meta name="theme-color" content="#fbf8f1" />
+    <!--
+      Stil dosyası inmeden önceki ilk karede de zemin doğru olsun. Aksi hâlde
+      koyu tema kullanan tarayıcılarda bir anlığına siyah ekran görünür.
+    -->
+    <style>
+      html { background-color: #fbf8f1; color-scheme: light; }
+      #app-loading {
+        font: 500 14px/1.5 system-ui, sans-serif;
+        color: #64748b;
+        padding: 3rem 1rem;
+        text-align: center;
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- React yüklenene kadar boş ekran yerine bunu gösteririz. -->
+      <div id="app-loading">Yükleniyor…</div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

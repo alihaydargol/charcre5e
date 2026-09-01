@@ -1,13 +1,6 @@
 import { useEffect, useState } from 'react'
-import {
-  classes,
-  getClassLevel,
-  loadEquipment,
-  loadMagicItems,
-  loadSpells,
-  races,
-  subraces,
-} from '../data/registry.ts'
+import { classes, loadEquipment, loadMagicItems, loadSpells, races, subraces } from '../data/registry.ts'
+import { getClassLevel } from '../data/classLevels.ts'
 import SpellBrowser from '../features/content/SpellBrowser.tsx'
 import EquipmentBrowser from '../features/content/EquipmentBrowser.tsx'
 import MagicItemBrowser from '../features/content/MagicItemBrowser.tsx'

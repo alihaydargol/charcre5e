@@ -226,6 +226,33 @@ export const equipmentSchema = z.discriminatedUnion('category', [
 export type Equipment = z.infer<typeof equipmentSchema>
 
 /**
+ * Ekipman kategorisi: "Martial Weapons", "Holy Symbols" gibi gruplamalar.
+ *
+ * Başlangıç ekipmanı seçenekleri bu kategorilere atıf yapar ("bir martial
+ * silah seç"). `martial-weapons` gibi bazıları silahın kendi alanlarından
+ * türetilebilir, ama `holy-symbols` / `arcane-foci` / `druidic-foci` keyfî
+ * gruplamalardır ve yalnızca bu tablodan okunabilir.
+ */
+export const equipmentCategorySchema = z.object({
+  ...recordBase,
+  /** Bu kategoriye giren eşyaların id'leri. */
+  items: z.array(z.string()),
+})
+export type EquipmentCategory = z.infer<typeof equipmentCategorySchema>
+
+/** Sihirli eşya. Karakter oluşturmada 1. seviyede gerekmez; lazy yüklenir. */
+export const magicItemSchema = z.object({
+  ...recordBase,
+  category: z.string(),
+  rarity: z.string(),
+  /** Bir varyantın ana kaydı mı (ör. "Potion of Healing" ailesi). */
+  hasVariants: z.boolean(),
+  variants: z.array(z.string()),
+  desc: z.array(z.string()),
+})
+export type MagicItem = z.infer<typeof magicItemSchema>
+
+/**
  * Başlangıç ekipmanı seçenekleri özyinelemelidir: "(a) zincir zırh veya
  * (b) deri zırh, uzun yay ve 20 ok" gibi paketler ve "bir martial silah seç"
  * gibi iç içe seçimler içerir.

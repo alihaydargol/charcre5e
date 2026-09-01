@@ -1,7 +1,16 @@
 import { useEffect, useState } from 'react'
-import { classes, getClassLevel, loadEquipment, loadSpells, races, subraces } from '../data/registry.ts'
+import {
+  classes,
+  getClassLevel,
+  loadEquipment,
+  loadMagicItems,
+  loadSpells,
+  races,
+  subraces,
+} from '../data/registry.ts'
 import SpellBrowser from '../features/content/SpellBrowser.tsx'
 import EquipmentBrowser from '../features/content/EquipmentBrowser.tsx'
+import MagicItemBrowser from '../features/content/MagicItemBrowser.tsx'
 
 /**
  * SRD içeriğini gözden geçirmek için tarayıcı.
@@ -11,13 +20,14 @@ import EquipmentBrowser from '../features/content/EquipmentBrowser.tsx'
  * tıklandığında ayrı bir chunk olarak indirilir.
  */
 
-type Tab = 'races' | 'classes' | 'spells' | 'equipment'
+type Tab = 'races' | 'classes' | 'spells' | 'equipment' | 'magic'
 
 const TABS: { id: Tab; label: string }[] = [
   { id: 'races', label: 'Irklar' },
   { id: 'classes', label: 'Sınıflar' },
   { id: 'spells', label: 'Büyüler' },
   { id: 'equipment', label: 'Ekipman' },
+  { id: 'magic', label: 'Sihirli Eşyalar' },
 ]
 
 export default function ContentPage() {
@@ -56,6 +66,7 @@ export default function ContentPage() {
       {tab === 'classes' && <ClassList />}
       {tab === 'spells' && <LazySpells />}
       {tab === 'equipment' && <LazyEquipment />}
+      {tab === 'magic' && <LazyMagicItems />}
     </div>
   )
 }
@@ -172,4 +183,9 @@ function LazySpells() {
 function LazyEquipment() {
   const { value, error } = useLazy(loadEquipment)
   return value ? <EquipmentBrowser equipment={value} /> : <Loading error={error} />
+}
+
+function LazyMagicItems() {
+  const { value, error } = useLazy(loadMagicItems)
+  return value ? <MagicItemBrowser magicItems={value} /> : <Loading error={error} />
 }

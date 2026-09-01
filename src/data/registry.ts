@@ -6,10 +6,12 @@ import {
   classLevelSchema,
   conditionSchema,
   damageTypeSchema,
+  equipmentCategorySchema,
   equipmentSchema,
   featSchema,
   featureSchema,
   languageSchema,
+  magicItemSchema,
   magicSchoolSchema,
   proficiencySchema,
   raceSchema,
@@ -26,9 +28,11 @@ import {
   type Condition,
   type DamageType,
   type Equipment,
+  type EquipmentCategory,
   type Feat,
   type Feature,
   type Language,
+  type MagicItem,
   type MagicSchool,
   type Proficiency,
   type Race,
@@ -47,6 +51,7 @@ import classLevelsJson from './srd/class-levels.json'
 import classesJson from './srd/classes.json'
 import conditionsJson from './srd/conditions.json'
 import damageTypesJson from './srd/damage-types.json'
+import equipmentCategoriesJson from './srd/equipment-categories.json'
 import featsJson from './srd/feats.json'
 import languagesJson from './srd/languages.json'
 import magicSchoolsJson from './srd/magic-schools.json'
@@ -180,6 +185,17 @@ export const subclasses = new Collection<Subclass>('Alt sınıf', subclassSchema
 export const backgrounds = new Collection<Background>('Geçmiş', backgroundSchema, backgroundsJson)
 export const feats = new Collection<Feat>('Feat', featSchema, featsJson)
 
+/**
+ * Ekipman kategorileri eager yüklenir: küçüktür (39 kayıt, yalnızca id
+ * listeleri) ve sihirbazın ekipman adımında "bir martial silah seç" gibi
+ * seçenekleri çözmek için gerekir.
+ */
+export const equipmentCategories = new Collection<EquipmentCategory>(
+  'Ekipman kategorisi',
+  equipmentCategorySchema,
+  equipmentCategoriesJson,
+)
+
 // ---------------------------------------------------------------------------
 // Seviye tablosu — id ile değil (sınıf, seviye) çiftiyle adreslenir
 // ---------------------------------------------------------------------------
@@ -238,6 +254,11 @@ export const loadSpells = lazyCollection<Spell>('Büyü', spellSchema, () => imp
 /** 237 ekipman kaydı. */
 export const loadEquipment = lazyCollection<Equipment>('Ekipman', equipmentSchema, () =>
   import('./srd/equipment.json'),
+)
+
+/** 362 sihirli eşya. Karakter oluşturmada 1. seviyede gerekmez. */
+export const loadMagicItems = lazyCollection<MagicItem>('Sihirli eşya', magicItemSchema, () =>
+  import('./srd/magic-items.json'),
 )
 
 /** 407 sınıf/alt sınıf özelliği (~200 KB). Karakter sayfasında gerekir. */

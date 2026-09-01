@@ -129,6 +129,8 @@ const rawBackgrounds = read('Backgrounds')
 const rawFeats = read('Feats')
 const rawSpells = read('Spells')
 const rawEquipment = read('Equipment')
+const rawEquipmentCategories = read('Equipment-Categories')
+const rawMagicItems = read('Magic-Items')
 
 const profByIndex = new Map(rawProficiencies.map((p) => [p.index, p]))
 
@@ -527,6 +529,35 @@ write(
       ...(e.quantity !== undefined ? { quantity: e.quantity } : {}),
     }
   }),
+)
+
+/**
+ * Ekipman kategorileri. Başlangıç ekipmanı seçenekleri bunlara atıf yapar
+ * ("bir martial silah seç", "bir kutsal sembol seç"). holy-symbols gibi
+ * gruplamalar eşyanın kendi alanlarından türetilemez; yalnızca burada durur.
+ */
+write(
+  'equipment-categories',
+  rawEquipmentCategories.map((c) => ({
+    id: c.index,
+    name: c.name,
+    source: SOURCE,
+    items: idsOf(c.equipment),
+  })),
+)
+
+write(
+  'magic-items',
+  rawMagicItems.map((m) => ({
+    id: m.index,
+    name: m.name,
+    source: SOURCE,
+    category: m.equipment_category.index,
+    rarity: m.rarity.name,
+    hasVariants: Boolean(m.variant === false && (m.variants ?? []).length > 0),
+    variants: idsOf(m.variants),
+    desc: m.desc ?? [],
+  })),
 )
 
 console.log('Tamamlandı.')

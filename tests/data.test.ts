@@ -243,12 +243,33 @@ describe('lazy koleksiyonlar', () => {
     if (halfPlate.category !== 'armor') throw new Error('zırh bekleniyordu')
     expect(halfPlate.armorClass.maxDexBonus).toBe(2)
 
+    // Versatile silahlar iki elle tutulunca daha büyük zar atar.
+    const longsword = equipment.require('longsword')
+    if (longsword.category !== 'weapon') throw new Error('silah bekleniyordu')
+    expect(longsword.damage?.dice).toBe('1d8')
+    expect(longsword.twoHandedDamage?.dice).toBe('1d10')
+    expect(longsword.properties).toContain('versatile')
+
     const longbow = equipment.require('longbow')
     if (longbow.category !== 'weapon') throw new Error('silah bekleniyordu')
     expect(longbow.weaponCategory).toBe('Martial')
     expect(longbow.weaponRange).toBe('Ranged')
     expect(longbow.damage?.dice).toBe('1d8')
     expect(longbow.properties).toContain('two-handed')
+  })
+
+  it('versatile özellikli her silahın iki elle hasarı vardır', async () => {
+    const equipment = await loadEquipment()
+    const versatile = equipment
+      .all()
+      .filter((i) => i.category === 'weapon' && i.properties.includes('versatile'))
+
+    // SRD'de altı versatile silah vardır; hiçbiri iki elle hasarsız kalmamalı.
+    expect(versatile).toHaveLength(6)
+    for (const weapon of versatile) {
+      if (weapon.category !== 'weapon') continue
+      expect(weapon.twoHandedDamage, weapon.name).toBeDefined()
+    }
   })
 
   it('sınıf özellikleri yüklenir ve geçerli sınıflara işaret eder', async () => {

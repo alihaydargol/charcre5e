@@ -2,6 +2,7 @@ const roadmap = [
   { label: 'İskelet ve yayın hattı', done: true },
   { label: 'SRD 5.1 veri katmanı', done: true },
   { label: 'Kural motoru (HP, AC, büyü slotları)', done: false },
+  { label: 'Silah/zırh mekanikleri ve ekipman kategorileri', done: false },
   { label: 'Karakter oluşturma sihirbazı', done: false },
   { label: 'Seviye atlama (1-20)', done: false },
   { label: 'Karakter sayfası, yazdırma, JSON aktarımı', done: false },

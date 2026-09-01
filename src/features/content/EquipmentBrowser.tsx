@@ -19,8 +19,11 @@ const CATEGORIES = [
 function summarize(item: Equipment): string {
   switch (item.category) {
     case 'weapon': {
-      const damage = item.damage ? `${item.damage.dice} ${item.damage.type}` : 'hasarsız'
-      return `${item.weaponCategory} ${item.weaponRange} · ${damage}`
+      if (!item.damage) return `${item.weaponCategory} ${item.weaponRange}`
+      // Versatile silahlar iki elle tutulunca daha büyük zar atar (Longsword
+      // 1d8 → 1d10). Bu, kartı açmadan görülmesi gereken bir bilgi.
+      const versatile = item.twoHandedDamage ? ` — iki elle ${item.twoHandedDamage.dice}` : ''
+      return `${item.weaponCategory} ${item.weaponRange} · ${item.damage.dice} ${item.damage.type}${versatile}`
     }
     case 'armor': {
       if (item.armorCategory === 'Shield') return `Shield · AC +${item.armorClass.base}`

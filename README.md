@@ -18,6 +18,16 @@ Proje aşamalı olarak geliştiriliyor.
 - [ ] **Aşama 6** &mdash; Karakter sayfası, yazdırma/PDF, JSON dışa/içe aktarma
 - [ ] **Aşama 7** &mdash; Karakter listesi ve localStorage yönetimi
 - [ ] **Aşama 8** &mdash; Mobil uyum, erişilebilirlik, tema
+- [ ] **Aşama 9** &mdash; Rastgele karakter oluşturma (yeni başlayanlar için tek tuş)
+- [ ] **Aşama 10** &mdash; Homebrew içerik (kendi ırk/sınıf/büyü/eşyanı tanımla)
+
+Aşama 9 ve 10 sonraya bırakıldı, ancak veri ve kural katmanı baştan bunları
+kaldıracak şekilde tasarlanıyor &mdash; ayrıntılar için [CLAUDE.md](./CLAUDE.md).
+
+## Kapsam
+
+Bu araç **yalnızca D&D 5e** kurallarını uygular. Eski edisyonlar, Pathfinder
+veya başka rol yapma sistemleri için destek eklenmeyecektir.
 
 ## Teknolojiler
 

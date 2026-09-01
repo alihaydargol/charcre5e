@@ -5,6 +5,8 @@ const roadmap = [
   { label: 'Karakter oluşturma sihirbazı', done: false },
   { label: 'Seviye atlama (1-20)', done: false },
   { label: 'Karakter sayfası, yazdırma, JSON aktarımı', done: false },
+  { label: 'Rastgele karakter oluşturma', done: false },
+  { label: 'Homebrew içerik desteği', done: false },
 ]
 
 export default function HomePage() {

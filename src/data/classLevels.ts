@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { connectClassLevels } from './pendingLevels.ts'
 import { classLevelSchema, type ClassLevel } from './schema.ts'
 import classLevelsJson from './srd/class-levels.json'
 
@@ -37,11 +38,30 @@ export function getClassLevelsUpTo(classId: string, level: number): ClassLevel[]
   return rows
 }
 
-export function registerClassLevels(records: unknown[]): void {
-  for (const record of z.array(classLevelSchema).parse(records)) {
+/**
+ * Homebrew seviye satırlarını kurar.
+ *
+ * `registry.ts`'teki `applyHomebrew` ile aynı mantık: verilen liste tüm
+ * homebrew içeriğidir, eskiler kaldırılır. Doğrulama önce yapılır, yazma
+ * sonra — hatalı bir liste tabloyu yarım bırakmaz.
+ */
+export function applyHomebrewClassLevels(records: unknown[]): void {
+  const parsed = z.array(classLevelSchema).parse(records)
+  for (const record of parsed) {
     if (record.source !== 'homebrew') {
-      throw new Error(`Yalnızca homebrew seviye satırı eklenebilir (${record.classId}:${record.level})`)
+      throw new Error(
+        `Yalnızca homebrew seviye satırı eklenebilir (${record.classId}:${record.level})`,
+      )
     }
+  }
+
+  for (const [key, row] of classLevelIndex) {
+    if (row.source === 'homebrew') classLevelIndex.delete(key)
+  }
+  for (const record of parsed) {
     classLevelIndex.set(`${record.classId}:${record.level}`, record)
   }
 }
+
+// Bu modül yüklendiği anda, açılışta kurulmuş homebrew satırlarını devralır.
+connectClassLevels(applyHomebrewClassLevels)

@@ -10,7 +10,7 @@ import {
   subraces,
   traits,
 } from '../data/registry.ts'
-import type { AbilityId } from '../data/schema.ts'
+import type { AbilityId, Source } from '../data/schema.ts'
 import { ABILITY_IDS, levelIn, type Character } from './character.ts'
 import { abilityScores } from './abilities.ts'
 import { skillProficiencies } from './derived.ts'
@@ -45,6 +45,11 @@ export type DecisionPoint =
 export interface ChoiceOption {
   id: string
   name: string
+  /**
+   * Kaydın kaynağı. Kural motoru bunu umursamaz (bkz. CLAUDE.md §3); yalnızca
+   * arayüz homebrew içeriği rozetle ayırt edebilsin diye taşınır.
+   */
+  source?: Source
   /** Kullanıcıya gösterilen kısa açıklama. */
   description?: string
   /** Doluysa seçenek seçilemez ve neden burada yazar. */
@@ -86,6 +91,7 @@ export function getValidChoices(character: Character, point: DecisionPoint): Val
         options: races.all().map((race) => ({
           id: race.id,
           name: race.name,
+          source: race.source,
           description: race.abilityBonuses
             .map((b) => `${b.ability.toUpperCase()} +${b.bonus}`)
             .join(', '),
@@ -106,6 +112,7 @@ export function getValidChoices(character: Character, point: DecisionPoint): Val
           return {
             id: subrace.id,
             name: subrace.name,
+            source: subrace.source,
             description: subrace.abilityBonuses
               .map((b) => `${b.ability.toUpperCase()} +${b.bonus}`)
               .join(', '),
@@ -121,6 +128,7 @@ export function getValidChoices(character: Character, point: DecisionPoint): Val
         options: classes.all().map((cls) => ({
           id: cls.id,
           name: cls.name,
+          source: cls.source,
           description: `d${cls.hitDie} · ${cls.savingThrows.map((s) => s.toUpperCase()).join('/')}`,
         })),
       }
@@ -138,7 +146,12 @@ export function getValidChoices(character: Character, point: DecisionPoint): Val
         applicable: true,
         options: cls.subclasses.map((id) => {
           const subclass = subclasses.require(id)
-          return { id: subclass.id, name: subclass.name, description: subclass.flavor }
+          return {
+            id: subclass.id,
+            name: subclass.name,
+            source: subclass.source,
+            description: subclass.flavor,
+          }
         }),
       }
     }
@@ -150,6 +163,7 @@ export function getValidChoices(character: Character, point: DecisionPoint): Val
         options: backgrounds.all().map((background) => ({
           id: background.id,
           name: background.name,
+          source: background.source,
           description: background.feature.name,
         })),
       }
@@ -282,6 +296,7 @@ export function getValidChoices(character: Character, point: DecisionPoint): Val
           return {
             id: feat.id,
             name: feat.name,
+            source: feat.source,
             description: feat.desc[0],
             disabledReason: taken.has(feat.id)
               ? 'Bu feat zaten alındı.'

@@ -3,6 +3,7 @@ import type { Collection } from '../../data/registry.ts'
 import { classes } from '../../data/registry.ts'
 import type { Spell } from '../../data/schema.ts'
 import Pagination from '../../components/Pagination.tsx'
+import { SourceBadge } from '../homebrew/fields.tsx'
 
 const PAGE_SIZE = 12
 
@@ -172,7 +173,10 @@ function SpellCard({
         className="flex w-full items-start justify-between gap-3 p-4 text-left hover:bg-slate-50"
       >
         <span>
-          <span className="block font-semibold">{spell.name}</span>
+          <span className="flex items-baseline gap-1.5 font-semibold">
+            {spell.name}
+            <SourceBadge source={spell.source} />
+          </span>
           <span className="mt-0.5 block text-sm capitalize text-slate-500">
             {levelLabel(spell.level)} · {spell.school}
             {spell.concentration && ' · Concentration'}

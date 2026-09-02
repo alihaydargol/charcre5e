@@ -19,7 +19,13 @@ import { chooseRandomly, getValidChoices } from './choices.ts'
 import { createRng, pick, pickMany, randomSeed, type Rng } from './dice.ts'
 import { randomStartingEquipment } from './equipment.ts'
 import { decisionsAtLevel } from './progression.ts'
-import { maxSpellLevelFor, spellcasting, wizardSpellbookSize } from './spellcasting.ts'
+import {
+  maxSpellLevelFor,
+  spellListClassId,
+  spellcasting,
+  usesSpellbook,
+  wizardSpellbookSize,
+} from './spellcasting.ts'
 
 /**
  * Rastgele karakter oluşturma.
@@ -56,6 +62,30 @@ const ABILITY_PRIORITY: Record<string, AbilityId[]> = {
 }
 
 const FALLBACK_PRIORITY: AbilityId[] = ['str', 'dex', 'con', 'int', 'wis', 'cha']
+
+/**
+ * Homebrew bir sınıfın yetenek önceliği.
+ *
+ * SRD sınıfları için elle yazılmış tablo var; homebrew sınıflar için sınıfın
+ * kendi tanımından türetilir: önce büyü yeteneği, sonra kurtarma atışı
+ * yeterlilikleri, sonra CON. Sabit bir sıraya düşmek STR 19'luk bir WIS kasteri
+ * üretirdi — kurallara uygun ama oynanamaz.
+ */
+function derivedPriority(classId: string): AbilityId[] {
+  const definition = classes.get(classId)
+  if (!definition) return FALLBACK_PRIORITY
+
+  const order: AbilityId[] = []
+  const push = (ability: AbilityId) => {
+    if (!order.includes(ability)) order.push(ability)
+  }
+
+  if (definition.spellcasting) push(definition.spellcasting.ability)
+  for (const ability of definition.savingThrows) push(ability)
+  push('con')
+  for (const ability of FALLBACK_PRIORITY) push(ability)
+  return order
+}
 
 const ALIGNMENTS = [
   'Lawful Good',
@@ -126,7 +156,7 @@ export function generateCharacter(options: GenerateOptions = {}): Character {
 
   // --- Yetenek puanları ----------------------------------------------------
   // Irkın seçmeli bonusu sınıfın önceliğine göre verilir ki bonus boşa gitmesin.
-  const priority = ABILITY_PRIORITY[classId] ?? FALLBACK_PRIORITY
+  const priority = ABILITY_PRIORITY[classId] ?? derivedPriority(classId)
   character.abilities = assignStandardArray(priority)
 
   const bonusChoices = getValidChoices(character, { kind: 'raceAbilityBonus' })
@@ -339,7 +369,7 @@ function fillSpells(character: Character, spells: Collection<Spell>, rng: Rng): 
   if (!info) return
 
   const classLevel = character.classes[0].level
-  const forClass = spells.all().filter((s) => s.classes.includes(info.classId))
+  const forClass = spells.all().filter((s) => s.classes.includes(spellListClassId(info.classId)))
   const maxLevel = maxSpellLevelFor(info.classId, classLevel)
 
   const cantripCount = info.cantripsKnown ?? 0
@@ -351,8 +381,9 @@ function fillSpells(character: Character, spells: Collection<Spell>, rng: Rng): 
   ).map((s) => s.id)
 
   // Wizard'ın defteri seviyeyle büyür; bilen sınıflarda sayı tablodan gelir.
-  const knownCount =
-    info.classId === 'wizard' ? wizardSpellbookSize(classLevel) : (info.spellsKnown ?? 0)
+  const knownCount = usesSpellbook(info.classId)
+    ? wizardSpellbookSize(classLevel)
+    : (info.spellsKnown ?? 0)
   if (knownCount > 0) {
     const leveled = forClass.filter((s) => s.level > 0 && s.level <= maxLevel)
     character.spells.known = pickMany(

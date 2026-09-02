@@ -41,8 +41,21 @@ export function subclassLevel(classId: string): number {
 
 /** Karakter bu sınıfta alt sınıf seçebilecek seviyeye geldi mi? */
 export function canChooseSubclass(character: Character, classId: string): boolean {
+  if (!hasSubclasses(classId)) return false
   const level = character.classes.find((c) => c.classId === classId)?.level ?? 0
   return level >= subclassLevel(classId) && subclassOf(character, classId) === undefined
+}
+
+/**
+ * Sınıfın seçilebilecek bir alt sınıfı var mı?
+ *
+ * SRD sınıflarının hepsinde en az bir tane var, ama homebrew bir sınıf alt
+ * sınıfsız tanımlanabilir. O durumda alt sınıf sorusu hiç sorulmamalı: sorulsa
+ * seçeneksiz ve yanıtlanamaz bir karar noktası doğar ve karakter hiçbir zaman
+ * tamamlanamaz.
+ */
+function hasSubclasses(classId: string): boolean {
+  return (classes.get(classId)?.subclasses.length ?? 0) > 0
 }
 
 /**
@@ -83,7 +96,7 @@ export type PendingDecision =
 export function decisionsAtLevel(classId: string, level: number): PendingDecision[] {
   const decisions: PendingDecision[] = []
 
-  if (subclassLevel(classId) === level) {
+  if (subclassLevel(classId) === level && hasSubclasses(classId)) {
     decisions.push({ kind: 'subclass', classId, level })
   }
   if (grantsAbilityScoreImprovement(classId, level)) {

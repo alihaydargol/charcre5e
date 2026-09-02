@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import type { Collection } from '../../data/registry.ts'
 import type { MagicItem } from '../../data/schema.ts'
 import Pagination from '../../components/Pagination.tsx'
+import { SourceBadge } from '../homebrew/fields.tsx'
 
 const PAGE_SIZE = 12
 
@@ -110,7 +111,10 @@ export default function MagicItemBrowser({ magicItems }: { magicItems: Collectio
                   className={`mt-1 h-8 w-1 shrink-0 rounded-full ${RARITY_COLOR[item.rarity] ?? 'bg-slate-300'}`}
                 />
                 <span className="flex-1">
-                  <span className="block font-semibold">{item.name}</span>
+                  <span className="flex items-baseline gap-1.5 font-semibold">
+                    {item.name}
+                    <SourceBadge source={item.source} />
+                  </span>
                   <span className="mt-0.5 block text-sm capitalize text-slate-500">
                     {item.rarity} · {item.category.replaceAll('-', ' ')}
                     {item.variants.length > 0 && ` · ${item.variants.length} varyant`}

@@ -36,8 +36,41 @@ export interface SpellcastingInfo {
   preparedCount?: number
 }
 
-/** Büyü hazırlayan sınıflar; diğerleri bildiği büyüleri sabit tutar. */
+/**
+ * Büyü hazırlayan sınıflar; diğerleri bildiği büyüleri sabit tutar.
+ *
+ * Homebrew sınıflar için karşılaştırma büyü listesi sınıfı üzerinden yapılır:
+ * "Cleric gibi büyü yapar" demek hazırlamak demektir.
+ */
 const PREPARING_CLASSES = new Set(['cleric', 'druid', 'paladin', 'wizard'])
+
+function prepares(classId: string): boolean {
+  return PREPARING_CLASSES.has(spellListClassId(classId))
+}
+
+/**
+ * Bir sınıfın büyü listesini veren sınıf id'si.
+ *
+ * SRD büyüleri hangi sınıfların kullanabileceğini kendi kayıtlarında taşır;
+ * hiçbiri homebrew bir sınıfı listelemez. Homebrew sınıf bu yüzden hangi SRD
+ * sınıfının listesini kullandığını söyler ("Wizard gibi büyü yapar") ve büyü
+ * seçimi o listeden yapılır.
+ */
+export function spellListClassId(classId: string): string {
+  return classes.get(classId)?.spellcasting?.spellList ?? classId
+}
+
+/**
+ * Sınıf büyülerini defterden mi kullanıyor?
+ *
+ * Wizard bildiği büyüleri bir deftere yazar ve defter seviyeyle büyür; diğer
+ * hazırlayan sınıflar (Cleric, Druid, Paladin) listenin tamamından hazırlar ve
+ * "bilinen büyü" tutmaz. Wizard'ı model alan homebrew sınıflar da deftere
+ * yazar.
+ */
+export function usesSpellbook(classId: string): boolean {
+  return spellListClassId(classId) === 'wizard'
+}
 
 /** Save DC = 8 + proficiency bonus + büyü yeteneği modifier'ı. */
 export function spellSaveDC(proficiencyBonus: number, abilityModifier: number): number {
@@ -83,7 +116,7 @@ export function spellcasting(character: Character): SpellcastingInfo[] {
     if (casting.pactMagic) {
       info.pactSlotLevel = highestSlotLevel(slots)
     }
-    if (PREPARING_CLASSES.has(cls.classId)) {
+    if (prepares(cls.classId)) {
       info.preparedCount = preparedSpellCount(cls.classId, cls.level, abilityMod)
     }
 

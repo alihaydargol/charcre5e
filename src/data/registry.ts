@@ -141,13 +141,16 @@ export class Collection<T extends Identified> {
    * yapılır — geliştirme/üretim ayrımı gözetilmez.
    */
   register(records: unknown[]): void {
-    for (const record of records) {
-      const parsed = this.#parse(record)
-      if (parsed.source !== 'homebrew') {
-        throw new Error(`Yalnızca homebrew kayıt eklenebilir (id: ${parsed.id})`)
+    // Önce hepsi doğrulanır, sonra yazılır: listenin ortasında hata çıkarsa
+    // koleksiyon yarı kurulmuş hâlde kalmasın.
+    const parsed = records.map((record) => {
+      const value = this.#parse(record)
+      if (value.source !== 'homebrew') {
+        throw new Error(`Yalnızca homebrew kayıt eklenebilir (id: ${value.id})`)
       }
-      this.#records.set(parsed.id, parsed)
-    }
+      return value
+    })
+    for (const record of parsed) this.#records.set(record.id, record)
   }
 
   /** Homebrew kaydı kaldırır. SRD kayıtları silinemez. */
@@ -156,7 +159,57 @@ export class Collection<T extends Identified> {
     if (!record || record.source === 'srd') return false
     return this.#records.delete(id)
   }
+
+  /**
+   * Tüm homebrew kayıtlarını kaldırır; SRD kayıtları kalır.
+   *
+   * Homebrew kurulumu "sil ve yeniden yaz" biçiminde yapılır: kullanıcı bir
+   * kaydı silince kalıntı kalmasın diye. Kısmi güncelleme yapmak, silinen
+   * kayıtları koleksiyonda unutmaya açık olurdu.
+   */
+  clearHomebrew(): void {
+    for (const [id, record] of this.#records) {
+      if (record.source === 'homebrew') this.#records.delete(id)
+    }
+  }
 }
+
+// ---------------------------------------------------------------------------
+// Homebrew kurulumu
+// ---------------------------------------------------------------------------
+
+/**
+ * Homebrew kaydı kabul eden koleksiyonlar.
+ *
+ * Not: `classLevels` burada yok — seviye tabloları ayrı bir modülde duruyor
+ * (bkz. `classLevels.ts`) ve oradaki `applyHomebrewClassLevels` ile kurulur.
+ */
+export const HOMEBREW_KINDS = [
+  'races',
+  'subraces',
+  'traits',
+  'classes',
+  'subclasses',
+  'backgrounds',
+  'feats',
+  'spells',
+  'equipment',
+  'magicItems',
+  'features',
+] as const
+
+export type HomebrewKind = (typeof HOMEBREW_KINDS)[number]
+
+/**
+ * Kurulu homebrew kayıtları, tür başına.
+ *
+ * Lazy koleksiyonlar (büyü, ekipman…) uygulama açıldıktan sonra yüklenir;
+ * o ana kadar kurulan homebrew kayıtlarını kaybetmemek için burada tutulur ve
+ * koleksiyon yüklendiğinde uygulanır.
+ */
+const installedHomebrew = new Map<HomebrewKind, unknown[]>()
+const lazyKinds = new Set<HomebrewKind>()
+const loadedLazy = new Map<HomebrewKind, Collection<Identified>>()
 
 // ---------------------------------------------------------------------------
 // Eager koleksiyonlar — küçük ve sihirbazın ilk adımlarında gerekli
@@ -198,31 +251,101 @@ export const equipmentCategories = new Collection<EquipmentCategory>(
 // ---------------------------------------------------------------------------
 
 function lazyCollection<T extends Identified>(
+  kind: HomebrewKind,
   label: string,
   schema: z.ZodType<T>,
   importJson: () => Promise<{ default: unknown }>,
 ) {
   let promise: Promise<Collection<T>> | undefined
-  return () => {
-    promise ??= importJson().then((m) => new Collection<T>(label, schema, m.default))
+
+  const loader = () => {
+    promise ??= importJson().then((m) => {
+      const collection = new Collection<T>(label, schema, m.default)
+      // Koleksiyon uygulama açıldıktan çok sonra yüklenebilir; o ana kadar
+      // kurulmuş homebrew kayıtları burada uygulanır.
+      collection.register(installedHomebrew.get(kind) ?? [])
+      loadedLazy.set(kind, collection as Collection<Identified>)
+      return collection
+    })
     return promise
   }
+
+  lazyKinds.add(kind)
+  return loader
 }
 
 /** 319 büyü (~450 KB). İlk açılışta indirilmez. */
-export const loadSpells = lazyCollection<Spell>('Büyü', spellSchema, () => import('./srd/spells.json'))
+export const loadSpells = lazyCollection<Spell>('spells', 'Büyü', spellSchema, () =>
+  import('./srd/spells.json'),
+)
 
 /** 237 ekipman kaydı. */
-export const loadEquipment = lazyCollection<Equipment>('Ekipman', equipmentSchema, () =>
+export const loadEquipment = lazyCollection<Equipment>('equipment', 'Ekipman', equipmentSchema, () =>
   import('./srd/equipment.json'),
 )
 
 /** 362 sihirli eşya. Karakter oluşturmada 1. seviyede gerekmez. */
-export const loadMagicItems = lazyCollection<MagicItem>('Sihirli eşya', magicItemSchema, () =>
+export const loadMagicItems = lazyCollection<MagicItem>('magicItems', 'Sihirli eşya', magicItemSchema, () =>
   import('./srd/magic-items.json'),
 )
 
 /** 407 sınıf/alt sınıf özelliği (~200 KB). Karakter sayfasında gerekir. */
-export const loadFeatures = lazyCollection<Feature>('Sınıf özelliği', featureSchema, () =>
+export const loadFeatures = lazyCollection<Feature>('features', 'Sınıf özelliği', featureSchema, () =>
   import('./srd/features.json'),
 )
+
+// ---------------------------------------------------------------------------
+// Homebrew kurulum arayüzü
+// ---------------------------------------------------------------------------
+
+const eagerCollections: Partial<Record<HomebrewKind, Collection<Identified>>> = {
+  races: races as Collection<Identified>,
+  subraces: subraces as Collection<Identified>,
+  traits: traits as Collection<Identified>,
+  classes: classes as Collection<Identified>,
+  subclasses: subclasses as Collection<Identified>,
+  backgrounds: backgrounds as Collection<Identified>,
+  feats: feats as Collection<Identified>,
+}
+
+/**
+ * Bir türün homebrew kayıtlarını kurar.
+ *
+ * "Sil ve yeniden yaz" biçiminde çalışır: verilen liste o türün tam
+ * homebrew içeriğidir, listede olmayan eski kayıtlar kaldırılır. Böylece
+ * kaydetme ve silme tek bir yoldan geçer.
+ *
+ * Doğrulama `Collection.register` içinde her zaman yapılır; şemaya uymayan
+ * bir kayıt hata fırlatır ve hiçbiri kurulmaz.
+ */
+export function applyHomebrew(kind: HomebrewKind, records: unknown[]): void {
+  const collection = eagerCollections[kind] ?? loadedLazy.get(kind)
+  if (!collection && !lazyKinds.has(kind)) {
+    throw new Error(`Bilinmeyen homebrew türü: ${kind}`)
+  }
+
+  if (collection) {
+    // register atomiktir: liste bütünüyle doğrulanmadan hiçbiri yazılmaz.
+    // Bu yüzden temizlik güvenle önce yapılabilir... ama yapılmaz: hata
+    // durumunda eski homebrew içeriği duruyor olmalı.
+    const previous = installedHomebrew.get(kind) ?? []
+    collection.clearHomebrew()
+    try {
+      collection.register(records)
+    } catch (error) {
+      collection.clearHomebrew()
+      collection.register(previous)
+      throw error
+    }
+  }
+  installedHomebrew.set(kind, records)
+}
+
+/** Kurulu homebrew kayıtlarının tamamını kaldırır. */
+export function clearAllHomebrew(): void {
+  for (const kind of HOMEBREW_KINDS) {
+    eagerCollections[kind]?.clearHomebrew()
+    loadedLazy.get(kind)?.clearHomebrew()
+    installedHomebrew.delete(kind)
+  }
+}

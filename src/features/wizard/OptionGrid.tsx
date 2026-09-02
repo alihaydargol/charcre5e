@@ -1,3 +1,4 @@
+import { SourceBadge } from '../homebrew/fields.tsx'
 import type { ChoiceOption } from '../../rules/choices.ts'
 
 /**
@@ -42,7 +43,10 @@ export default function OptionGrid({
               ].join(' ')}
             >
               <span className="flex items-baseline justify-between gap-2">
-                <span className="font-medium">{option.name}</span>
+                <span className="flex items-baseline gap-1.5 font-medium">
+                  {option.name}
+                  {option.source && <SourceBadge source={option.source} />}
+                </span>
                 {isSelected && (
                   <span aria-hidden="true" className="text-accent">
                     ✓

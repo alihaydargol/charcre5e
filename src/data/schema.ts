@@ -22,6 +22,7 @@ export type AbilityId = z.infer<typeof abilityIdSchema>
 export const ABILITY_ORDER = ['str', 'dex', 'con', 'int', 'wis', 'cha'] as const
 
 export const sizeSchema = z.enum(['Tiny', 'Small', 'Medium', 'Large', 'Huge', 'Gargantuan'])
+export type Size = z.infer<typeof sizeSchema>
 
 /** Her kaydın taşıdığı ortak alanlar. */
 const recordBase = {
@@ -320,6 +321,14 @@ export const characterClassSchema = z.object({
       ability: abilityIdSchema,
       /** Warlock'un Pact Magic'i normal slot tablosundan ayrıdır. */
       pactMagic: z.boolean(),
+      /**
+       * Bu sınıfın kullandığı büyü listesi, sınıf id'si olarak.
+       *
+       * SRD sınıflarında boştur — büyüler zaten sınıfın kendi id'sini taşır.
+       * Homebrew bir sınıfın büyü listesi yoktur (hiçbir SRD büyüsü onu
+       * listelemez), bu yüzden hangi sınıfın listesini kullandığını söyler.
+       */
+      spellList: z.string().optional(),
       info: z.array(z.object({ name: z.string(), desc: z.array(z.string()) })),
     })
     .optional(),

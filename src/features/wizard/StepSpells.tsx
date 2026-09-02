@@ -3,7 +3,13 @@ import { classes, type Collection } from '../../data/registry.ts'
 import type { Spell } from '../../data/schema.ts'
 import type { Character } from '../../rules/character.ts'
 import { createRng, pickMany, randomSeed } from '../../rules/dice.ts'
-import { maxSpellLevelFor, spellcasting, wizardSpellbookSize } from '../../rules/spellcasting.ts'
+import {
+  maxSpellLevelFor,
+  spellListClassId,
+  spellcasting,
+  usesSpellbook,
+  wizardSpellbookSize,
+} from '../../rules/spellcasting.ts'
 import { useCharacterStore } from '../../state/characterStore.ts'
 import Section from './Section.tsx'
 
@@ -34,7 +40,7 @@ export default function StepSpells({
 
   const available = useMemo(() => {
     if (!info) return { cantrips: [], leveled: [] }
-    const forClass = spells.all().filter((s) => s.classes.includes(info.classId))
+    const forClass = spells.all().filter((s) => s.classes.includes(spellListClassId(info.classId)))
     return {
       cantrips: forClass.filter((s) => s.level === 0),
       leveled: forClass.filter((s) => s.level > 0 && s.level <= maxLevel),
@@ -51,11 +57,11 @@ export default function StepSpells({
 
   const cantripCount = info.cantripsKnown ?? 0
   // Wizard'ın defteri seviyeyle büyür; bilen sınıflarda sayı tablodan gelir.
-  const spellCount =
-    info.classId === 'wizard'
-      ? wizardSpellbookSize(character.classes[0].level)
-      : (info.spellsKnown ?? 0)
-  const prepares = info.preparedCount !== undefined && info.classId !== 'wizard'
+  const spellbook = usesSpellbook(info.classId)
+  const spellCount = spellbook
+    ? wizardSpellbookSize(character.classes[0].level)
+    : (info.spellsKnown ?? 0)
+  const prepares = info.preparedCount !== undefined && !spellbook
 
   const matches = (list: Spell[]) => {
     const q = query.trim().toLocaleLowerCase('tr')
@@ -111,7 +117,7 @@ export default function StepSpells({
 
       {spellCount > 0 && (
         <Section
-          title={info.classId === 'wizard' ? 'Büyü defteri' : 'Bilinen büyüler'}
+          title={spellbook ? 'Büyü defteri' : 'Bilinen büyüler'}
           hint={
             info.classId === 'wizard'
               ? `Defterine ${spellCount} büyü yaz. ${character.spells.known.length}/${spellCount} seçildi.`

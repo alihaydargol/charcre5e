@@ -27,6 +27,9 @@ export default function Layout() {
             <NavLink to="/rastgele" className={navLinkClass}>
               Rastgele
             </NavLink>
+            <NavLink to="/homebrew" className={navLinkClass}>
+              Homebrew
+            </NavLink>
             <NavLink to="/icerik" className={navLinkClass}>
               SRD İçeriği
             </NavLink>

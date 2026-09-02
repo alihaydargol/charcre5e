@@ -3,6 +3,7 @@ import type { Collection } from '../../data/registry.ts'
 import { weaponProperties } from '../../data/registry.ts'
 import type { Equipment } from '../../data/schema.ts'
 import Pagination from '../../components/Pagination.tsx'
+import { SourceBadge } from '../homebrew/fields.tsx'
 
 const PAGE_SIZE = 16
 
@@ -154,7 +155,10 @@ function EquipmentCard({
         className="flex w-full items-start justify-between gap-3 p-4 text-left hover:bg-slate-50 disabled:hover:bg-transparent"
       >
         <span>
-          <span className="block font-semibold">{item.name}</span>
+          <span className="flex items-baseline gap-1.5 font-semibold">
+            {item.name}
+            <SourceBadge source={item.source} />
+          </span>
           <span className="mt-0.5 block text-sm capitalize text-slate-500">{summarize(item)}</span>
         </span>
         <span className="shrink-0 text-right text-xs text-slate-500">

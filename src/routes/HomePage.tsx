@@ -18,7 +18,7 @@ const roadmap = [
   { label: 'Karakter listesi ve depolama yönetimi', done: true },
   { label: 'Mobil uyum, erişilebilirlik, tema', done: false },
   { label: 'Rastgele karakter oluşturma', done: true },
-  { label: 'Homebrew içerik desteği', done: false },
+  { label: 'Homebrew içerik desteği', done: true },
   { label: 'Görsel tasarım ve arayüz yenilemesi', done: false },
 ]
 

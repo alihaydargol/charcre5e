@@ -2,7 +2,7 @@ import { classes, races, traits } from '../../data/registry.ts'
 import { evaluatePointBuy } from '../../rules/abilities.ts'
 import type { Character } from '../../rules/character.ts'
 import { getValidChoices } from '../../rules/choices.ts'
-import { spellcasting, wizardSpellbookSize } from '../../rules/spellcasting.ts'
+import { spellcasting, usesSpellbook, wizardSpellbookSize } from '../../rules/spellcasting.ts'
 
 /**
  * Sihirbaz adımları ve her adımın doğrulaması.
@@ -223,13 +223,13 @@ function validateSpells(character: Character): StepStatus {
     }
 
     // Wizard'ın defteri seviyeyle büyür: 1. seviyede 6, sonra seviye başına 2.
-    if (info.classId === 'wizard') {
+    if (usesSpellbook(info.classId)) {
       const expected = wizardSpellbookSize(
-        character.classes.find((c) => c.classId === 'wizard')?.level ?? 1,
+        character.classes.find((c) => c.classId === info.classId)?.level ?? 1,
       )
       if (character.spells.known.length !== expected) {
         issues.push(
-          `Wizard: büyü defterine ${expected} büyü yazmalısın, ${character.spells.known.length} yazdın.`,
+          `${cls.name}: büyü defterine ${expected} büyü yazmalısın, ${character.spells.known.length} yazdın.`,
         )
       }
     }

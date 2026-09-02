@@ -20,16 +20,24 @@ Proje aşamalı olarak geliştiriliyor.
 - [x] **Aşama 7** &mdash; Karakter listesi ve localStorage yönetimi
 - [ ] **Aşama 8** &mdash; Mobil uyum, erişilebilirlik, tema
 - [x] **Aşama 9** &mdash; Rastgele karakter oluşturma (yeni başlayanlar için tek tuş)
-- [ ] **Aşama 10** &mdash; Homebrew içerik (kendi ırk/sınıf/büyü/eşyanı tanımla)
+- [x] **Aşama 10** &mdash; Homebrew içerik (kendi ırk/sınıf/büyü/eşyanı tanımla)
 - [ ] **Aşama 11** &mdash; Görsel tasarım ve arayüz yenilemesi
 
-Homebrew (Aşama 10) henüz yazılmadı, ancak veri ve kural katmanı baştan bunu
-kaldıracak şekilde tasarlanıyor &mdash; ayrıntılar için [CLAUDE.md](./CLAUDE.md).
+Kalan aşamalar arayüz cilası; kural motoru ve içerik katmanı tamam.
+Mimari kararların gerekçesi için [CLAUDE.md](./CLAUDE.md).
 
 ## Kapsam
 
 Bu araç **yalnızca D&D 5e** kurallarını uygular. Eski edisyonlar, Pathfinder
 veya başka rol yapma sistemleri için destek eklenmeyecektir.
+
+Depoya yalnızca SRD 5.1 (CC-BY-4.0) içeriği konur; *Player's Handbook* ve diğer
+kaynaklardan metin ya da oyun verisi kopyalanmaz. SRD'nin dar kapsamı (tek
+background, tek feat, sınıf başına tek alt sınıf) **homebrew** desteğiyle
+telafi edilir: `/homebrew` sayfasından kendi ırk, sınıf, alt sınıf, geçmiş,
+feat, büyü ve eşyanı tanımlayabilir, paket olarak dışa/içe aktarabilirsin.
+Tanımladıkların sihirbazda, seviye atlamada ve rastgele oluşturmada SRD
+içeriğiyle birlikte görünür.
 
 ## Teknolojiler
 

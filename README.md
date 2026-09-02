@@ -15,7 +15,7 @@ Proje aşamalı olarak geliştiriliyor.
 - [x] **Aşama 3** &mdash; Kural motoru (HP, AC, büyü slotları, seviye tabloları) + testler
 - [x] **Aşama 3B** &mdash; Silah/zırh mekanikleri, ekipman kategorileri, sihirli eşyalar
 - [x] **Aşama 4** &mdash; Karakter oluşturma sihirbazı
-- [ ] **Aşama 5** &mdash; Seviye atlama (1&ndash;20), ASI/feat, alt sınıflar
+- [x] **Aşama 5** &mdash; Seviye atlama (1&ndash;20), ASI/feat, alt sınıflar
 - [ ] **Aşama 6** &mdash; Karakter sayfası, yazdırma/PDF, JSON dışa/içe aktarma
 - [ ] **Aşama 7** &mdash; Karakter listesi ve localStorage yönetimi
 - [ ] **Aşama 8** &mdash; Mobil uyum, erişilebilirlik, tema

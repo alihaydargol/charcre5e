@@ -78,6 +78,7 @@ export type PendingDecision =
   | { kind: 'subclass'; classId: string; level: number }
   | { kind: 'asiOrFeat'; classId: string; level: number }
   | { kind: 'fightingStyle'; classId: string; level: number }
+  | { kind: 'expertise'; classId: string; level: number }
 
 export function decisionsAtLevel(classId: string, level: number): PendingDecision[] {
   const decisions: PendingDecision[] = []
@@ -88,9 +89,13 @@ export function decisionsAtLevel(classId: string, level: number): PendingDecisio
   if (grantsAbilityScoreImprovement(classId, level)) {
     decisions.push({ kind: 'asiOrFeat', classId, level })
   }
-  // Fighting Style, sınıf tablosunda bir özellik olarak görünür.
-  if (featuresGainedAt(classId, level).some((id) => /fighting-style$/.test(id))) {
+  // Fighting Style ve Expertise, sınıf tablosunda birer özellik olarak görünür.
+  const features = featuresGainedAt(classId, level)
+  if (features.some((id) => /fighting-style$/.test(id))) {
     decisions.push({ kind: 'fightingStyle', classId, level })
+  }
+  if (features.some((id) => /expertise(-\d+)?$/.test(id))) {
+    decisions.push({ kind: 'expertise', classId, level })
   }
 
   return decisions

@@ -9,6 +9,7 @@ import HomePage from './routes/HomePage.tsx'
  * verisini boşuna indirmez.
  */
 const WizardPage = lazy(() => import('./features/wizard/WizardPage.tsx'))
+const LevelUpPage = lazy(() => import('./features/levelup/LevelUpPage.tsx'))
 const ContentPage = lazy(() => import('./routes/ContentPage.tsx'))
 const AboutPage = lazy(() => import('./routes/AboutPage.tsx'))
 
@@ -28,6 +29,14 @@ export default function App() {
             element={
               <Suspense fallback={<PageLoading />}>
                 <WizardPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="seviye/:id"
+            element={
+              <Suspense fallback={<PageLoading />}>
+                <LevelUpPage />
               </Suspense>
             }
           />

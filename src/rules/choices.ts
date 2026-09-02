@@ -40,6 +40,7 @@ export type DecisionPoint =
   | { kind: 'asiAbilities'; classId: string; level: number }
   | { kind: 'feat'; classId: string; level: number }
   | { kind: 'fightingStyle'; classId: string; level: number }
+  | { kind: 'expertise'; classId: string; level: number }
 
 export interface ChoiceOption {
   id: string
@@ -290,6 +291,43 @@ export function getValidChoices(character: Character, point: DecisionPoint): Val
           }
         }),
       }
+    }
+
+    case 'expertise': {
+      // Uzmanlık yalnızca ZATEN yeterliliğin olduğu becerilerde alınabilir.
+      const proficient = [...skillProficiencies(character)]
+      const taken = new Set(
+        character.levelChoices
+          .filter((c) => c.kind === 'expertise')
+          .flatMap((c) => c.proficiencyIds),
+      )
+
+      const options: ChoiceOption[] = proficient.map((id) => ({
+        id,
+        name: skills.get(id)?.name ?? id,
+        description: skills.get(id)?.ability.toUpperCase(),
+        disabledReason: taken.has(id) ? 'Bu beceride zaten uzmanlığın var.' : undefined,
+      }))
+
+      // Rogue uzmanlığı thieves' tools'a da verebilir.
+      if (point.classId === 'rogue') {
+        options.push({
+          id: 'thieves-tools',
+          name: "Thieves' Tools",
+          description: 'Alet yeterliliği',
+          disabledReason: taken.has('thieves-tools')
+            ? 'Bu alette zaten uzmanlığın var.'
+            : undefined,
+        })
+      }
+
+      if (options.length === 0 || options.every((o) => o.disabledReason)) {
+        return NOT_APPLICABLE(
+          'Uzmanlık için önce beceri yeterliliği kazanmalısın; uygun beceri kalmadı.',
+        )
+      }
+
+      return { choose: 2, applicable: true, options }
     }
 
     case 'fightingStyle': {

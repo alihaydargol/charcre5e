@@ -5,6 +5,8 @@ import {
   type AbilityMethod,
   type Character,
   type CustomBackground,
+  type HpMethod,
+  type LevelChoice,
 } from '../rules/character.ts'
 import { clearDraft, loadCharacters, loadDraft, saveCharacters, saveDraft } from './storage.ts'
 
@@ -45,6 +47,13 @@ interface CharacterState {
   toggleSpell: (spellId: string, max: number) => void
   setName: (name: string) => void
   setNote: (key: keyof Character['notes'], value: string) => void
+
+  setLevel: (level: number) => void
+  setLevelChoice: (choice: LevelChoice) => void
+  clearLevelChoice: (kind: LevelChoice['kind'], classId: string, level: number) => void
+  setHpMethod: (method: HpMethod) => void
+  setHpRoll: (levelIndex: number, value: number) => void
+  setHpManualTotal: (total: number | undefined) => void
 
   saveDraftAsCharacter: () => string
   deleteCharacter: (id: string) => void
@@ -210,6 +219,63 @@ export const useCharacterStore = create<CharacterState>((set, get) => ({
   setName: (name) => get().update((draft) => void (draft.name = name)),
 
   setNote: (key, value) => get().update((draft) => void (draft.notes[key] = value)),
+
+  /**
+   * Sınıf seviyesini değiştirir.
+   *
+   * Seviye düşürülünce o seviyenin üstünde yapılmış seçimler ve atılan hit
+   * die'lar silinir — aksi hâlde karakterde artık geçerli olmayan seçimler
+   * kalır ve türetilmiş değerler yanlış çıkar.
+   */
+  setLevel: (level) =>
+    get().update((draft) => {
+      const primary = draft.classes[0]
+      if (!primary) return
+      const next = Math.min(20, Math.max(1, level))
+      primary.level = next
+      draft.levelChoices = draft.levelChoices.filter((c) => c.level <= next)
+      draft.hp.rolls = draft.hp.rolls.slice(0, Math.max(0, next - 1))
+    }),
+
+  /** Bir karar noktasının cevabını kaydeder; aynı noktanın eski cevabı düşer. */
+  setLevelChoice: (choice) =>
+    get().update((draft) => {
+      // ASI ve feat aynı karar noktasının iki cevabıdır; biri diğerini siler.
+      const conflicting: LevelChoice['kind'][] =
+        choice.kind === 'asi' || choice.kind === 'feat' ? ['asi', 'feat'] : [choice.kind]
+
+      draft.levelChoices = draft.levelChoices.filter(
+        (c) =>
+          !(
+            conflicting.includes(c.kind) &&
+            c.classId === choice.classId &&
+            c.level === choice.level
+          ),
+      )
+      draft.levelChoices.push(choice)
+      draft.levelChoices.sort((a, b) => a.level - b.level)
+    }),
+
+  clearLevelChoice: (kind, classId, level) =>
+    get().update((draft) => {
+      const conflicting: LevelChoice['kind'][] =
+        kind === 'asi' || kind === 'feat' ? ['asi', 'feat'] : [kind]
+      draft.levelChoices = draft.levelChoices.filter(
+        (c) => !(conflicting.includes(c.kind) && c.classId === classId && c.level === level),
+      )
+    }),
+
+  setHpMethod: (method) => get().update((draft) => void (draft.hp.method = method)),
+
+  /** `levelIndex` 0 = 2. seviye (1. seviyede zar atılmaz, hit die maks alınır). */
+  setHpRoll: (levelIndex, value) =>
+    get().update((draft) => {
+      const rolls = [...draft.hp.rolls]
+      rolls[levelIndex] = value
+      draft.hp.rolls = rolls
+    }),
+
+  setHpManualTotal: (total) => get().update((draft) => void (draft.hp.manualTotal = total)),
 
   /** Taslağı kalıcı listeye taşır. Var olan bir karakterse üzerine yazar. */
   saveDraftAsCharacter: () => {

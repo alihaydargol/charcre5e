@@ -9,7 +9,7 @@ const roadmap = [
   { label: 'Kural motoru (HP, AC, büyü slotları)', done: true },
   { label: 'Silah/zırh mekanikleri ve ekipman kategorileri', done: true },
   { label: 'Karakter oluşturma sihirbazı', done: true },
-  { label: 'Seviye atlama (1-20)', done: false },
+  { label: 'Seviye atlama (1-20)', done: true },
   { label: 'Karakter sayfası, yazdırma, JSON aktarımı', done: false },
   { label: 'Rastgele karakter oluşturma', done: false },
   { label: 'Homebrew içerik desteği', done: false },
@@ -78,6 +78,7 @@ export default function HomePage() {
                 key={character.id}
                 character={character}
                 onEdit={() => edit(character.id)}
+                onLevel={() => navigate(`/seviye/${character.id}`)}
                 onDelete={() => {
                   if (confirm(`"${character.name}" silinecek. Emin misin?`)) {
                     deleteCharacter(character.id)
@@ -118,10 +119,12 @@ export default function HomePage() {
 function CharacterCard({
   character,
   onEdit,
+  onLevel,
   onDelete,
 }: {
   character: Character
   onEdit: () => void
+  onLevel: () => void
   onDelete: () => void
 }) {
   const race = character.raceId ? races.get(character.raceId) : undefined
@@ -146,6 +149,15 @@ function CharacterCard({
         >
           Düzenle
         </button>
+        {cls && (
+          <button
+            type="button"
+            onClick={onLevel}
+            className="rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
+          >
+            Seviye
+          </button>
+        )}
         <button
           type="button"
           onClick={onDelete}

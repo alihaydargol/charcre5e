@@ -130,6 +130,28 @@ export function clearDraft(): void {
   safeRemove(DRAFT_KEY)
 }
 
+/**
+ * Kayıtların kapladığı yer ve kabaca kalan alan.
+ *
+ * Tarayıcılar localStorage için genelde 5 MB civarı kota verir ve doluysa
+ * yazma sessizce değil, hata fırlatarak başarısız olur. Kullanıcı bunu
+ * karakterini kaybettikten sonra değil, öncesinde görmeli.
+ */
+export function storageUsage(): { bytes: number; limit: number; ratio: number } {
+  // Yaklaşık 5 MB; tarayıcılar bunu açıkça bildirmez.
+  const limit = 5 * 1024 * 1024
+  let bytes = 0
+  try {
+    for (const key of [CHARACTERS_KEY, DRAFT_KEY]) {
+      // UTF-16 saklanır; karakter başına 2 bayt.
+      bytes += (localStorage.getItem(key)?.length ?? 0) * 2
+    }
+  } catch {
+    return { bytes: 0, limit, ratio: 0 }
+  }
+  return { bytes, limit, ratio: bytes / limit }
+}
+
 /** localStorage bu tarayıcıda kullanılabilir mi? */
 export function storageAvailable(): boolean {
   try {

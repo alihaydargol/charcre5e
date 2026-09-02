@@ -56,6 +56,7 @@ interface CharacterState {
   setHpManualTotal: (total: number | undefined) => void
 
   saveDraftAsCharacter: () => string
+  renameCharacter: (id: string, name: string) => void
   deleteCharacter: (id: string) => void
   duplicateCharacter: (id: string) => void
   importCharacter: (character: Character) => void
@@ -293,6 +294,17 @@ export const useCharacterStore = create<CharacterState>((set, get) => ({
     set({ saved: next, draft: createEmptyCharacter(newId()), persistenceFailed: !written })
     return record.id
   },
+
+  renameCharacter: (id, name) =>
+    set((state) => {
+      const next = state.saved.map((c) =>
+        c.id === id ? { ...c, name, updatedAt: new Date().toISOString() } : c,
+      )
+      // Düzenlenen karakter aynı zamanda taslaktaysa oradaki adı da güncelle.
+      const draft = state.draft.id === id ? { ...state.draft, name } : state.draft
+      if (draft !== state.draft) saveDraft(draft)
+      return { saved: next, draft, persistenceFailed: !saveCharacters(next) }
+    }),
 
   deleteCharacter: (id) =>
     set((state) => {

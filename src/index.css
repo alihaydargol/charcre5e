@@ -35,9 +35,46 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Yazdırma görünümü Aşama 6'da karakter sayfasıyla birlikte detaylandırılacak. */
+/*
+ * Yazdırma görünümü. Karakter sayfası ekranda ve kâğıtta AYNI bileşenleri
+ * kullanır; burada yalnızca kâğıda uygun hâle getiriliyor. Ayrı bir yazdırma
+ * sayfası yapmak iki görünümün zamanla ayrışmasına yol açardı.
+ */
 @media print {
   .no-print {
     display: none !important;
+  }
+
+  @page {
+    size: A4;
+    margin: 12mm;
+  }
+
+  html,
+  body {
+    background: #fff;
+    height: auto;
+  }
+
+  /* Ekran düzeninin genişlik sınırı ve dolgusu kâğıtta yer israfı. */
+  main {
+    max-width: none !important;
+    padding: 0 !important;
+  }
+
+  /* Kartlar sayfa ortasından bölünmesin. */
+  .break-inside-avoid {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Kâğıtta gri zemin mürekkep harcar; kenarlık yeterli. */
+  .bg-white,
+  .bg-slate-50 {
+    background: #fff !important;
+  }
+
+  a[href]::after {
+    content: none !important;
   }
 }

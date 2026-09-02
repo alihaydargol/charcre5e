@@ -51,10 +51,10 @@ export default function LivePreview({
       <dl className="grid grid-cols-3 gap-2 text-center">
         <Stat label="HP" value={hasClass ? hp.total : '—'} />
         <Stat label="AC" value={ac.value} />
-        <Stat label="Hız" value={`${walkingSpeed(character)} ft`} />
-        <Stat label="Initiative" value={formatModifier(initiative(character))} />
+        <Stat label="HIZ" value={`${walkingSpeed(character)} ft`} />
+        <Stat label="INITIATIVE" value={formatModifier(initiative(character))} />
         <Stat label="PB" value={formatModifier(characterProficiencyBonus(character))} />
-        <Stat label="Pas. Alg." value={passivePerception(character)} />
+        <Stat label="PAS. ALGI" value={passivePerception(character)} />
       </dl>
 
       <div>
@@ -69,8 +69,8 @@ export default function LivePreview({
                 key={ability}
                 className="rounded-md border border-slate-200 px-2 py-1.5 text-center"
               >
-                <span className="block text-[10px] font-semibold uppercase text-slate-400">
-                  {ability}
+                <span className="block text-[10px] font-semibold text-slate-400">
+                  {ability.toUpperCase()}
                 </span>
                 <span className="block text-lg font-semibold leading-tight">
                   {formatModifier(score.modifier)}
@@ -143,7 +143,7 @@ export default function LivePreview({
 function Stat({ label, value }: { label: string; value: string | number }) {
   return (
     <div className="rounded-md bg-slate-50 px-2 py-2">
-      <dt className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">{label}</dt>
+      <dt className="text-[10px] font-semibold tracking-wide text-slate-400">{label}</dt>
       <dd className="text-lg font-semibold leading-tight">{value}</dd>
     </div>
   )

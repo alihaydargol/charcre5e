@@ -187,26 +187,26 @@ function SpellCard({
       {open && (
         <div className="border-t border-slate-200 px-4 py-4">
           <dl className="grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
-            <Field label="Casting Time" value={spell.castingTime} />
-            <Field label="Range" value={spell.range} />
-            <Field label="Components" value={componentLine(spell)} />
-            <Field label="Duration" value={spell.duration} />
+            <Field label="CASTING TIME" value={spell.castingTime} />
+            <Field label="RANGE" value={spell.range} />
+            <Field label="COMPONENTS" value={componentLine(spell)} />
+            <Field label="DURATION" value={spell.duration} />
             {spell.attackType && (
-              <Field label="Saldırı" value={`${spell.attackType} spell attack`} />
+              <Field label="SALDIRI" value={`${spell.attackType} spell attack`} />
             )}
             {spell.dc && (
               <Field
-                label="Kurtarma atışı"
+                label="KURTARMA ATIŞI"
                 value={`${spell.dc.ability.toUpperCase()} — başarılıysa ${spell.dc.successType}`}
               />
             )}
             {spell.areaOfEffect && (
               <Field
-                label="Etki alanı"
+                label="ETKİ ALANI"
                 value={`${spell.areaOfEffect.size} ft ${spell.areaOfEffect.type}`}
               />
             )}
-            <Field label="Sınıflar" value={classNames} />
+            <Field label="SINIFLAR" value={classNames} />
           </dl>
 
           <div className="mt-4 space-y-2 text-sm leading-relaxed text-slate-700">
@@ -226,21 +226,21 @@ function SpellCard({
 
           {spell.damage?.atSlotLevel && (
             <DamageTable
-              caption="Slot seviyesine göre hasar"
+              caption="SLOT SEVİYESİNE GÖRE HASAR"
               rows={spell.damage.atSlotLevel}
               rowLabel={(k) => `${k}. seviye slot`}
             />
           )}
           {spell.damage?.atCharacterLevel && (
             <DamageTable
-              caption="Karakter seviyesine göre hasar"
+              caption="KARAKTER SEVİYESİNE GÖRE HASAR"
               rows={spell.damage.atCharacterLevel}
               rowLabel={(k) => `${k}. seviye karakter`}
             />
           )}
           {spell.healAtSlotLevel && (
             <DamageTable
-              caption="Slot seviyesine göre iyileştirme"
+              caption="SLOT SEVİYESİNE GÖRE İYİLEŞTİRME"
               rows={spell.healAtSlotLevel}
               rowLabel={(k) => `${k}. seviye slot`}
             />
@@ -254,7 +254,9 @@ function SpellCard({
 function Field({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <dt className="text-xs uppercase tracking-wide text-slate-400">{label}</dt>
+      {/* CSS uppercase, sayfa lang="tr" olduğu için İngilizce terimleri
+          bozardı ("CASTİNG TİME"). Etiketler istenen büyüklükte yazılır. */}
+      <dt className="text-xs tracking-wide text-slate-400">{label}</dt>
       <dd className="text-slate-700">{value}</dd>
     </div>
   )
@@ -273,7 +275,7 @@ function DamageTable({
   return (
     <div className="mt-4 overflow-x-auto">
       <table className="w-full min-w-64 text-sm">
-        <caption className="mb-1 text-left text-xs uppercase tracking-wide text-slate-400">
+        <caption className="mb-1 text-left text-xs tracking-wide text-slate-400">
           {caption}
         </caption>
         <tbody>

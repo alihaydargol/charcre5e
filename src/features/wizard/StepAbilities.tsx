@@ -165,7 +165,7 @@ export default function StepAbilities({ character }: { character: Character }) {
               >
                 <span className="w-32 shrink-0">
                   <span className="block font-medium">{ABILITY_NAMES[ability]}</span>
-                  <span className="block text-xs uppercase text-slate-400">{ability}</span>
+                  <span className="block text-xs text-slate-400">{ability.toUpperCase()}</span>
                 </span>
 
                 <span className="flex items-center gap-1">

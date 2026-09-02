@@ -72,28 +72,28 @@ export default function StepSummary({
 
       <Section title="Kimlik">
         <dl className="grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
-          <Row label="İsim" value={character.name || '—'} />
+          <Row label="İSİM" value={character.name || '—'} />
           <Row
-            label="Irk"
+            label="IRK"
             value={subrace ? `${subrace.name} (${race?.name})` : (race?.name ?? '—')}
           />
           <Row
-            label="Sınıf"
+            label="SINIF"
             value={cls ? `${cls.name} · ${totalLevel(character)}. seviye` : '—'}
           />
-          <Row label="Geçmiş" value={backgroundName ?? '—'} />
+          <Row label="GEÇMİŞ" value={backgroundName ?? '—'} />
           {character.notes.alignment && (
-            <Row label="Alignment" value={character.notes.alignment} />
+            <Row label="ALIGNMENT" value={character.notes.alignment} />
           )}
         </dl>
       </Section>
 
       <Section title="Temel değerler">
         <dl className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-          <Tile label="Hit Points" value={hp.total} />
-          <Tile label="Armor Class" value={ac.value} />
-          <Tile label="Pasif Algı" value={passivePerception(character)} />
-          <Tile label="Hız" value={`${race?.speed ?? 30} ft`} />
+          <Tile label="HIT POINTS" value={hp.total} />
+          <Tile label="ARMOR CLASS" value={ac.value} />
+          <Tile label="PASİF ALGI" value={passivePerception(character)} />
+          <Tile label="HIZ" value={`${race?.speed ?? 30} ft`} />
         </dl>
       </Section>
 
@@ -101,7 +101,7 @@ export default function StepSummary({
         <ul className="grid gap-2 sm:grid-cols-3">
           {ABILITY_IDS.map((ability) => (
             <li key={ability} className="rounded-lg border border-slate-200 bg-white p-3">
-              <span className="text-xs font-semibold uppercase text-slate-400">{ability}</span>
+              <span className="text-xs font-semibold text-slate-400">{ability.toUpperCase()}</span>
               <span className="block text-xl font-semibold">
                 {scores[ability].total}{' '}
                 <span className="text-base font-normal text-slate-500">
@@ -194,7 +194,7 @@ export default function StepSummary({
 function Row({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <dt className="text-xs uppercase tracking-wide text-slate-400">{label}</dt>
+      <dt className="text-xs tracking-wide text-slate-400">{label}</dt>
       <dd className="font-medium">{value}</dd>
     </div>
   )
@@ -203,7 +203,7 @@ function Row({ label, value }: { label: string; value: string }) {
 function Tile({ label, value }: { label: string; value: string | number }) {
   return (
     <div className="rounded-lg border border-slate-200 bg-white p-3 text-center">
-      <dt className="text-xs uppercase tracking-wide text-slate-400">{label}</dt>
+      <dt className="text-xs tracking-wide text-slate-400">{label}</dt>
       <dd className="text-2xl font-semibold">{value}</dd>
     </div>
   )

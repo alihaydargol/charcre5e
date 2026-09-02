@@ -1,7 +1,9 @@
+import { useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { classes, races, subraces } from '../data/registry.ts'
 import { totalLevel, type Character } from '../rules/character.ts'
 import { useCharacterStore } from '../state/characterStore.ts'
+import { buildExport, downloadJson, parseImport } from '../state/transfer.ts'
 
 const roadmap = [
   { label: 'İskelet ve yayın hattı', done: true },
@@ -10,7 +12,7 @@ const roadmap = [
   { label: 'Silah/zırh mekanikleri ve ekipman kategorileri', done: true },
   { label: 'Karakter oluşturma sihirbazı', done: true },
   { label: 'Seviye atlama (1-20)', done: true },
-  { label: 'Karakter sayfası, yazdırma, JSON aktarımı', done: false },
+  { label: 'Karakter sayfası, yazdırma, JSON aktarımı', done: true },
   { label: 'Rastgele karakter oluşturma', done: false },
   { label: 'Homebrew içerik desteği', done: false },
   { label: 'Görsel tasarım ve arayüz yenilemesi', done: false },
@@ -22,7 +24,22 @@ export default function HomePage() {
   const loadErrors = useCharacterStore((s) => s.loadErrors)
   const deleteCharacter = useCharacterStore((s) => s.deleteCharacter)
   const loadForEditing = useCharacterStore((s) => s.loadForEditing)
+  const duplicateCharacter = useCharacterStore((s) => s.duplicateCharacter)
+  const importCharacter = useCharacterStore((s) => s.importCharacter)
   const navigate = useNavigate()
+
+  const fileInput = useRef<HTMLInputElement>(null)
+  const [importErrors, setImportErrors] = useState<string[]>([])
+  const [importMessage, setImportMessage] = useState<string>()
+
+  const handleImport = async (file: File) => {
+    const { characters, errors } = parseImport(await file.text())
+    for (const character of characters) importCharacter(character)
+    setImportErrors(errors)
+    setImportMessage(
+      characters.length > 0 ? `${characters.length} karakter içe aktarıldı.` : undefined,
+    )
+  }
 
   // Taslakta bir şey seçilmişse "yarım kalan iş" olarak gösterilir.
   const hasDraft = Boolean(draft.raceId || draft.classes.length > 0 || draft.name)
@@ -53,7 +70,56 @@ export default function HomePage() {
           >
             SRD içeriğine göz at
           </Link>
+          <button
+            type="button"
+            onClick={() => fileInput.current?.click()}
+            className="rounded-md border border-slate-300 px-4 py-2 text-sm text-slate-600 hover:bg-slate-50"
+          >
+            JSON'dan içe aktar
+          </button>
+          {saved.length > 0 && (
+            <button
+              type="button"
+              onClick={() =>
+                downloadJson(
+                  `charcre5e-karakterler-${new Date().toISOString().slice(0, 10)}.json`,
+                  buildExport(saved),
+                )
+              }
+              className="rounded-md border border-slate-300 px-4 py-2 text-sm text-slate-600 hover:bg-slate-50"
+            >
+              Tümünü dışa aktar
+            </button>
+          )}
+          <input
+            ref={fileInput}
+            type="file"
+            accept="application/json,.json"
+            className="hidden"
+            onChange={(e) => {
+              const file = e.target.files?.[0]
+              if (file) void handleImport(file)
+              // Aynı dosyayı ikinci kez seçebilmek için input sıfırlanmalı.
+              e.target.value = ''
+            }}
+          />
         </div>
+
+        {importMessage && (
+          <p role="status" className="rounded-md bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
+            {importMessage}
+          </p>
+        )}
+        {importErrors.length > 0 && (
+          <div className="rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-900">
+            <p className="font-medium">İçe aktarılamayan kayıtlar:</p>
+            <ul className="mt-1 list-disc space-y-0.5 pl-5">
+              {importErrors.map((error, i) => (
+                <li key={i}>{error}</li>
+              ))}
+            </ul>
+          </div>
+        )}
       </section>
 
       {loadErrors.length > 0 && (
@@ -77,8 +143,10 @@ export default function HomePage() {
               <CharacterCard
                 key={character.id}
                 character={character}
+                onOpen={() => navigate(`/karakter/${character.id}`)}
                 onEdit={() => edit(character.id)}
                 onLevel={() => navigate(`/seviye/${character.id}`)}
+                onDuplicate={() => duplicateCharacter(character.id)}
                 onDelete={() => {
                   if (confirm(`"${character.name}" silinecek. Emin misin?`)) {
                     deleteCharacter(character.id)
@@ -118,13 +186,17 @@ export default function HomePage() {
 
 function CharacterCard({
   character,
+  onOpen,
   onEdit,
   onLevel,
+  onDuplicate,
   onDelete,
 }: {
   character: Character
+  onOpen: () => void
   onEdit: () => void
   onLevel: () => void
+  onDuplicate: () => void
   onDelete: () => void
 }) {
   const race = character.raceId ? races.get(character.raceId) : undefined
@@ -141,7 +213,14 @@ function CharacterCard({
       <p className="mt-1 text-xs text-slate-400">
         Son düzenleme: {new Date(character.updatedAt).toLocaleDateString('tr-TR')}
       </p>
-      <div className="mt-3 flex gap-2">
+      <div className="mt-3 flex flex-wrap gap-2">
+        <button
+          type="button"
+          onClick={onOpen}
+          className="rounded-md bg-accent px-3 py-1.5 text-sm font-medium text-white hover:opacity-90"
+        >
+          Karakter sayfası
+        </button>
         <button
           type="button"
           onClick={onEdit}
@@ -158,6 +237,13 @@ function CharacterCard({
             Seviye
           </button>
         )}
+        <button
+          type="button"
+          onClick={onDuplicate}
+          className="rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
+        >
+          Kopyala
+        </button>
         <button
           type="button"
           onClick={onDelete}

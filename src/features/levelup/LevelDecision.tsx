@@ -252,8 +252,8 @@ function AsiOrFeatDecision({
                       atCap || spent >= 2 ? 'opacity-40' : 'hover:bg-slate-50',
                     ].join(' ')}
                   >
-                    <span className="block text-[10px] font-semibold uppercase text-slate-400">
-                      {ability}
+                    <span className="block text-[10px] font-semibold text-slate-400">
+                      {ability.toUpperCase()}
                     </span>
                     <span className="block font-semibold">
                       {scores[ability].total}

@@ -16,7 +16,7 @@ Proje aşamalı olarak geliştiriliyor.
 - [x] **Aşama 3B** &mdash; Silah/zırh mekanikleri, ekipman kategorileri, sihirli eşyalar
 - [x] **Aşama 4** &mdash; Karakter oluşturma sihirbazı
 - [x] **Aşama 5** &mdash; Seviye atlama (1&ndash;20), ASI/feat, alt sınıflar
-- [ ] **Aşama 6** &mdash; Karakter sayfası, yazdırma/PDF, JSON dışa/içe aktarma
+- [x] **Aşama 6** &mdash; Karakter sayfası, yazdırma/PDF, JSON dışa/içe aktarma
 - [ ] **Aşama 7** &mdash; Karakter listesi ve localStorage yönetimi
 - [ ] **Aşama 8** &mdash; Mobil uyum, erişilebilirlik, tema
 - [ ] **Aşama 9** &mdash; Rastgele karakter oluşturma (yeni başlayanlar için tek tuş)

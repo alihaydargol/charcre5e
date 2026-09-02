@@ -59,9 +59,8 @@ export default function WizardPage() {
   }, [steps, current])
 
   const save = () => {
-    saveDraftAsCharacter()
-    // Karakter sayfası Aşama 6'da gelecek; şimdilik listeye dönüyoruz.
-    navigate('/')
+    const id = saveDraftAsCharacter()
+    navigate(`/karakter/${id}`)
   }
 
   return (

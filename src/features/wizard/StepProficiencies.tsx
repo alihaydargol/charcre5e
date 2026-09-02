@@ -90,7 +90,7 @@ export default function StepProficiencies({ character }: { character: Character 
             >
               <span>
                 {skill.name}{' '}
-                <span className="text-xs uppercase text-slate-400">{skill.ability}</span>
+                <span className="text-xs text-slate-400">{skill.ability.toUpperCase()}</span>
               </span>
               <span className="font-semibold">{formatModifier(mods[skill.id].value)}</span>
             </li>

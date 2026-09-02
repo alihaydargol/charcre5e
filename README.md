@@ -19,11 +19,11 @@ Proje aşamalı olarak geliştiriliyor.
 - [x] **Aşama 6** &mdash; Karakter sayfası, yazdırma/PDF, JSON dışa/içe aktarma
 - [x] **Aşama 7** &mdash; Karakter listesi ve localStorage yönetimi
 - [ ] **Aşama 8** &mdash; Mobil uyum, erişilebilirlik, tema
-- [ ] **Aşama 9** &mdash; Rastgele karakter oluşturma (yeni başlayanlar için tek tuş)
+- [x] **Aşama 9** &mdash; Rastgele karakter oluşturma (yeni başlayanlar için tek tuş)
 - [ ] **Aşama 10** &mdash; Homebrew içerik (kendi ırk/sınıf/büyü/eşyanı tanımla)
 - [ ] **Aşama 11** &mdash; Görsel tasarım ve arayüz yenilemesi
 
-Aşama 9 ve 10 sonraya bırakıldı, ancak veri ve kural katmanı baştan bunları
+Homebrew (Aşama 10) henüz yazılmadı, ancak veri ve kural katmanı baştan bunu
 kaldıracak şekilde tasarlanıyor &mdash; ayrıntılar için [CLAUDE.md](./CLAUDE.md).
 
 ## Kapsam

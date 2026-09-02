@@ -1,4 +1,4 @@
-import { races, traits } from '../../data/registry.ts'
+import { races, skills, traits } from '../../data/registry.ts'
 import { getValidChoices } from '../../rules/choices.ts'
 import type { Character } from '../../rules/character.ts'
 import { useCharacterStore } from '../../state/characterStore.ts'
@@ -6,7 +6,7 @@ import OptionGrid from './OptionGrid.tsx'
 import Section from './Section.tsx'
 
 export default function StepRace({ character }: { character: Character }) {
-  const { setRace, setSubrace, toggleRaceAbilityBonus, toggleLanguage, toggleTool } =
+  const { setRace, setSubrace, toggleRaceAbilityBonus, toggleTool, toggleRaceSkill, toggleRaceLanguage } =
     useCharacterStore()
 
   const race = character.raceId ? races.get(character.raceId) : undefined
@@ -80,10 +80,8 @@ export default function StepRace({ character }: { character: Character }) {
         <Section title="Ek dil" hint={`${languageChoices.choose} dil seç.`}>
           <OptionGrid
             options={languageChoices.options}
-            selected={character.proficiencies.languages}
-            onToggle={(id) =>
-              toggleLanguage(id, languageChoices.choose, languageChoices.options.map((o) => o.id))
-            }
+            selected={character.proficiencies.raceLanguages}
+            onToggle={(id) => toggleRaceLanguage(id, languageChoices.choose)}
             columns={3}
           />
         </Section>
@@ -94,7 +92,12 @@ export default function StepRace({ character }: { character: Character }) {
         if (!trait?.proficiencyChoice) return null
         const choices = getValidChoices(character, { kind: 'traitProficiency', traitId })
         const pool = choices.options.map((o) => o.id)
-        const selected = [...character.proficiencies.tools, ...character.proficiencies.skills]
+        // Havuz becerilerden mi oluşuyor (Half-Elf) yoksa aletlerden mi (Dwarf)?
+        // Beceri seçimleri raceSkills'e yazılır ki sınıf seçimiyle karışmasın.
+        const isSkillChoice = pool.every((id) => skills.has(id))
+        const selected = isSkillChoice
+          ? character.proficiencies.raceSkills
+          : character.proficiencies.tools
 
         return (
           <Section
@@ -105,7 +108,11 @@ export default function StepRace({ character }: { character: Character }) {
             <OptionGrid
               options={choices.options}
               selected={selected.filter((id) => pool.includes(id))}
-              onToggle={(id) => toggleTool(id, choices.choose, pool)}
+              onToggle={(id) =>
+                isSkillChoice
+                  ? toggleRaceSkill(id, choices.choose)
+                  : toggleTool(id, choices.choose, pool)
+              }
               columns={3}
             />
           </Section>

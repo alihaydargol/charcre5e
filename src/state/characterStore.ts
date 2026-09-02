@@ -39,6 +39,8 @@ interface CharacterState {
   setSrdBackground: (id: string) => void
   setCustomBackground: (value: CustomBackground) => void
   toggleSkill: (skillId: string, max: number) => void
+  toggleRaceSkill: (skillId: string, max: number) => void
+  toggleRaceLanguage: (languageId: string, max: number) => void
   toggleLanguage: (languageId: string, max: number, pool: string[]) => void
   toggleTool: (toolId: string, max: number, pool: string[]) => void
   setEquipment: (items: { itemId: string; quantity: number }[]) => void
@@ -107,7 +109,8 @@ export const useCharacterStore = create<CharacterState>((set, get) => ({
       // Irk değişince ona bağlı seçimler geçersizleşir.
       draft.subraceId = undefined
       draft.raceAbilityChoice = []
-      draft.proficiencies.languages = []
+      draft.proficiencies.raceLanguages = []
+      draft.proficiencies.raceSkills = []
     }),
 
   setSubrace: (subraceId) => get().update((draft) => void (draft.subraceId = subraceId)),
@@ -163,6 +166,24 @@ export const useCharacterStore = create<CharacterState>((set, get) => ({
       const index = list.indexOf(skillId)
       if (index >= 0) list.splice(index, 1)
       else if (list.length < max) list.push(skillId)
+    }),
+
+  /** Irk özelliğinden gelen beceri seçimi; sınıf seçimiyle karışmaz. */
+  toggleRaceSkill: (skillId, max) =>
+    get().update((draft) => {
+      const list = draft.proficiencies.raceSkills
+      const index = list.indexOf(skillId)
+      if (index >= 0) list.splice(index, 1)
+      else if (list.length < max) list.push(skillId)
+    }),
+
+  /** Irktan gelen dil seçimi; geçmişin dilleriyle karışmaz. */
+  toggleRaceLanguage: (languageId, max) =>
+    get().update((draft) => {
+      const list = draft.proficiencies.raceLanguages
+      const index = list.indexOf(languageId)
+      if (index >= 0) list.splice(index, 1)
+      else if (list.length < max) list.push(languageId)
     }),
 
   toggleLanguage: (languageId, max, pool) =>

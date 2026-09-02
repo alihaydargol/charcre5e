@@ -369,7 +369,7 @@ describe('türetilmiş değerler', () => {
     const rogue = character({
       classes: [{ classId: 'rogue', level: 5 }],
       abilities: { str: 10, dex: 16, con: 12, int: 12, wis: 12, cha: 14 },
-      proficiencies: { skills: ['stealth', 'acrobatics'], tools: [], languages: [] },
+      proficiencies: { skills: ['stealth', 'acrobatics'], raceSkills: [], raceLanguages: [], tools: [], languages: [] },
       levelChoices: [
         { kind: 'expertise', classId: 'rogue', level: 1, proficiencyIds: ['stealth'] },
       ],
@@ -423,7 +423,7 @@ describe('türetilmiş değerler', () => {
       raceId: 'halfling', // hız 25
       classes: [{ classId: 'rogue', level: 1 }],
       abilities: { str: 8, dex: 15, con: 12, int: 10, wis: 14, cha: 12 },
-      proficiencies: { skills: ['perception'], tools: [], languages: [] },
+      proficiencies: { skills: ['perception'], raceSkills: [], raceLanguages: [], tools: [], languages: [] },
     })
     // Halfling DEX +2 → 17 → +3
     expect(initiative(halfling)).toBe(3)

@@ -24,6 +24,9 @@ export default function Layout() {
             <NavLink to="/olustur" className={navLinkClass}>
               Karakter Oluştur
             </NavLink>
+            <NavLink to="/rastgele" className={navLinkClass}>
+              Rastgele
+            </NavLink>
             <NavLink to="/icerik" className={navLinkClass}>
               SRD İçeriği
             </NavLink>

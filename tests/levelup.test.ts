@@ -196,7 +196,7 @@ describe('Expertise', () => {
     const rogue = character({
       classes: [{ classId: 'rogue', level: 1 }],
       abilities: { str: 10, dex: 16, con: 12, int: 12, wis: 12, cha: 14 },
-      proficiencies: { skills: ['stealth', 'acrobatics'], tools: [], languages: [] },
+      proficiencies: { skills: ['stealth', 'acrobatics'], raceSkills: [], raceLanguages: [], tools: [], languages: [] },
     })
     const choices = getValidChoices(rogue, { kind: 'expertise', classId: 'rogue', level: 1 })
 
@@ -215,7 +215,7 @@ describe('Expertise', () => {
     const rogue = character({
       classes: [{ classId: 'rogue', level: 6 }],
       abilities: { str: 10, dex: 16, con: 12, int: 12, wis: 12, cha: 14 },
-      proficiencies: { skills: ['stealth', 'acrobatics', 'perception', 'deception'], tools: [], languages: [] },
+      proficiencies: { skills: ['stealth', 'acrobatics', 'perception', 'deception'], raceSkills: [], raceLanguages: [], tools: [], languages: [] },
       levelChoices: [
         { kind: 'expertise', classId: 'rogue', level: 1, proficiencyIds: ['stealth', 'perception'] },
       ],
@@ -229,7 +229,7 @@ describe('Expertise', () => {
     const rogue = character({
       classes: [{ classId: 'rogue', level: 1 }],
       abilities: { str: 10, dex: 16, con: 12, int: 12, wis: 12, cha: 14 },
-      proficiencies: { skills: ['stealth', 'acrobatics'], tools: [], languages: [] },
+      proficiencies: { skills: ['stealth', 'acrobatics'], raceSkills: [], raceLanguages: [], tools: [], languages: [] },
       levelChoices: [
         { kind: 'expertise', classId: 'rogue', level: 1, proficiencyIds: ['stealth'] },
       ],

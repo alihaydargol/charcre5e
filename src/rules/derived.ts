@@ -23,7 +23,10 @@ import { characterProficiencyBonus } from './progression.ts'
  * tekrarlanmaz.
  */
 export function skillProficiencies(character: Character): Set<string> {
-  const result = new Set(character.proficiencies.skills)
+  const result = new Set([
+    ...character.proficiencies.skills,
+    ...character.proficiencies.raceSkills,
+  ])
 
   // Geçmişten gelen beceriler.
   if (character.background?.kind === 'srd') {
@@ -253,7 +256,10 @@ export function armorClass(
 
 /** Karakterin bildiği diller: ırk, geçmiş ve kullanıcı seçimlerinden. */
 export function knownLanguages(character: Character): Set<string> {
-  const result = new Set(character.proficiencies.languages)
+  const result = new Set([
+    ...character.proficiencies.languages,
+    ...character.proficiencies.raceLanguages,
+  ])
 
   if (character.raceId) {
     for (const id of races.get(character.raceId)?.languages ?? []) result.add(id)

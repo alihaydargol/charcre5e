@@ -131,14 +131,28 @@ export const characterSchema = z.object({
     })
     .default({ method: 'average', rolls: [] }),
 
+  /**
+   * Kullanıcının seçtiği yeterlilikler.
+   *
+   * Her seçim noktası KENDİ listesini tutar. Bunun sebebi havuzların
+   * örtüşmesi: Half-Elf'in Skill Versatility'si 18 becerinin tamamından seçim
+   * yaptırır ve sınıfın beceri havuzunu kapsar; Acolyte'ın "istediğin iki dil"i
+   * ırkın dil havuzunu kapsar. Tek listede tutulsalardı hangi becerinin hangi
+   * seçimden geldiği anlaşılamaz ve doğrulama yanlış sayardı.
+   */
   proficiencies: z
     .object({
-      /** Sınıftan seçilen beceriler. Irk ve geçmişten gelenler türetilir. */
+      /** Sınıftan seçilen beceriler. */
       skills: z.array(z.string()).default([]),
-      tools: z.array(z.string()).default([]),
+      /** Irk özelliklerinden seçilen beceriler (Half-Elf). */
+      raceSkills: z.array(z.string()).default([]),
+      /** Irktan seçilen ek diller (Half-Elf, Human). */
+      raceLanguages: z.array(z.string()).default([]),
+      /** Geçmişten seçilen diller (Acolyte: istediğin iki dil). */
       languages: z.array(z.string()).default([]),
+      tools: z.array(z.string()).default([]),
     })
-    .default({ skills: [], tools: [], languages: [] }),
+    .default({ skills: [], raceSkills: [], raceLanguages: [], languages: [], tools: [] }),
 
   spells: z
     .object({
@@ -190,7 +204,7 @@ export function createEmptyCharacter(id: string, now = new Date().toISOString())
     abilityMethod: 'pointbuy',
     levelChoices: [],
     hp: { method: 'average', rolls: [] },
-    proficiencies: { skills: [], tools: [], languages: [] },
+    proficiencies: { skills: [], raceSkills: [], raceLanguages: [], languages: [], tools: [] },
     spells: { cantrips: [], known: [], prepared: [] },
     equipment: [],
     notes: { appearance: '', backstory: '', personality: '', alignment: '' },

@@ -21,6 +21,8 @@ function completeBarbarian(): Character {
     background: { kind: 'srd', id: 'acolyte' },
     proficiencies: {
       skills: ['athletics', 'survival'],
+      raceSkills: [],
+      raceLanguages: [],
       tools: ['smiths-tools'],
       languages: [],
     },
@@ -75,7 +77,7 @@ describe('ırk adımı', () => {
     const withLanguage = validateStep(
       character({
         raceId: 'human',
-        proficiencies: { skills: [], tools: [], languages: ['dwarvish'] },
+        proficiencies: { skills: [], raceSkills: [], raceLanguages: ['dwarvish'], tools: [], languages: [] },
       }),
       'race',
     )
@@ -93,7 +95,7 @@ describe('ırk adımı', () => {
       character({
         raceId: 'dwarf',
         subraceId: 'hill-dwarf',
-        proficiencies: { skills: [], tools: ['smiths-tools'], languages: [] },
+        proficiencies: { skills: [], raceSkills: [], raceLanguages: [], tools: ['smiths-tools'], languages: [] },
       }),
       'race',
     )
@@ -110,7 +112,13 @@ describe('ırk adımı', () => {
       character({
         raceId: 'half-elf',
         raceAbilityChoice: ['dex', 'con'],
-        proficiencies: { skills: ['stealth', 'perception'], tools: [], languages: ['dwarvish'] },
+        proficiencies: {
+          skills: [],
+          raceSkills: ['stealth', 'perception'],
+          raceLanguages: ['dwarvish'],
+          tools: [],
+          languages: [],
+        },
       }),
       'race',
     )
@@ -122,7 +130,13 @@ describe('ırk adımı', () => {
       character({
         raceId: 'half-elf',
         raceAbilityChoice: ['dex', 'dex'],
-        proficiencies: { skills: ['stealth', 'perception'], tools: [], languages: ['dwarvish'] },
+        proficiencies: {
+          skills: [],
+          raceSkills: ['stealth', 'perception'],
+          raceLanguages: ['dwarvish'],
+          tools: [],
+          languages: [],
+        },
       }),
       'race',
     )
@@ -238,7 +252,7 @@ describe('beceri adımı', () => {
     const status = validateStep(
       character({
         classes: [{ classId: 'barbarian', level: 1 }],
-        proficiencies: { skills: ['athletics'], tools: [], languages: [] },
+        proficiencies: { skills: ['athletics'], raceSkills: [], raceLanguages: [], tools: [], languages: [] },
       }),
       'proficiencies',
     )
@@ -252,7 +266,7 @@ describe('beceri adımı', () => {
       character({
         classes: [{ classId: 'cleric', level: 1 }],
         background: { kind: 'srd', id: 'acolyte' },
-        proficiencies: { skills: ['insight', 'medicine'], tools: [], languages: [] },
+        proficiencies: { skills: ['insight', 'medicine'], raceSkills: [], raceLanguages: [], tools: [], languages: [] },
       }),
       'proficiencies',
     )

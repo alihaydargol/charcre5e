@@ -2,7 +2,7 @@ import { classes, races, traits } from '../../data/registry.ts'
 import { evaluatePointBuy } from '../../rules/abilities.ts'
 import type { Character } from '../../rules/character.ts'
 import { getValidChoices } from '../../rules/choices.ts'
-import { spellcasting } from '../../rules/spellcasting.ts'
+import { spellcasting, wizardSpellbookSize } from '../../rules/spellcasting.ts'
 
 /**
  * Sihirbaz adımları ve her adımın doğrulaması.
@@ -87,7 +87,7 @@ function validateRace(character: Character): StepStatus {
   }
 
   if (race.languageChoice) {
-    const chosen = character.proficiencies.languages.filter((id) =>
+    const chosen = character.proficiencies.raceLanguages.filter((id) =>
       race.languageChoice!.from.includes(id),
     )
     if (chosen.length !== race.languageChoice.choose) {
@@ -102,9 +102,12 @@ function validateRace(character: Character): StepStatus {
     const trait = traits.get(traitId)
     if (!trait?.proficiencyChoice) continue
     const pool = trait.proficiencyChoice.from
-    const chosen = [...character.proficiencies.tools, ...character.proficiencies.skills].filter(
-      (id) => pool.includes(id),
-    )
+    // Beceri seçimleri raceSkills'te, alet seçimleri tools'ta durur; sınıf
+    // seçimleriyle karışmasınlar diye ayrı sayılırlar.
+    const chosen = [
+      ...character.proficiencies.tools,
+      ...character.proficiencies.raceSkills,
+    ].filter((id) => pool.includes(id))
     if (chosen.length !== trait.proficiencyChoice.choose) {
       issues.push(
         `${trait.name}: ${trait.proficiencyChoice.choose} seçim yapmalısın, ${chosen.length} yaptın.`,
@@ -219,11 +222,16 @@ function validateSpells(character: Character): StepStatus {
       )
     }
 
-    // Wizard büyü defterine 1. seviyede altı büyü yazar.
-    if (info.classId === 'wizard' && character.spells.known.length !== 6) {
-      issues.push(
-        `Wizard: büyü defterine 6 büyü yazmalısın, ${character.spells.known.length} yazdın.`,
+    // Wizard'ın defteri seviyeyle büyür: 1. seviyede 6, sonra seviye başına 2.
+    if (info.classId === 'wizard') {
+      const expected = wizardSpellbookSize(
+        character.classes.find((c) => c.classId === 'wizard')?.level ?? 1,
       )
+      if (character.spells.known.length !== expected) {
+        issues.push(
+          `Wizard: büyü defterine ${expected} büyü yazmalısın, ${character.spells.known.length} yazdın.`,
+        )
+      }
     }
   }
 

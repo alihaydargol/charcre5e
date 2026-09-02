@@ -124,6 +124,17 @@ export function highestSpellLevel(character: Character): number {
 }
 
 /**
+ * Wizard'ın büyü defterindeki büyü sayısı.
+ *
+ * 1. seviyede altı büyüyle başlar, sonraki her seviyede iki büyü daha ekler.
+ * Bu, "bilinen büyü" tablosundan farklıdır ve SRD verisinde tablo olarak
+ * bulunmaz; formül olarak burada durur.
+ */
+export function wizardSpellbookSize(classLevel: number): number {
+  return 6 + Math.max(0, classLevel - 1) * 2
+}
+
+/**
  * Bir sınıfın belirli seviyede öğrenebileceği büyülerin seviye üst sınırı.
  * Sihirbazın büyü seçimi adımında listeyi daraltmak için kullanılır.
  */

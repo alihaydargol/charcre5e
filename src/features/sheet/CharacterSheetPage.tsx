@@ -3,11 +3,16 @@ import { Link, useParams } from 'react-router-dom'
 import { loadEquipment, loadFeatures, loadSpells, type Collection } from '../../data/registry.ts'
 import type { Equipment, Feature, Spell } from '../../data/schema.ts'
 import { formatModifier } from '../../rules/abilities.ts'
-import type { Character } from '../../rules/character.ts'
+import { levelIn, type Character } from '../../rules/character.ts'
+import {
+  maxSpellLevelFor,
+  spellListClassId,
+  usesSpellbook,
+} from '../../rules/spellcasting.ts'
 import { useCharacterStore } from '../../state/characterStore.ts'
 import { buildExport, downloadJson, safeFileName } from '../../state/transfer.ts'
 import { buildSheet } from './sheetData.ts'
-import { btnSmallPrimary, btnSmallSecondary } from '../../components/ui.ts'
+import { btnSmallPrimary, btnSmallSecondary, sectionLabel } from '../../components/ui.ts'
 
 /**
  * Karakter sayfası.
@@ -88,7 +93,7 @@ function Sheet({
         <div className="space-y-6 print:space-y-3">
           <Abilities sheet={sheet} />
           <Skills sheet={sheet} />
-          <Inventory sheet={sheet} />
+          <Inventory character={character} sheet={sheet} />
           <Notes character={character} />
         </div>
         <div className="space-y-6 print:space-y-3">
@@ -373,6 +378,22 @@ function Spellcasting({
           <span className="font-medium">Cantrip:</span> {cantrips.map((s) => s.name).join(', ')}
         </p>
       )}
+
+      {/*
+        Hazırlık günlük bir karardır, karakterin kalıcı bir özelliği değil —
+        bu yüzden sihirbazda değil burada. Sayfa masada açık durur.
+      */}
+      {spells &&
+        sheet.casting
+          .filter((info) => info.preparedCount !== undefined)
+          .map((info) => (
+            <PreparedSpells
+              key={`prepared-${info.classId}`}
+              character={character}
+              info={info}
+              spells={spells}
+            />
+          ))}
       {known.length > 0 && (
         <div className="mt-2 text-sm">
           <p className="font-medium">Büyüler:</p>
@@ -390,6 +411,127 @@ function Spellcasting({
         </div>
       )}
     </Section>
+  )
+}
+
+/**
+ * Hazırlanan büyüler.
+ *
+ * Wizard defterinden hazırlar (bildiği büyüler), Cleric/Druid/Paladin sınıf
+ * listesinin tamamından. İki farklı kaynak ama aynı seçim mekaniği.
+ *
+ * Liste uzun olabildiği için (Cleric'in listesi 100+ büyü) arama var; yazdırma
+ * çıktısında yalnızca seçilenler kalır.
+ */
+function PreparedSpells({
+  character,
+  info,
+  spells,
+}: {
+  character: Character
+  info: ReturnType<typeof buildSheet>['casting'][number]
+  spells: Collection<Spell>
+}) {
+  const togglePrepared = useCharacterStore((s) => s.togglePrepared)
+  const [query, setQuery] = useState('')
+  const [open, setOpen] = useState(false)
+
+  const max = info.preparedCount ?? 0
+  const maxLevel = maxSpellLevelFor(info.classId, levelIn(character, info.classId))
+  const listId = spellListClassId(info.classId)
+
+  const pool = useMemo(() => {
+    const source = usesSpellbook(info.classId)
+      ? character.spells.known
+          .map((id) => spells.get(id))
+          .filter((s) => s !== undefined)
+      : spells.all().filter((s) => s.classes.includes(listId))
+    return source
+      .filter((s) => s.level > 0 && s.level <= maxLevel)
+      .sort((a, b) => a.level - b.level || a.name.localeCompare(b.name))
+  }, [character.spells.known, spells, info.classId, listId, maxLevel])
+
+  const prepared = character.spells.prepared.filter((id) => pool.some((s) => s.id === id))
+  const visible = query.trim()
+    ? pool.filter((s) => s.name.toLocaleLowerCase('tr').includes(query.toLocaleLowerCase('tr')))
+    : pool
+
+  return (
+    <div className="mt-3 border-t border-border pt-3 text-sm">
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <p className="font-medium">
+          Hazırlanan büyüler{' '}
+          <span className="font-normal text-faint">
+            ({prepared.length}/{max})
+          </span>
+        </p>
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          aria-expanded={open}
+          className="no-print text-sm font-medium text-accent underline underline-offset-2 hover:no-underline"
+        >
+          {open ? 'Kapat' : 'Değiştir'}
+        </button>
+      </div>
+
+      {prepared.length > 0 ? (
+        <ul className="mt-1 space-y-0.5">
+          {pool
+            .filter((s) => prepared.includes(s.id))
+            .map((spell) => (
+              <li key={spell.id} className="flex gap-2">
+                <span className="w-6 shrink-0 text-faint">{spell.level}.</span>
+                <span>{spell.name}</span>
+                {spell.concentration && <span className="text-xs text-faint">(conc.)</span>}
+              </li>
+            ))}
+        </ul>
+      ) : (
+        <p className="mt-1 text-muted">Henüz büyü hazırlamadın.</p>
+      )}
+
+      {open && (
+        <div className="no-print mt-3 space-y-2">
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Büyü ara"
+            aria-label="Hazırlanacak büyü ara"
+            className="w-full rounded-md border border-border-strong bg-surface px-3 py-1.5 text-sm"
+          />
+          <ul className="max-h-72 space-y-0.5 overflow-y-auto rounded-md border border-border p-2">
+            {visible.map((spell) => {
+              const checked = prepared.includes(spell.id)
+              const full = prepared.length >= max
+              return (
+                <li key={spell.id}>
+                  <label
+                    className={`flex items-center gap-2 ${
+                      !checked && full ? 'text-disabled' : 'text-ink'
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      disabled={!checked && full}
+                      onChange={() => togglePrepared(character.id, spell.id, max)}
+                      className="accent-accent"
+                    />
+                    <span className="w-6 shrink-0 text-faint">{spell.level}.</span>
+                    {spell.name}
+                  </label>
+                </li>
+              )
+            })}
+            {visible.length === 0 && (
+              <li className="px-1 py-2 text-muted">Aramaya uyan büyü yok.</li>
+            )}
+          </ul>
+        </div>
+      )}
+    </div>
   )
 }
 
@@ -449,7 +591,52 @@ function Features({ sheet }: { sheet: ReturnType<typeof buildSheet> }) {
   )
 }
 
-function Inventory({ sheet }: { sheet: ReturnType<typeof buildSheet> }) {
+const CURRENCY_UNITS = [
+  { id: 'pp', label: 'pp' },
+  { id: 'gp', label: 'gp' },
+  { id: 'ep', label: 'ep' },
+  { id: 'sp', label: 'sp' },
+  { id: 'cp', label: 'cp' },
+] as const
+
+/**
+ * Para kesesi.
+ *
+ * Doğrudan düzenlenebilir: masa oynarken para harcanır ve kazanılır, ayrı bir
+ * ekrana gitmek gereksiz sürtünme olurdu.
+ */
+function Purse({ character }: { character: Character }) {
+  const setCurrency = useCharacterStore((s) => s.setCurrency)
+
+  return (
+    <div className="mt-3 border-t border-border pt-2">
+      <p className={sectionLabel}>Para</p>
+      <div className="mt-1.5 grid grid-cols-5 gap-2">
+        {CURRENCY_UNITS.map((unit) => (
+          <label key={unit.id} className="text-center">
+            <span className="mb-1 block text-[11px] font-semibold text-faint">{unit.label}</span>
+            <input
+              type="number"
+              min={0}
+              value={character.currency[unit.id]}
+              onChange={(e) => setCurrency(character.id, unit.id, Number(e.target.value))}
+              aria-label={`${unit.label} miktarı`}
+              className="w-full rounded-md border border-border-strong bg-surface px-1 py-1 text-center text-sm print:border-0"
+            />
+          </label>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function Inventory({
+  character,
+  sheet,
+}: {
+  character: Character
+  sheet: ReturnType<typeof buildSheet>
+}) {
   return (
     <Section title="Ekipman ve diller">
       {sheet.equipmentList.length === 0 ? (
@@ -471,6 +658,8 @@ function Inventory({ sheet }: { sheet: ReturnType<typeof buildSheet> }) {
           </p>
         </>
       )}
+
+      <Purse character={character} />
 
       <p className="mt-3 border-t border-border pt-2 text-sm">
         <span className="font-medium">Diller:</span> {sheet.languages.join(', ') || '—'}

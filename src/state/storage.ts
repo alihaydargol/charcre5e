@@ -46,7 +46,19 @@ function safeRemove(key: string): void {
  * Sürüm dönüştürücüleri. Her giriş, `n` sürümündeki kaydı `n+1`'e çevirir.
  * Şu an tek sürüm var; ilk şema değişikliğinde buraya eklenecek.
  */
-const MIGRATIONS: Record<number, (record: Record<string, unknown>) => Record<string, unknown>> = {}
+const MIGRATIONS: Record<number, (record: Record<string, unknown>) => Record<string, unknown>> = {
+  /**
+   * 1 → 2: para kesesi eklendi.
+   *
+   * Eski kayıtlarda alan yok; boş keseyle doldurulur. Şemanın `.default()`
+   * değeri tek başına yetmezdi: `schemaVersion` literal olarak 2 bekleniyor,
+   * yani sürüm artmadan kayıt ayrıştırılamaz.
+   */
+  1: (record) => ({
+    ...record,
+    currency: record.currency ?? { cp: 0, sp: 0, ep: 0, gp: 0, pp: 0 },
+  }),
+}
 
 /** Eski sürümdeki bir kaydı güncel şemaya taşır. */
 export function migrate(record: unknown): unknown {

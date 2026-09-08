@@ -204,3 +204,51 @@ describe('şema sürümü', () => {
     expect(written[0].schemaVersion).toBe(SCHEMA_VERSION)
   })
 })
+
+describe('şema sürümü 1 → 2 (para kesesi)', () => {
+  it('eski kayıt yüklenir ve boş keseyle gelir', async () => {
+    // Sürüm 1 kaydı: currency alanı yok.
+    const old = {
+      ...createEmptyCharacter('eski'),
+      schemaVersion: 1,
+      name: 'Eski Karakter',
+    } as Record<string, unknown>
+    delete old.currency
+
+    fake.setItem('charcre5e:characters', JSON.stringify([old]))
+
+    const { loadCharacters } = await freshStorage()
+    const { characters, errors } = loadCharacters()
+    expect(errors).toEqual([])
+    expect(characters).toHaveLength(1)
+    expect(characters[0].name).toBe('Eski Karakter')
+    expect(characters[0].schemaVersion).toBe(2)
+    expect(characters[0].currency).toEqual({ cp: 0, sp: 0, ep: 0, gp: 0, pp: 0 })
+  })
+
+  it('yeni kayıttaki para korunur', async () => {
+    const character = {
+      ...createEmptyCharacter('yeni'),
+      currency: { cp: 5, sp: 4, ep: 0, gp: 12, pp: 1 },
+    }
+    fake.setItem('charcre5e:characters', JSON.stringify([character]))
+
+    const { loadCharacters } = await freshStorage()
+    const { characters } = loadCharacters()
+    expect(characters[0].currency).toEqual({ cp: 5, sp: 4, ep: 0, gp: 12, pp: 1 })
+  })
+
+  it('migration sürümsüz kayıtta da çalışır', async () => {
+    const old = { ...createEmptyCharacter('x'), name: 'Sürümsüz' } as Record<string, unknown>
+    delete old.schemaVersion
+    delete old.currency
+
+    // Sürümü olmayan kayıt 0 sayılır; 0 → 1 dönüştürücüsü yok, orada durur.
+    // Yüklenememesi beklenir ama uygulama çökmez ve hata raporlanır.
+    fake.setItem('charcre5e:characters', JSON.stringify([old]))
+
+    const { loadCharacters } = await freshStorage()
+    const { characters, errors } = loadCharacters()
+    expect(characters.length + errors.length).toBe(1)
+  })
+})

@@ -1,5 +1,11 @@
 import { beforeAll, describe, expect, it } from 'vitest'
-import { classes, loadEquipment, loadSpells, type Collection } from '../src/data/registry.ts'
+import {
+  backgrounds,
+  classes,
+  loadEquipment,
+  loadSpells,
+  type Collection,
+} from '../src/data/registry.ts'
 import type { Equipment, Spell } from '../src/data/schema.ts'
 import { abilityScores } from '../src/rules/abilities.ts'
 import { parseCharacter, totalLevel } from '../src/rules/character.ts'
@@ -300,5 +306,24 @@ describe('zırh yeterliliği', () => {
       }
     }
     expect(equipped.has('Heavy')).toBe(true)
+  })
+})
+
+describe('para kesesi', () => {
+  it('geçmişin başlangıç altını keseye yazılır', () => {
+    const character = generateCharacter({ seed: 1, level: 1, spells, equipment })
+    const background =
+      character.background?.kind === 'srd' ? backgrounds.get(character.background.id) : undefined
+    expect(background).toBeDefined()
+    expect(character.currency.gp).toBe(background!.startingGold)
+    expect(character.currency.gp).toBeGreaterThan(0)
+  })
+
+  it('diğer para birimleri sıfırdan başlar', () => {
+    const character = generateCharacter({ seed: 2, level: 3, spells, equipment })
+    expect(character.currency.cp).toBe(0)
+    expect(character.currency.sp).toBe(0)
+    expect(character.currency.ep).toBe(0)
+    expect(character.currency.pp).toBe(0)
   })
 })

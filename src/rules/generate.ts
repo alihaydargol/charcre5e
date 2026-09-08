@@ -196,7 +196,12 @@ export function generateCharacter(options: GenerateOptions = {}): Character {
 
   // --- Geçmiş --------------------------------------------------------------
   const [backgroundId] = chooseRandomly(character, { kind: 'background' }, rng)
-  if (backgroundId) character.background = { kind: 'srd', id: backgroundId }
+  if (backgroundId) {
+    character.background = { kind: 'srd', id: backgroundId }
+    // Geçmişin başlangıç altını keseye yazılır; sonrası karakterin kendi
+    // durumu (bkz. rules/character.ts, currency).
+    character.currency.gp = backgrounds.get(backgroundId)?.startingGold ?? 0
+  }
 
   // Geçmişin verdiği ek diller (Acolyte: iki dil).
   const backgroundLanguages = backgrounds.get(backgroundId ?? '')?.languageChoiceCount ?? 0

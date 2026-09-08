@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { backgrounds } from '../data/registry.ts'
 import type { AbilityId } from '../data/schema.ts'
 import {
   createEmptyCharacter,
@@ -63,6 +64,17 @@ interface CharacterState {
   setHpManualTotal: (total: number | undefined) => void
 
   saveDraftAsCharacter: () => string
+  /**
+   * Kayıtlı bir karakterin kesesini ayarlar.
+   *
+   * Taslak üzerinden değil doğrudan kayıt üzerinden çalışır: para masada
+   * harcanıp kazanılan bir şey, ayrıca "kaydet" adımı istemek sürtünme olurdu.
+   */
+  setCurrency: (id: string, unit: keyof Character['currency'], amount: number) => void
+  /** Kayıtlı bir karakterin hazırladığı büyüyü ekler ya da çıkarır. */
+  togglePrepared: (id: string, spellId: string, max: number) => void
+  /** Kayıtlı bir karakteri yerinde değiştirir ve hemen kalıcılaştırır. */
+  updateSaved: (id: string, mutate: (character: Character) => void) => void
   renameCharacter: (id: string, name: string) => void
   deleteCharacter: (id: string) => void
   duplicateCharacter: (id: string) => void
@@ -157,6 +169,9 @@ export const useCharacterStore = create<CharacterState>((set, get) => ({
       // Geçmiş değişince onun verdiği becerilerle çakışan sınıf seçimleri
       // geçersizleşebilir; kullanıcı adımda düzeltsin diye temizliyoruz.
       draft.proficiencies.skills = []
+      // Geçmişin altını keseye yazılır. Yalnızca başlangıç değeri: sonrasında
+      // para harcanıp kazanıldığı için türetilemez, karakterde durur.
+      draft.currency.gp = backgrounds.get(id)?.startingGold ?? 0
     }),
 
   setCustomBackground: (value) =>
@@ -336,6 +351,19 @@ export const useCharacterStore = create<CharacterState>((set, get) => ({
   setHpManualTotal: (total) => get().update((draft) => void (draft.hp.manualTotal = total)),
 
   /** Taslağı kalıcı listeye taşır. Var olan bir karakterse üzerine yazar. */
+  togglePrepared: (id, spellId, max) =>
+    get().updateSaved(id, (character) => {
+      const prepared = character.spells.prepared
+      const index = prepared.indexOf(spellId)
+      if (index >= 0) prepared.splice(index, 1)
+      else if (prepared.length < max) prepared.push(spellId)
+    }),
+
+  setCurrency: (id, unit, amount) =>
+    get().updateSaved(id, (character) => {
+      character.currency[unit] = Math.max(0, Math.floor(amount) || 0)
+    }),
+
   saveDraftAsCharacter: () => {
     const { draft, saved } = get()
     const record = structuredClone(draft)
@@ -351,6 +379,25 @@ export const useCharacterStore = create<CharacterState>((set, get) => ({
     set({ saved: next, draft: createEmptyCharacter(newId()), persistenceFailed: !written })
     return record.id
   },
+
+  updateSaved: (id, mutate) =>
+    set((state) => {
+      const index = state.saved.findIndex((c) => c.id === id)
+      if (index < 0) return state
+
+      const updated = structuredClone(state.saved[index])
+      mutate(updated)
+      updated.updatedAt = new Date().toISOString()
+
+      const next = [...state.saved]
+      next[index] = updated
+
+      // Aynı karakter taslakta açıksa orayı da eşitle; iki kopya ayrışmasın.
+      const draft = state.draft.id === id ? updated : state.draft
+      if (draft !== state.draft) saveDraft(draft)
+
+      return { saved: next, draft, persistenceFailed: !saveCharacters(next) }
+    }),
 
   renameCharacter: (id, name) =>
     set((state) => {

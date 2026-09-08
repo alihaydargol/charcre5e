@@ -13,7 +13,13 @@ import { abilityIdSchema, type AbilityId } from '../data/schema.ts'
  * hesaplama anında eklenir. Böylece ırk değiştirildiğinde puanlar bozulmaz.
  */
 
-export const SCHEMA_VERSION = 1
+/**
+ * Kayıt şemasının sürümü.
+ *
+ * 2: karaktere para kesesi (`currency`) eklendi. Eski kayıtlarda alan yok;
+ * `storage.ts`'teki migration boş keseyle dolduruyor.
+ */
+export const SCHEMA_VERSION = 2
 
 /** Her seviyede yapılan seçim. Seviye atlamanın ve yeniden hesaplamanın kalbi. */
 export const levelChoiceSchema = z.discriminatedUnion('kind', [
@@ -185,6 +191,23 @@ export const characterSchema = z.object({
     )
     .default([]),
 
+  /**
+   * Karakterin kesesi.
+   *
+   * Ayrı bir alan çünkü para harcanır ve kazanılır — geçmişin verdiği
+   * başlangıç altını yalnızca ilk değeri belirler, sonrasında karakterin
+   * kendi durumudur ve türetilemez.
+   */
+  currency: z
+    .object({
+      cp: z.number().int().min(0).default(0),
+      sp: z.number().int().min(0).default(0),
+      ep: z.number().int().min(0).default(0),
+      gp: z.number().int().min(0).default(0),
+      pp: z.number().int().min(0).default(0),
+    })
+    .default({ cp: 0, sp: 0, ep: 0, gp: 0, pp: 0 }),
+
   notes: z
     .object({
       appearance: z.string().default(''),
@@ -220,6 +243,7 @@ export function createEmptyCharacter(id: string, now = new Date().toISOString())
     proficiencies: { skills: [], raceSkills: [], raceLanguages: [], languages: [], tools: [] },
     spells: { cantrips: [], known: [], prepared: [] },
     equipment: [],
+    currency: { cp: 0, sp: 0, ep: 0, gp: 0, pp: 0 },
     notes: { appearance: '', backstory: '', personality: '', alignment: '' },
   }
 }

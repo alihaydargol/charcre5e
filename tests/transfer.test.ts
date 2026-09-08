@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createEmptyCharacter, type Character } from '../src/rules/character.ts'
+import { createEmptyCharacter, SCHEMA_VERSION, type Character } from '../src/rules/character.ts'
 import { buildExport, parseImport, safeFileName } from '../src/state/transfer.ts'
 
 function sample(overrides: Partial<Character> = {}): Character {
@@ -40,7 +40,8 @@ describe('dışa aktarma', () => {
   it('sarmalayıcı biçim ve sürüm bilgisi içerir', () => {
     const file = buildExport([sample()])
     expect(file.format).toBe('charcre5e')
-    expect(file.schemaVersion).toBe(1)
+    // Sabite bağlı: şema sürümü her arttığında testin güncellenmesi gerekmesin.
+    expect(file.schemaVersion).toBe(SCHEMA_VERSION)
     expect(file.characters).toHaveLength(1)
     expect(typeof file.exportedAt).toBe('string')
   })

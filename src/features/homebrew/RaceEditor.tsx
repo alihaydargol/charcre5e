@@ -3,7 +3,7 @@ import { languages, skills } from '../../data/registry.ts'
 import type { AbilityId, Race, Size, Trait } from '../../data/schema.ts'
 import { ABILITY_IDS } from '../../rules/character.ts'
 import EditorShell from './EditorShell.tsx'
-import { childId, slugify } from './text.ts'
+import { childId, slugify } from '../../data/ids.ts'
 import {
   CheckboxPool,
   Field,

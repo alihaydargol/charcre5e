@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { skills } from '../../data/registry.ts'
 import type { Background } from '../../data/schema.ts'
 import EditorShell from './EditorShell.tsx'
-import { slugify } from './text.ts'
+import { slugify } from '../../data/ids.ts'
 import { CheckboxPool, NumberField, ParagraphsField, TextField } from './fields.tsx'
 
 /**

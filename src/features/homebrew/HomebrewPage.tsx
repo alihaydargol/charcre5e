@@ -12,6 +12,7 @@ import type {
 import { downloadJson, safeFileName } from '../../state/transfer.ts'
 import { parseHomebrewImport, packSize, type HomebrewPack } from '../../state/homebrew.ts'
 import { useHomebrewStore } from '../../state/homebrewStore.ts'
+import { convertDndData, type ImportReport } from '../../state/importers/dndData.ts'
 import BackgroundEditor from './BackgroundEditor.tsx'
 import ClassEditor from './ClassEditor.tsx'
 import EquipmentEditor from './EquipmentEditor.tsx'
@@ -20,7 +21,7 @@ import RaceEditor from './RaceEditor.tsx'
 import SpellEditor from './SpellEditor.tsx'
 import SubclassEditor from './SubclassEditor.tsx'
 import { traitIdPrefix } from './text.ts'
-import { btnPrimary } from '../../components/ui.ts'
+import { btnPrimary, cardPadded, sectionLabel } from '../../components/ui.ts'
 
 /**
  * Homebrew içerik yönetimi.
@@ -56,7 +57,9 @@ export default function HomebrewPage() {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [creating, setCreating] = useState(false)
   const [importError, setImportError] = useState<string>()
+  const [dndReport, setDndReport] = useState<ImportReport>()
   const fileInput = useRef<HTMLInputElement>(null)
+  const dndInput = useRef<HTMLInputElement>(null)
 
   // Büyü ve eşya düzenleyicileri lazy koleksiyonlara yazar; kurulumun
   // görünür olması için koleksiyonların yüklenmiş olması gerekir.
@@ -80,6 +83,35 @@ export default function HomebrewPage() {
       return
     }
     setImportError(undefined)
+    setDndReport(undefined)
+    merge(incoming)
+  }
+
+  /**
+   * dnd-data biçimindeki bir dosyayı içe aktarır.
+   *
+   * Paket içe aktarmadan farkı kısmi başarıya izin vermesi: kaynak dış bir
+   * derleme ve kayıtların çoğu düzyazı, dolayısıyla bir kısmının çevrilememesi
+   * normal. Ne alındığı ve neyin neden atlandığı kullanıcıya yazılıyor.
+   */
+  const importDndData = async (file: File) => {
+    let raw: unknown
+    try {
+      raw = JSON.parse(await file.text())
+    } catch {
+      setImportError('Dosya geçerli bir JSON değil.')
+      setDndReport(undefined)
+      return
+    }
+
+    const { pack: incoming, report, error } = convertDndData(raw)
+    if (error) {
+      setImportError(error)
+      setDndReport(undefined)
+      return
+    }
+    setImportError(undefined)
+    setDndReport(report)
     merge(incoming)
   }
 
@@ -139,12 +171,28 @@ export default function HomebrewPage() {
             e.target.value = ''
           }}
         />
+        <button type="button" onClick={() => dndInput.current?.click()} className={buttonClass}>
+          dnd-data dosyası içe aktar
+        </button>
+        <input
+          ref={dndInput}
+          type="file"
+          accept="application/json,.json"
+          className="hidden"
+          onChange={(e) => {
+            const file = e.target.files?.[0]
+            if (file) void importDndData(file)
+            e.target.value = ''
+          }}
+        />
         {importError && (
           <span role="alert" className="text-sm text-accent">
             {importError}
           </span>
         )}
       </section>
+
+      {dndReport && <DndDataReport report={dndReport} onClose={() => setDndReport(undefined)} />}
 
       <nav className="flex flex-wrap gap-1 border-b border-border">
         {TABS.map((entry) => {
@@ -282,6 +330,66 @@ export default function HomebrewPage() {
         </section>
       )}
     </div>
+  )
+}
+
+/**
+ * dnd-data içe aktarma raporu.
+ *
+ * Kaç kayıt alındığı kadar NEYİN EKSİK GELDİĞİ de yazılıyor: kaynakta yapılı
+ * karşılığı olmayan alanlar varsayılanla doluyor ve kullanıcı bunu bilmezse
+ * eksik bir kaydı tam sanır.
+ */
+function DndDataReport({ report, onClose }: { report: ImportReport; onClose: () => void }) {
+  const grouped = new Map<string, number>()
+  for (const item of report.skipped) {
+    grouped.set(item.reason, (grouped.get(item.reason) ?? 0) + 1)
+  }
+
+  return (
+    <section className={`${cardPadded} space-y-3`} role="status">
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <h2 className="font-display text-lg font-semibold">
+          {report.imported - report.merged} kayıt içe aktarıldı
+          {report.merged > 0 && (
+            <span className="ml-2 text-sm font-normal text-muted">
+              ({report.merged} kayıt aynı adı taşıdığı için birleşti)
+            </span>
+          )}
+        </h2>
+        <button
+          type="button"
+          onClick={onClose}
+          className="text-sm font-medium text-accent underline underline-offset-2 hover:no-underline"
+        >
+          Kapat
+        </button>
+      </div>
+
+      {report.defaulted.length > 0 && (
+        <div>
+          <p className={sectionLabel}>Elle tamamlaman gerekenler</p>
+          <ul className="mt-1 list-disc space-y-0.5 pl-5 text-sm text-muted">
+            {report.defaulted.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {grouped.size > 0 && (
+        <div>
+          <p className={sectionLabel}>Atlanan kayıtlar</p>
+          <ul className="mt-1 list-disc space-y-0.5 pl-5 text-sm text-muted">
+            {[...grouped.entries()].map(([reason, count]) => (
+              <li key={reason}>
+                {count} kayıt — {reason}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </section>
   )
 }
 

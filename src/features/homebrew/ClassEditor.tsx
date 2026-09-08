@@ -9,7 +9,7 @@ import {
   spellcastingModels,
 } from '../../rules/classTable.ts'
 import EditorShell from './EditorShell.tsx'
-import { childId, slugify } from './text.ts'
+import { childId, slugify } from '../../data/ids.ts'
 import {
   CheckboxPool,
   Field,

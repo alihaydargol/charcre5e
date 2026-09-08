@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { damageTypes, weaponProperties } from '../../data/registry.ts'
 import type { Equipment } from '../../data/schema.ts'
 import EditorShell from './EditorShell.tsx'
-import { slugify } from './text.ts'
+import { slugify } from '../../data/ids.ts'
 import {
   CheckboxPool,
   NumberField,

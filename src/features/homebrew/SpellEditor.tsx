@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { classes, magicSchools } from '../../data/registry.ts'
 import type { Spell } from '../../data/schema.ts'
 import EditorShell from './EditorShell.tsx'
-import { slugify } from './text.ts'
+import { slugify } from '../../data/ids.ts'
 import {
   CheckboxPool,
   Field,

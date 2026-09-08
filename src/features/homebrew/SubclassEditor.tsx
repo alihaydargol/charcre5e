@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { classes } from '../../data/registry.ts'
 import type { Feature, Subclass } from '../../data/schema.ts'
 import EditorShell from './EditorShell.tsx'
-import { childId, slugify } from './text.ts'
+import { childId, slugify } from '../../data/ids.ts'
 import { NumberField, ParagraphsField, SelectField, TextField } from './fields.tsx'
 import { btnSmallSecondary } from '../../components/ui.ts'
 

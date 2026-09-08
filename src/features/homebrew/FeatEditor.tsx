@@ -3,7 +3,7 @@ import { ABILITY_IDS } from '../../rules/character.ts'
 import type { AbilityId, Feat } from '../../data/schema.ts'
 import { Field, NumberField, ParagraphsField, TextField, inputClass } from './fields.tsx'
 import EditorShell from './EditorShell.tsx'
-import { slugify } from './text.ts'
+import { slugify } from '../../data/ids.ts'
 import { btnSmallSecondary } from '../../components/ui.ts'
 
 /**

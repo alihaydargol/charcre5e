@@ -21,6 +21,10 @@ Proje aşama aşama geliştirildi.
 - [x] **Aşama 9** &mdash; Rastgele karakter oluşturma (yeni başlayanlar için tek tuş)
 - [x] **Aşama 10** &mdash; Homebrew içerik (kendi ırk/sınıf/büyü/eşyanı tanımla)
 - [x] **Aşama 8+11** &mdash; Mobil uyum, erişilebilirlik, karanlık tema, görsel tasarım
+- [x] **Aşama 12** &mdash; Multiclass
+- [x] **Aşama 13** &mdash; Hazırlanan büyüler ve para kesesi
+- [x] **Aşama 14** &mdash; dnd-data biçiminde homebrew içe aktarma
+- [x] **Aşama 15** &mdash; Çevrimdışı kullanım: PWA ve tek dosya indirme
 
 Yol haritası tamamlandı. Mimari kararların gerekçesi için
 [CLAUDE.md](./CLAUDE.md).
@@ -37,6 +41,30 @@ telafi edilir: `/homebrew` sayfasından kendi ırk, sınıf, alt sınıf, geçmi
 feat, büyü ve eşyanı tanımlayabilir, paket olarak dışa/içe aktarabilirsin.
 Tanımladıkların sihirbazda, seviye atlamada ve rastgele oluşturmada SRD
 içeriğiyle birlikte görünür.
+
+## Çevrimdışı kullanım
+
+Uygulama internet olmadan da çalışır:
+
+- **Kurulabilir (PWA).** Tarayıcının kurulum simgesiyle ana ekrana eklenir. Bir
+  kez açıldıktan sonra çevrimdışı açılır; yeni sürüm çıkınca sessizce
+  güncellenmez, sorar &mdash; yarım kalan bir sihirbaz bozulmasın diye.
+- **Tek dosya.** `npm run build:single` uygulamanın tamamını ve SRD verisini tek
+  bir `.html` dosyasına gömer (~1,7 MB). `file://` altında, sunucusuz ve
+  kurulumsuz açılır. Yayınlanan sitede
+  [`/indir/charcre5e.html`](https://alihaydargol.github.io/charcre5e/indir/charcre5e.html)
+  adresinden indirilebilir.
+
+## Homebrew içe aktarma
+
+`/homebrew` sayfası kendi paketlerinin yanında
+[`nick-aschenbach/dnd-data`](https://github.com/nick-aschenbach/dnd-data)
+biçimindeki dosyaları da okur (species, classes, spells, backgrounds, items).
+
+**O veri bu depoda yok ve olmayacak:** kaynağı PHB 2024, Xanathar's, Tasha's ve
+190'dan fazla kitabın birebir metni, üstelik onlarca üçüncü taraf yayıncıyı da
+kapsıyor. Depoda yalnızca *çevirici* var; veriyi kendi makinende edinip kendi
+tarayıcına yüklersin. Ayrıntı için [CLAUDE.md](./CLAUDE.md) §2.
 
 ## Arayüz
 

@@ -38,6 +38,14 @@ jobs:
       - name: Derleme
         run: npm run build
 
+      # Çevrimdışı arşiv: her şeyi tek bir HTML dosyasına gömen ikinci çıktı.
+      # Sitenin içinden indirilebilsin diye dist/ altına kopyalanıyor.
+      - name: Tek dosya çıktısı
+        run: |
+          npm run build:single
+          mkdir -p dist/indir
+          cp dist-single/index.html dist/indir/charcre5e.html
+
       - uses: actions/configure-pages@v5
 
       - uses: actions/upload-pages-artifact@v3

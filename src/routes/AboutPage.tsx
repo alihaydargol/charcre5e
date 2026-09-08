@@ -18,6 +18,10 @@ const ROADMAP = [
   { label: 'Rastgele karakter oluşturma', done: true },
   { label: 'Homebrew içerik desteği', done: true },
   { label: 'Mobil uyum, erişilebilirlik, tema ve görsel tasarım', done: true },
+  { label: 'Multiclass', done: true },
+  { label: 'Hazırlanan büyüler ve para kesesi', done: true },
+  { label: 'dnd-data biçiminde içe aktarma', done: true },
+  { label: 'Çevrimdışı kullanım: PWA ve tek dosya', done: true },
 ]
 
 export default function AboutPage() {
@@ -70,6 +74,33 @@ export default function AboutPage() {
           CC-BY-4.0 ile lisanslanmıştır. Bu proje Wizards of the Coast tarafından
           desteklenmemektedir.
         </p>
+      </section>
+
+      <section className={`${cardPadded} space-y-3`}>
+        <h2 className="font-display text-lg font-semibold text-ink">Çevrimdışı kullanım</h2>
+        <p className="text-sm text-muted">
+          Uygulama internet olmadan da çalışır. İki yolu var:
+        </p>
+        <ul className="list-disc space-y-2 pl-5 text-sm text-muted">
+          <li>
+            <strong className="text-ink">Kur.</strong> Tarayıcının adres çubuğundaki kurulum
+            simgesiyle ana ekrana ekleyebilirsin. Bir kez açtıktan sonra çevrimdışı açılır ve
+            yeni sürüm çıkınca haber verir.
+          </li>
+          <li>
+            <strong className="text-ink">Tek dosya indir.</strong>{' '}
+            <a
+              href={`${import.meta.env.BASE_URL}indir/charcre5e.html`}
+              download="charcre5e.html"
+              className="font-medium text-accent underline underline-offset-2 hover:no-underline"
+            >
+              charcre5e.html
+            </a>{' '}
+            (~1,7 MB) &mdash; uygulamanın tamamı ve SRD verisi tek bir dosyada. İstediğin yere
+            kopyala, çift tıkla; sunucu, kurulum ve internet gerekmez. Karakterlerin o dosyanın
+            açıldığı tarayıcıda saklanır.
+          </li>
+        </ul>
       </section>
 
       <section className={`${cardPadded} space-y-3`}>

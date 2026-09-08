@@ -3,6 +3,7 @@ node_modules/
 
 # Derleme çıktısı
 dist/
+dist-single/
 dist-ssr/
 
 # Günlükler

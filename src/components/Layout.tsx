@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import ThemeToggle from './ThemeToggle.tsx'
+import UpdatePrompt from './UpdatePrompt.tsx'
 
 const NAV = [
   { to: '/', label: 'Karakterlerim', end: true },
@@ -140,6 +141,8 @@ export default function Layout() {
           lisansıyla kullanır. Wizards of the Coast ile bağlantılı değildir.
         </p>
       </footer>
+
+      <UpdatePrompt />
     </div>
   )
 }

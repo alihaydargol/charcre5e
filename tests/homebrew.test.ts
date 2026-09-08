@@ -272,6 +272,84 @@ describe('homebrew sınıf', () => {
   })
 })
 
+describe('homebrew mekanikleri', () => {
+  it('homebrew feat yetenek puanı verir', () => {
+    applyHomebrew('feats', [
+      {
+        id: 'hb-dayaniklilik',
+        name: 'Dayanıklılık',
+        source: 'homebrew',
+        desc: ['CON puanın 1 artar.'],
+        prerequisites: [],
+        abilityBonuses: [{ ability: 'con', bonus: 1 }],
+      },
+    ])
+
+    const base = {
+      ...createEmptyCharacter('t'),
+      classes: [{ classId: 'fighter', level: 4 }],
+      abilities: { str: 15, dex: 12, con: 14, int: 10, wis: 10, cha: 8 },
+    }
+    expect(abilityScores(base).con.total).toBe(14)
+
+    const withFeat = {
+      ...base,
+      levelChoices: [
+        { kind: 'feat' as const, classId: 'fighter', level: 4, featId: 'hb-dayaniklilik' },
+      ],
+    }
+    expect(abilityScores(withFeat).con.total).toBe(15)
+  })
+
+  it('SRD feat’i puan vermez — Grappler bir şey değiştirmez', () => {
+    const base = {
+      ...createEmptyCharacter('t'),
+      classes: [{ classId: 'fighter', level: 4 }],
+      abilities: { str: 15, dex: 12, con: 14, int: 10, wis: 10, cha: 8 },
+      levelChoices: [
+        { kind: 'feat' as const, classId: 'fighter', level: 4, featId: 'grappler' },
+      ],
+    }
+    expect(abilityScores(base).str.total).toBe(15)
+  })
+
+  it('homebrew ırk özelliği seviye başına HP verebilir', () => {
+    applyHomebrew('traits', [
+      {
+        id: 'hb-aetherborn--sert-deri-0',
+        name: 'Sert Deri',
+        source: 'homebrew',
+        desc: ['Hit point maksimumun her seviyede 1 artar.'],
+        proficiencies: [],
+        hpPerLevel: 1,
+      },
+    ])
+    applyHomebrew('races', [{ ...race, traits: ['hb-aetherborn--sert-deri-0'] }])
+
+    const character = {
+      ...createEmptyCharacter('t'),
+      raceId: 'hb-aetherborn',
+      classes: [{ classId: 'fighter', level: 5 }],
+      abilities: { str: 15, dex: 12, con: 14, int: 10, wis: 10, cha: 8 },
+    }
+    // d10: 10 + 4×6 = 34 taban, CON +2 × 5 = 10, özellik 1 × 5 = 5
+    const hp = maxHitPoints(character)
+    expect(hp.traits).toBe(5)
+    expect(hp.total).toBe(34 + 10 + 5)
+  })
+
+  it('özellik HP vermiyorsa hesap değişmez', () => {
+    applyHomebrew('races', [race])
+    const character = {
+      ...createEmptyCharacter('t'),
+      raceId: 'hb-aetherborn',
+      classes: [{ classId: 'fighter', level: 5 }],
+      abilities: { str: 15, dex: 12, con: 14, int: 10, wis: 10, cha: 8 },
+    }
+    expect(maxHitPoints(character).traits).toBe(0)
+  })
+})
+
 describe('paket', () => {
   it('boş paket geçerlidir ve sıfır kayıt içerir', () => {
     const pack = emptyPack()

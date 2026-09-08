@@ -1,4 +1,4 @@
-import { races, subraces } from '../data/registry.ts'
+import { feats, races, subraces } from '../data/registry.ts'
 import type { AbilityId } from '../data/schema.ts'
 import { ABILITY_IDS, type Character } from './character.ts'
 import { roll4d6DropLowest, type Rng } from './dice.ts'
@@ -104,9 +104,11 @@ export interface AbilityBreakdown {
 /**
  * Bir karakterin nihai yetenek puanları.
  *
- * Sıra: ham puan + ırk bonusu + alt ırk bonusu + ırkın seçmeli bonusu + ASI.
- * Feat'lerin verdiği puan artışları Aşama 3B'de eklenecek (SRD'deki tek feat
- * olan Grappler puan vermez).
+ * Sıra: ham puan + ırk bonusu + alt ırk bonusu + ırkın seçmeli bonusu + ASI +
+ * feat bonusları.
+ *
+ * SRD'nin tek feat'i (Grappler) puan vermez; feat bonusları homebrew "yarım
+ * feat"ler için var (bir yetenekte +1 ve bir özellik).
  */
 export function abilityScores(character: Character): Record<AbilityId, AbilityBreakdown> {
   const racial: Record<string, number> = {}
@@ -128,11 +130,18 @@ export function abilityScores(character: Character): Record<AbilityId, AbilityBr
     }
   }
 
+  // ASI ve feat bonusları aynı kovada toplanır: ikisi de aynı karar noktasının
+  // ("ASI mi feat mi") sonucu ve karakter sayfasında ayrı gösterilmiyorlar.
   const asi: Record<string, number> = {}
   for (const choice of character.levelChoices) {
-    if (choice.kind !== 'asi') continue
-    for (const increase of choice.increases) {
-      asi[increase.ability] = (asi[increase.ability] ?? 0) + increase.amount
+    if (choice.kind === 'asi') {
+      for (const increase of choice.increases) {
+        asi[increase.ability] = (asi[increase.ability] ?? 0) + increase.amount
+      }
+    } else if (choice.kind === 'feat') {
+      for (const bonus of feats.get(choice.featId)?.abilityBonuses ?? []) {
+        asi[bonus.ability] = (asi[bonus.ability] ?? 0) + bonus.bonus
+      }
     }
   }
 

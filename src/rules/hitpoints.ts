@@ -1,4 +1,4 @@
-import { classes, races, subraces } from '../data/registry.ts'
+import { classes, races, subraces, traits } from '../data/registry.ts'
 import { primaryClass, totalLevel, type Character } from './character.ts'
 import { abilityModifiers } from './abilities.ts'
 import { rollDie, type Rng } from './dice.ts'
@@ -18,22 +18,34 @@ export function averageHitDie(hitDie: number): number {
 /**
  * Seviye başına ek HP veren özellikler.
  *
- * SRD verisi mekanikleri kodlamaz — özellik metni düzyazıdır. Bu yüzden
- * mekanik etkiyi burada açıkça eşleştiriyoruz. Liste kısa ve kapalıdır;
- * homebrew içerik için Aşama 10'da genişletilebilir bir alan eklenecek.
+ * SRD verisi mekanikleri kodlamaz — özellik metni düzyazıdır. Bu yüzden SRD
+ * özelliklerinin mekanik etkisi burada elle eşleştiriliyor.
+ *
+ * Homebrew özellikler bu listeye giremez (kod değişikliği gerekirdi); onlar
+ * mekaniği kendi kayıtlarında `hpPerLevel` alanıyla taşır. İki kaynağın
+ * birlikte var olması bilinçli: SRD'de mekanik düzyazıda, homebrew'de veride.
  */
 const HP_PER_LEVEL_TRAITS: Record<string, number> = {
   /** Hill Dwarf: "Hit point maksimumun 1 artar ve her seviyede 1 daha artar." */
   'dwarven-toughness': 1,
 }
 
-/** Karakterin ırk/alt ırk özelliklerinden gelen seviye başına HP bonusu. */
+/**
+ * Karakterin ırk/alt ırk özelliklerinden gelen seviye başına HP bonusu.
+ *
+ * Hem SRD eşleştirmesine hem özelliğin kendi `hpPerLevel` alanına bakar;
+ * ikisi de doluysa büyüğü alınır (aynı mekaniği iki kez saymamak için).
+ */
 export function hpPerLevelBonus(character: Character): number {
   const traitIds = [
     ...(character.raceId ? (races.get(character.raceId)?.traits ?? []) : []),
     ...(character.subraceId ? (subraces.get(character.subraceId)?.traits ?? []) : []),
   ]
-  return traitIds.reduce((sum, id) => sum + (HP_PER_LEVEL_TRAITS[id] ?? 0), 0)
+  return traitIds.reduce((sum, id) => {
+    const srd = HP_PER_LEVEL_TRAITS[id] ?? 0
+    const declared = traits.get(id)?.hpPerLevel ?? 0
+    return sum + Math.max(srd, declared)
+  }, 0)
 }
 
 export interface HitPointBreakdown {

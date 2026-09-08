@@ -63,8 +63,7 @@ function hasSubclasses(classId: string): boolean {
  *
  * Alt sınıf özellikleri yalnızca o alt sınıf seçilmişse dahil edilir; seviye
  * tablosu alt sınıf satırlarını içermediği için alt sınıf özellikleri ayrıca
- * `features` koleksiyonundan süzülmelidir (Aşama 6'da karakter sayfasında
- * kullanılacak).
+ * `features` koleksiyonundan süzülmelidir; karakter sayfası bunu yapar.
  */
 export function classFeatureIds(character: Character): string[] {
   const ids: string[] = []

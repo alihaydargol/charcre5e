@@ -122,6 +122,15 @@ export const traitSchema = z.object({
   proficiencies: z.array(z.string()),
   /** Bazı özellikler kullanıcıya seçim yaptırır (ör. Tool Proficiency). */
   proficiencyChoice: choiceSchema.optional(),
+  /**
+   * Seviye başına ek hit point (Dwarven Toughness gibi).
+   *
+   * SRD kayıtlarında hep 0'dır: kaynak veride mekanik kodlanmamış, yalnızca
+   * düzyazı metin var; SRD'nin bu mekaniği `rules/hitpoints.ts` içinde elle
+   * eşleştiriliyor. Bu alan homebrew içindir — kullanıcı kendi ırkına aynı
+   * mekaniği verebilsin diye.
+   */
+  hpPerLevel: z.number().int().min(0).default(0),
 })
 export type Trait = z.infer<typeof traitSchema>
 
@@ -396,6 +405,14 @@ export const featSchema = z.object({
   prerequisites: z.array(
     z.object({ ability: abilityIdSchema, minimumScore: z.number().int() }),
   ),
+  /**
+   * Feat'in verdiği yetenek puanı artışları.
+   *
+   * SRD'nin tek feat'i (Grappler) puan vermez, o yüzden SRD kayıtlarında hep
+   * boştur. Homebrew için gerekli: "yarım feat" (bir yetenekte +1 ve bir
+   * özellik) yaygın bir kalıptır ve alan olmadan tanımlanamazdı.
+   */
+  abilityBonuses: z.array(abilityBonusSchema).default([]),
 })
 export type Feat = z.infer<typeof featSchema>
 

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { ABILITY_IDS } from '../../rules/character.ts'
 import type { AbilityId, Feat } from '../../data/schema.ts'
-import { NumberField, ParagraphsField, TextField } from './fields.tsx'
+import { Field, NumberField, ParagraphsField, TextField, inputClass } from './fields.tsx'
 import EditorShell from './EditorShell.tsx'
 import { slugify } from './text.ts'
 import { btnSmallSecondary } from '../../components/ui.ts'
@@ -25,6 +25,11 @@ export default function FeatEditor({
   const [name, setName] = useState(record?.name ?? '')
   const [desc, setDesc] = useState<string[]>(record?.desc ?? [])
   const [prerequisites, setPrerequisites] = useState(record?.prerequisites ?? [])
+  const [bonuses, setBonuses] = useState<Record<AbilityId, number>>(() => {
+    const base = { str: 0, dex: 0, con: 0, int: 0, wis: 0, cha: 0 }
+    for (const bonus of record?.abilityBonuses ?? []) base[bonus.ability] = bonus.bonus
+    return base
+  })
 
   const issues: string[] = []
   if (!name.trim()) issues.push('Bir isim vermelisin.')
@@ -37,12 +42,39 @@ export default function FeatEditor({
       source: 'homebrew',
       desc,
       prerequisites,
+      abilityBonuses: ABILITY_IDS.filter((ability) => bonuses[ability] !== 0).map((ability) => ({
+        ability,
+        bonus: bonuses[ability],
+      })),
     })
 
   return (
     <EditorShell title="Feat" issues={issues} onSave={save} onCancel={onCancel}>
       <TextField label="İsim" value={name} onChange={setName} placeholder="Savage Reflexes" />
       <ParagraphsField label="Açıklama" value={desc} onChange={setDesc} />
+
+      <Field
+        label="Yetenek puanı artışı"
+        hint='Bir yetenekte +1 veren "yarım feat"ler için. Vermiyorsa hepsini 0 bırak.'
+      >
+        <div className="grid grid-cols-3 gap-3 sm:grid-cols-6">
+          {ABILITY_IDS.map((ability) => (
+            <label key={ability} className="text-center">
+              <span className="mb-1 block text-[11px] font-semibold text-faint">
+                {ability.toUpperCase()}
+              </span>
+              <input
+                type="number"
+                min={0}
+                max={2}
+                value={bonuses[ability]}
+                onChange={(e) => setBonuses({ ...bonuses, [ability]: Number(e.target.value) })}
+                className={inputClass + ' text-center'}
+              />
+            </label>
+          ))}
+        </div>
+      </Field>
 
       <fieldset className="space-y-2">
         <legend className="text-xs font-medium text-muted">Ön koşullar</legend>

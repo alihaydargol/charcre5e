@@ -36,6 +36,8 @@ interface TraitDraft {
   desc: string[]
   /** Bu özellik beceri seçtiriyorsa kaç tane. 0 = seçtirmiyor. */
   skillChoice: number
+  /** Dwarven Toughness gibi seviye başına ek HP. 0 = vermiyor. */
+  hpPerLevel: number
 }
 
 export default function RaceEditor({
@@ -70,6 +72,7 @@ export default function RaceEditor({
       name: trait.name,
       desc: trait.desc,
       skillChoice: trait.proficiencyChoice?.choose ?? 0,
+      hpPerLevel: trait.hpPerLevel,
     })),
   )
 
@@ -98,6 +101,7 @@ export default function RaceEditor({
         draft.skillChoice > 0
           ? { choose: draft.skillChoice, from: skills.all().map((s) => s.id) }
           : undefined,
+      hpPerLevel: draft.hpPerLevel,
     }))
 
     onSave(
@@ -210,13 +214,22 @@ export default function RaceEditor({
                   placeholder="Darkvision"
                 />
               </div>
-              <div className="w-40">
+              <div className="w-32">
                 <NumberField
                   label="Seçtirdiği beceri"
                   min={0}
                   max={4}
                   value={trait.skillChoice}
                   onChange={(value) => updateTrait(trait.key, { skillChoice: value })}
+                />
+              </div>
+              <div className="w-32">
+                <NumberField
+                  label="Seviye başına HP"
+                  min={0}
+                  max={3}
+                  value={trait.hpPerLevel}
+                  onChange={(value) => updateTrait(trait.key, { hpPerLevel: value })}
                 />
               </div>
               <button
@@ -240,7 +253,7 @@ export default function RaceEditor({
           onClick={() =>
             setTraits([
               ...traits,
-              { key: crypto.randomUUID(), name: '', desc: [], skillChoice: 0 },
+              { key: crypto.randomUUID(), name: '', desc: [], skillChoice: 0, hpPerLevel: 0 },
             ])
           }
           className={btnSmallSecondary}

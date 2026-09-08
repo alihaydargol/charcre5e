@@ -1,6 +1,6 @@
 import { classes, races, traits } from '../../data/registry.ts'
 import { evaluatePointBuy } from '../../rules/abilities.ts'
-import type { Character } from '../../rules/character.ts'
+import { ABILITY_IDS, type Character } from '../../rules/character.ts'
 import { getValidChoices } from '../../rules/choices.ts'
 import { spellcasting, usesSpellbook, wizardSpellbookSize } from '../../rules/spellcasting.ts'
 
@@ -57,6 +57,19 @@ export interface StepStatus {
    * dezavantajlıdır; bu yüzden ilerlemeyi kilitlemek yanlış olur.
    */
   warnings: string[]
+  /**
+   * Kullanıcı bu adımda gerçekten bir seçim yaptı mı?
+   *
+   * `complete` "engelleyen eksik yok" demektir; bu ayrı bir sorudur. Sınıf
+   * seçilmeden beceri adımının engelleyeni yoktur ama kullanıcı oraya hiç
+   * uğramamıştır. İkisini aynı saymak, stepper'da yapılmamış işi yapılmış
+   * göstermekti — boş bir karakterde Yetenekler, Ekipman ve Özet tikliydi.
+   *
+   * Hiçbir zaman seçim gerektirmeyen adımlar (büyü yapmayan sınıfta büyü,
+   * seçenek sunmayan beceri adımı) `touched: true` sayılır: yapılacak bir şey
+   * yok, dolayısıyla eksik de yok.
+   */
+  touched: boolean
 }
 
 /**
@@ -67,7 +80,7 @@ function validateRace(character: Character): StepStatus {
   const issues: string[] = []
 
   if (!character.raceId) {
-    return { complete: false, issues: ['Bir ırk seç.'], warnings: [] }
+    return { complete: false, issues: ['Bir ırk seç.'], warnings: [], touched: false }
   }
   const race = races.require(character.raceId)
 
@@ -115,14 +128,14 @@ function validateRace(character: Character): StepStatus {
     }
   }
 
-  return { complete: issues.length === 0, issues, warnings: [] }
+  return { complete: issues.length === 0, issues, warnings: [], touched: true }
 }
 
 function validateClass(character: Character): StepStatus {
   if (character.classes.length === 0) {
-    return { complete: false, issues: ['Bir sınıf seç.'], warnings: [] }
+    return { complete: false, issues: ['Bir sınıf seç.'], warnings: [], touched: false }
   }
-  return { complete: true, issues: [], warnings: [] }
+  return { complete: true, issues: [], warnings: [], touched: true }
 }
 
 function validateAbilities(character: Character): StepStatus {
@@ -146,7 +159,10 @@ function validateAbilities(character: Character): StepStatus {
     }
   }
 
-  return { complete: issues.length === 0, issues, warnings }
+  // Yetenekler 8'den başlar (point-buy tabanı); hiçbiri değişmediyse
+  // kullanıcı bu adıma henüz uğramamış demektir.
+  const untouched = ABILITY_IDS.every((ability) => character.abilities[ability] === 8)
+  return { complete: issues.length === 0, issues, warnings, touched: !untouched }
 }
 
 function validateBackground(character: Character): StepStatus {
@@ -155,6 +171,7 @@ function validateBackground(character: Character): StepStatus {
       complete: false,
       issues: ['Bir geçmiş seç ya da kendi geçmişini tanımla.'],
       warnings: [],
+      touched: false,
     }
   }
   if (character.background.kind === 'custom') {
@@ -162,14 +179,24 @@ function validateBackground(character: Character): StepStatus {
     const issues: string[] = []
     if (!custom.name.trim()) issues.push('Özel geçmişine bir isim ver.')
     if (custom.skillIds.length === 0) issues.push('Özel geçmişin en az bir beceri vermeli.')
-    return { complete: issues.length === 0, issues, warnings: [] }
+    return { complete: issues.length === 0, issues, warnings: [], touched: true }
   }
-  return { complete: true, issues: [], warnings: [] }
+  return { complete: true, issues: [], warnings: [], touched: true }
 }
 
 function validateProficiencies(character: Character): StepStatus {
   const choices = getValidChoices(character, { kind: 'classSkills' })
-  if (!choices.applicable) return { complete: true, issues: [], warnings: [] }
+  if (!choices.applicable) {
+    // Seçenek iki nedenle yok olabilir: sınıf henüz seçilmediği için (adım
+    // sırası gelmemiş) ya da sınıf beceri seçtirmediği için (yapılacak bir şey
+    // yok). İkincisi tamamlanmış sayılır, birincisi sayılmaz.
+    return {
+      complete: true,
+      issues: [],
+      warnings: [],
+      touched: character.classes.length > 0,
+    }
+  }
 
   const selectable = new Set(
     choices.options.filter((o) => !o.disabledReason).map((o) => o.id),
@@ -189,20 +216,27 @@ function validateProficiencies(character: Character): StepStatus {
     issues.push('Zaten sahip olduğun bir beceriyi tekrar seçtin; başka bir beceri seç.')
   }
 
-  return { complete: issues.length === 0, issues, warnings: [] }
+  return { complete: issues.length === 0, issues, warnings: [], touched: chosen.length > 0 }
 }
 
 /**
  * Ekipman adımı isteğe bağlıdır: karakter ekipmansız da geçerlidir (bazı
- * masalar ekipmanı sonra dağıtır). Bu yüzden hiçbir zaman engellemez.
+ * masalar ekipmanı sonra dağıtır). Bu yüzden hiçbir zaman engellemez — ama
+ * hiçbir şey seçilmediyse tik de almaz.
  */
-function validateEquipment(): StepStatus {
-  return { complete: true, issues: [], warnings: [] }
+function validateEquipment(character: Character): StepStatus {
+  return {
+    complete: true,
+    issues: [],
+    warnings: [],
+    touched: character.equipment.length > 0,
+  }
 }
 
 function validateSpells(character: Character): StepStatus {
   const casting = spellcasting(character)
-  if (casting.length === 0) return { complete: true, issues: [], warnings: [] }
+  // Büyü yapmayan karakterde seçilecek bir şey yok.
+  if (casting.length === 0) return { complete: true, issues: [], warnings: [], touched: true }
 
   const issues: string[] = []
   for (const info of casting) {
@@ -235,14 +269,19 @@ function validateSpells(character: Character): StepStatus {
     }
   }
 
-  return { complete: issues.length === 0, issues, warnings: [] }
+  return {
+    complete: issues.length === 0,
+    issues,
+    warnings: [],
+    touched: character.spells.cantrips.length > 0 || character.spells.known.length > 0,
+  }
 }
 
 function validateDetails(character: Character): StepStatus {
   if (!character.name.trim()) {
-    return { complete: false, issues: ['Karakterine bir isim ver.'], warnings: [] }
+    return { complete: false, issues: ['Karakterine bir isim ver.'], warnings: [], touched: false }
   }
-  return { complete: true, issues: [], warnings: [] }
+  return { complete: true, issues: [], warnings: [], touched: true }
 }
 
 const VALIDATORS: Record<StepId, (character: Character) => StepStatus> = {
@@ -254,8 +293,12 @@ const VALIDATORS: Record<StepId, (character: Character) => StepStatus> = {
   equipment: validateEquipment,
   spells: validateSpells,
   details: validateDetails,
-  // Özet adımı kendi başına bir şey istemez; öncekilerin durumunu gösterir.
-  summary: () => ({ complete: true, issues: [], warnings: [] }),
+  // Özet adımı kendi başına bir şey istemez; karakterin bütününü yansıtır.
+  // Sabit `complete: true` dönseydi boş bir karakterde bile tikli görünürdü.
+  summary: (character) => {
+    const { ready, issues } = isCharacterComplete(character)
+    return { complete: ready, issues, warnings: [], touched: ready }
+  },
 }
 
 export function validateStep(character: Character, step: StepId): StepStatus {

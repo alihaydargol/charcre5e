@@ -53,13 +53,13 @@ function Header({
     <div className="flex flex-wrap items-baseline justify-between gap-2">
       <div>
         <h4 className="text-sm font-semibold">{title}</h4>
-        {hint && <p className="text-xs text-slate-500">{hint}</p>}
+        {hint && <p className="text-xs text-muted">{hint}</p>}
       </div>
       {onRandom && (
         <button
           type="button"
           onClick={onRandom}
-          className="rounded border border-slate-300 px-2 py-1 text-xs text-slate-600 hover:bg-slate-50"
+          className="rounded border border-border-strong px-2 py-1 text-xs text-muted hover:bg-surface-muted"
         >
           Benim yerime seç
         </button>
@@ -94,16 +94,16 @@ function OptionButtons({
                 isSelected
                   ? 'border-accent bg-accent-soft'
                   : disabled
-                    ? 'cursor-not-allowed border-slate-200 bg-slate-50 opacity-60'
-                    : 'border-slate-200 hover:bg-slate-50',
+                    ? 'cursor-not-allowed border-border bg-surface-muted opacity-60'
+                    : 'border-border hover:bg-surface-muted',
               ].join(' ')}
             >
               <span className="font-medium">{option.name}</span>
               {option.description && (
-                <span className="mt-0.5 block text-xs text-slate-500">{option.description}</span>
+                <span className="mt-0.5 block text-xs text-muted">{option.description}</span>
               )}
               {disabled && (
-                <span className="mt-0.5 block text-xs text-slate-400">{option.disabledReason}</span>
+                <span className="mt-0.5 block text-xs text-faint">{option.disabledReason}</span>
               )}
             </button>
           </li>
@@ -131,7 +131,7 @@ function SubclassDecision({
     setLevelChoice({ kind: 'subclass', classId: decision.classId, level: decision.level, subclassId })
 
   if (!choices.applicable) {
-    return <p className="text-sm text-slate-500">{choices.reason}</p>
+    return <p className="text-sm text-muted">{choices.reason}</p>
   }
 
   return (
@@ -224,7 +224,7 @@ function AsiOrFeatDecision({
             aria-pressed={mode === m}
             className={[
               'rounded-md border px-3 py-1.5 text-sm',
-              mode === m ? 'border-accent bg-accent-soft text-accent' : 'border-slate-300',
+              mode === m ? 'border-accent bg-accent-soft text-accent' : 'border-border-strong',
             ].join(' ')}
           >
             {m === 'asi' ? 'Yetenek artışı' : 'Feat'}
@@ -234,7 +234,7 @@ function AsiOrFeatDecision({
 
       {mode === 'asi' ? (
         <div className="space-y-2">
-          <p className="text-xs text-slate-500">{2 - spent} puan kaldı</p>
+          <p className="text-xs text-muted">{2 - spent} puan kaldı</p>
           <ul className="grid grid-cols-3 gap-2 sm:grid-cols-6">
             {ABILITY_IDS.map((ability) => {
               const added = increases.find((i) => i.ability === ability)?.amount ?? 0
@@ -248,11 +248,11 @@ function AsiOrFeatDecision({
                     title={atCap ? 'Yetenek puanı 20 üst sınırında' : undefined}
                     className={[
                       'w-full rounded-md border p-2 text-center transition-colors',
-                      added > 0 ? 'border-accent bg-accent-soft' : 'border-slate-200',
-                      atCap || spent >= 2 ? 'opacity-40' : 'hover:bg-slate-50',
+                      added > 0 ? 'border-accent bg-accent-soft' : 'border-border',
+                      atCap || spent >= 2 ? 'opacity-40' : 'hover:bg-surface-muted',
                     ].join(' ')}
                   >
-                    <span className="block text-[10px] font-semibold text-slate-400">
+                    <span className="block text-[10px] font-semibold text-faint">
                       {ability.toUpperCase()}
                     </span>
                     <span className="block font-semibold">
@@ -268,7 +268,7 @@ function AsiOrFeatDecision({
             <button
               type="button"
               onClick={() => setIncreases([])}
-              className="text-xs text-slate-500 underline"
+              className="text-xs text-muted underline"
             >
               Seçimi temizle
             </button>
@@ -277,7 +277,7 @@ function AsiOrFeatDecision({
       ) : (
         <>
           {feats.size === 1 && (
-            <p className="rounded-md bg-slate-100 px-3 py-2 text-xs text-slate-600">
+            <p className="rounded-md bg-surface-hover px-3 py-2 text-xs text-muted">
               SRD yalnızca bir feat içerir (Grappler). Kendi feat’lerini tanımlayabilmen için
               homebrew desteği planlanıyor.
             </p>
@@ -383,7 +383,7 @@ function ExpertiseDecision({
   }
 
   if (!choices.applicable) {
-    return <p className="text-sm text-slate-500">{choices.reason}</p>
+    return <p className="text-sm text-muted">{choices.reason}</p>
   }
 
   return (

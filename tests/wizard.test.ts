@@ -361,3 +361,46 @@ describe('karakter bütünlüğü', () => {
     expect(isCharacterComplete(frugal).ready).toBe(true)
   })
 })
+
+describe('adım göstergesi', () => {
+  it('boş karakterde hiçbir adım tamamlanmış görünmez', () => {
+    const character = createEmptyCharacter('t')
+    for (const step of applicableSteps(character)) {
+      const status = validateStep(character, step.id)
+      expect(status.complete && status.touched, `${step.id} tikli görünüyor`).toBe(false)
+    }
+  })
+
+  it('seçim yapılan adım "dokunulmuş" sayılır', () => {
+    const character = { ...createEmptyCharacter('t'), raceId: 'half-orc' }
+    const status = validateStep(character, 'race')
+    expect(status.touched).toBe(true)
+    expect(status.complete).toBe(true)
+  })
+
+  it('ırk seçilse de alt seçimler eksikse adım tamamlanmaz', () => {
+    // Human ek bir dil seçtirir; ırkı seçmek tek başına yetmez.
+    const character = { ...createEmptyCharacter('t'), raceId: 'human' }
+    const status = validateStep(character, 'race')
+    expect(status.touched).toBe(true)
+    expect(status.complete).toBe(false)
+  })
+
+  it('yapılacak bir şeyi olmayan adım baştan tamamdır', () => {
+    // Büyü yapmayan sınıfta büyü adımı hiçbir zaman seçim istemez.
+    const barbarian = {
+      ...createEmptyCharacter('t'),
+      raceId: 'human',
+      classes: [{ classId: 'barbarian', level: 1 }],
+    }
+    const status = validateStep(barbarian, 'spells')
+    expect(status.complete).toBe(true)
+    expect(status.touched).toBe(true)
+  })
+
+  it('özet adımı karakterin bütününü yansıtır', () => {
+    const empty = createEmptyCharacter('t')
+    expect(validateStep(empty, 'summary').complete).toBe(false)
+    expect(validateStep(empty, 'summary').issues.length).toBeGreaterThan(0)
+  })
+})

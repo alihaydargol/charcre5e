@@ -1,6 +1,7 @@
 import type { Character } from '../../rules/character.ts'
 import { useCharacterStore } from '../../state/characterStore.ts'
 import Section from './Section.tsx'
+import { input } from '../../components/ui.ts'
 
 const ALIGNMENTS = [
   'Lawful Good', 'Neutral Good', 'Chaotic Good',
@@ -19,7 +20,7 @@ export default function StepDetails({ character }: { character: Character }) {
           value={character.name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Karakterinin adı"
-          className="w-full rounded-md border border-slate-300 px-3 py-2"
+          className="w-full rounded-md border border-border-strong px-3 py-2"
         />
       </Section>
 
@@ -27,7 +28,7 @@ export default function StepDetails({ character }: { character: Character }) {
         <select
           value={character.notes.alignment}
           onChange={(e) => setNote('alignment', e.target.value)}
-          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+          className="w-full rounded-md border border-border-strong bg-surface px-3 py-2 text-sm"
         >
           <option value="">Seçilmedi</option>
           {ALIGNMENTS.map((a) => (
@@ -42,7 +43,7 @@ export default function StepDetails({ character }: { character: Character }) {
           onChange={(e) => setNote('appearance', e.target.value)}
           rows={3}
           placeholder="Boy, yaş, saç rengi, dikkat çeken bir detay…"
-          className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+          className={input}
         />
       </Section>
 
@@ -52,7 +53,7 @@ export default function StepDetails({ character }: { character: Character }) {
           onChange={(e) => setNote('personality', e.target.value)}
           rows={3}
           placeholder="Nasıl davranır, neye inanır, neyden korkar?"
-          className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+          className={input}
         />
       </Section>
 
@@ -62,7 +63,7 @@ export default function StepDetails({ character }: { character: Character }) {
           onChange={(e) => setNote('backstory', e.target.value)}
           rows={5}
           placeholder="Buraya gelene kadar başına neler geldi?"
-          className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+          className={input}
         />
       </Section>
     </div>

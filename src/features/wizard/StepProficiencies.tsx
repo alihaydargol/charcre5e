@@ -49,7 +49,7 @@ export default function StepProficiencies({ character }: { character: Character 
           />
         </Section>
       ) : (
-        <p className="rounded-md bg-slate-100 px-3 py-2 text-sm text-slate-600">
+        <p className="rounded-md bg-surface-hover px-3 py-2 text-sm text-muted">
           {skillChoices.reason}
         </p>
       )}
@@ -85,12 +85,12 @@ export default function StepProficiencies({ character }: { character: Character 
               key={skill.id}
               className={[
                 'flex items-center justify-between rounded-md px-3 py-1.5 text-sm',
-                proficient.has(skill.id) ? 'bg-accent-soft font-medium' : 'text-slate-600',
+                proficient.has(skill.id) ? 'bg-accent-soft font-medium' : 'text-muted',
               ].join(' ')}
             >
               <span>
                 {skill.name}{' '}
-                <span className="text-xs text-slate-400">{skill.ability.toUpperCase()}</span>
+                <span className="text-xs text-faint">{skill.ability.toUpperCase()}</span>
               </span>
               <span className="font-semibold">{formatModifier(mods[skill.id].value)}</span>
             </li>
@@ -99,7 +99,7 @@ export default function StepProficiencies({ character }: { character: Character 
       </Section>
 
       <Section title="Bildiğin diller">
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-muted">
           {[...known]
             .map((id) => languages.get(id)?.name ?? id)
             .sort((a, b) => a.localeCompare(b, 'tr'))

@@ -10,7 +10,7 @@ import { splitParagraphs } from './text.ts'
  */
 
 export const inputClass =
-  'w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 ' +
+  'w-full rounded-md border border-border-strong bg-surface px-3 py-2 text-sm text-ink ' +
   'focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent'
 
 export function Field({
@@ -24,9 +24,9 @@ export function Field({
 }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-xs font-medium text-slate-500">{label}</span>
+      <span className="mb-1 block text-xs font-medium text-muted">{label}</span>
       {children}
-      {hint && <span className="mt-1 block text-xs text-slate-400">{hint}</span>}
+      {hint && <span className="mt-1 block text-xs text-faint">{hint}</span>}
     </label>
   )
 }
@@ -174,15 +174,15 @@ export function CheckboxPool({
 
   return (
     <fieldset>
-      <legend className="mb-1 text-xs font-medium text-slate-500">
+      <legend className="mb-1 text-xs font-medium text-muted">
         {label}
         {max !== undefined && (
-          <span className="ml-1 text-slate-400">
+          <span className="ml-1 text-faint">
             ({selected.length}/{max})
           </span>
         )}
       </legend>
-      {hint && <p className="mb-1.5 text-xs text-slate-400">{hint}</p>}
+      {hint && <p className="mb-1.5 text-xs text-faint">{hint}</p>}
       <div
         className="grid gap-x-4 gap-y-1"
         style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
@@ -193,7 +193,7 @@ export function CheckboxPool({
             <label
               key={option.value}
               className={`flex items-center gap-2 text-sm ${
-                !checked && full ? 'text-slate-300' : 'text-slate-700'
+                !checked && full ? 'text-disabled' : 'text-ink'
               }`}
             >
               <input
@@ -216,7 +216,7 @@ export function CheckboxPool({
 export function Issues({ issues }: { issues: string[] }) {
   if (issues.length === 0) return null
   return (
-    <ul className="space-y-1 rounded-md border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900">
+    <ul className="space-y-1 rounded-md border border-warn bg-warn-soft p-3 text-sm text-warn-ink">
       {issues.map((issue) => (
         <li key={issue}>{issue}</li>
       ))}

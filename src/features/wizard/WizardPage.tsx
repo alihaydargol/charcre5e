@@ -15,6 +15,7 @@ import StepRace from './StepRace.tsx'
 import StepSpells from './StepSpells.tsx'
 import StepSummary from './StepSummary.tsx'
 import { applicableSteps, validateStep, type StepId } from './steps.ts'
+import { btnPrimary, btnSecondary, btnSmallSecondary } from '../../components/ui.ts'
 
 /**
  * Karakter oluşturma sihirbazı.
@@ -67,8 +68,8 @@ export default function WizardPage() {
     <div className="space-y-6">
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Karakter oluştur</h1>
-          <p className="mt-1 text-sm text-slate-600">
+          <h1 className="font-display text-3xl font-semibold text-ink">Karakter oluştur</h1>
+          <p className="mt-1 text-sm text-muted">
             Adım adım ilerle. Verdiğin her karar sağdaki önizlemeye anında yansır.
           </p>
         </div>
@@ -77,19 +78,19 @@ export default function WizardPage() {
           onClick={() => {
             if (confirm('Taslak silinecek ve baştan başlayacaksın. Emin misin?')) reset()
           }}
-          className="rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-600 hover:bg-slate-50"
+          className={btnSmallSecondary}
         >
           Baştan başla
         </button>
       </header>
 
       {!storageAvailable() && (
-        <p className="rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-900">
+        <p className="rounded-md bg-warn-soft px-3 py-2 text-sm text-warn-ink">
           Tarayıcın yerel depolamayı engelliyor: sayfayı kapatırsan taslağın kaybolur.
         </p>
       )}
       {persistenceFailed && (
-        <p className="rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-900">
+        <p className="rounded-md bg-warn-soft px-3 py-2 text-sm text-warn-ink">
           Taslak kaydedilemedi (depolama alanı dolu olabilir). Karakterini kaybetmemek için
           tamamlayıp dışa aktar.
         </p>
@@ -109,7 +110,7 @@ export default function WizardPage() {
             (spells ? (
               <StepSpells character={draft} spells={spells} />
             ) : (
-              <p className="text-sm text-slate-500">Büyüler yükleniyor…</p>
+              <p className="text-sm text-muted">Büyüler yükleniyor…</p>
             ))}
           {current === 'details' && <StepDetails character={draft} />}
           {current === 'summary' && (
@@ -117,7 +118,7 @@ export default function WizardPage() {
           )}
 
           {!isLast && (
-            <div className="space-y-2 border-t border-slate-200 pt-4">
+            <div className="space-y-2 border-t border-border pt-4">
               {status.issues.length > 0 && (
                 <ul className="space-y-1 text-sm text-accent" role="status">
                   {status.issues.map((issue, i) => (
@@ -127,7 +128,7 @@ export default function WizardPage() {
               )}
               {/* Uyarılar ilerlemeyi engellemez; farklı renkte gösterilir. */}
               {status.warnings.length > 0 && (
-                <ul className="space-y-1 text-sm text-amber-700">
+                <ul className="space-y-1 text-sm text-warn-ink">
                   {status.warnings.map((warning, i) => (
                     <li key={i}>{warning}</li>
                   ))}
@@ -138,7 +139,7 @@ export default function WizardPage() {
                   type="button"
                   onClick={() => setCurrent(steps[index - 1].id)}
                   disabled={index === 0}
-                  className="rounded-md border border-slate-300 px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 disabled:opacity-40"
+                  className={btnSecondary}
                 >
                   ‹ Geri
                 </button>
@@ -146,7 +147,7 @@ export default function WizardPage() {
                   type="button"
                   onClick={() => setCurrent(steps[index + 1].id)}
                   disabled={!status.complete}
-                  className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+                  className={btnPrimary}
                 >
                   İleri ›
                 </button>
@@ -176,7 +177,10 @@ function Stepper({
     <nav aria-label="Sihirbaz adımları">
       <ol className="flex flex-wrap gap-1">
         {steps.map((step, i) => {
-          const complete = validateStep(draft, step.id).complete
+          const status = validateStep(draft, step.id)
+          // Tik yalnızca kullanıcı gerçekten bir seçim yaptıysa; "engelleyen
+          // eksik yok" tek başına yeterli değil (bkz. steps.ts, touched).
+          const complete = status.complete && status.touched
           const active = step.id === current
           return (
             <li key={step.id}>
@@ -187,10 +191,10 @@ function Stepper({
                 className={[
                   'flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm transition-colors',
                   active
-                    ? 'bg-accent text-white'
+                    ? 'bg-accent text-on-accent'
                     : complete
-                      ? 'text-slate-700 hover:bg-slate-100'
-                      : 'text-slate-400 hover:bg-slate-100',
+                      ? 'text-ink hover:bg-surface-hover'
+                      : 'text-faint hover:bg-surface-hover',
                 ].join(' ')}
               >
                 <span
@@ -198,10 +202,10 @@ function Stepper({
                   className={[
                     'inline-flex size-5 items-center justify-center rounded-full text-xs font-semibold',
                     active
-                      ? 'bg-white/25'
+                      ? 'bg-surface/25'
                       : complete
                         ? 'bg-accent-soft text-accent'
-                        : 'border border-slate-300',
+                        : 'border border-border-strong',
                   ].join(' ')}
                 >
                   {complete && !active ? '✓' : i + 1}

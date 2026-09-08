@@ -4,6 +4,7 @@ import type { AbilityId, Feat } from '../../data/schema.ts'
 import { NumberField, ParagraphsField, TextField } from './fields.tsx'
 import EditorShell from './EditorShell.tsx'
 import { slugify } from './text.ts'
+import { btnSmallSecondary } from '../../components/ui.ts'
 
 /**
  * Feat düzenleyicisi.
@@ -44,8 +45,8 @@ export default function FeatEditor({
       <ParagraphsField label="Açıklama" value={desc} onChange={setDesc} />
 
       <fieldset className="space-y-2">
-        <legend className="text-xs font-medium text-slate-500">Ön koşullar</legend>
-        <p className="text-xs text-slate-400">
+        <legend className="text-xs font-medium text-muted">Ön koşullar</legend>
+        <p className="text-xs text-faint">
           Belirli bir yetenek puanı gerektiriyorsa ekle; gerekmiyorsa boş bırak.
         </p>
         {prerequisites.map((prerequisite, index) => (
@@ -59,7 +60,7 @@ export default function FeatEditor({
                   ),
                 )
               }
-              className="rounded-md border border-slate-300 px-2 py-1.5 text-sm"
+              className="rounded-md border border-border-strong px-2 py-1.5 text-sm"
             >
               {ABILITY_IDS.map((ability) => (
                 <option key={ability} value={ability}>
@@ -83,7 +84,7 @@ export default function FeatEditor({
             <button
               type="button"
               onClick={() => setPrerequisites(prerequisites.filter((_, i) => i !== index))}
-              className="pb-2 text-sm text-slate-500 underline hover:text-accent"
+              className="pb-2 text-sm text-muted underline hover:text-accent"
             >
               kaldır
             </button>
@@ -92,7 +93,7 @@ export default function FeatEditor({
         <button
           type="button"
           onClick={() => setPrerequisites([...prerequisites, { ability: 'str', minimumScore: 13 }])}
-          className="rounded-md border border-slate-300 px-3 py-1.5 text-sm hover:bg-slate-50"
+          className={btnSmallSecondary}
         >
           Ön koşul ekle
         </button>

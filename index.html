@@ -9,20 +9,41 @@
       content="D&D 5e (SRD 5.1) kurallarına göre seviye 1-20 karakter oluşturma aracı. Tarayıcıda çalışır, veriler cihazınızda kalır."
     />
     <title>Karakter Oluşturucu — D&D 5e</title>
-    <meta name="theme-color" content="#fbf8f1" />
+    <meta name="theme-color" content="#f8f4ea" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#16130f" media="(prefers-color-scheme: dark)" />
     <!--
       Stil dosyası inmeden önceki ilk karede de zemin doğru olsun. Aksi hâlde
-      koyu tema kullanan tarayıcılarda bir anlığına siyah ekran görünür.
+      tema geçişinde bir anlığına yanlış renk görünür.
     -->
     <style>
-      html { background-color: #fbf8f1; color-scheme: light; }
+      html { background-color: #f8f4ea; color-scheme: light; }
+      html[data-theme='dark'] { background-color: #16130f; color-scheme: dark; }
       #app-loading {
         font: 500 14px/1.5 system-ui, sans-serif;
-        color: #64748b;
+        color: #7d766a;
         padding: 3rem 1rem;
         text-align: center;
       }
     </style>
+    <!--
+      Temayı ilk boyamadan ÖNCE uygula. React yüklendiğinde uygulansaydı koyu
+      tema kullanan kullanıcı önce açık bir ekran görüp sonra karanlığa
+      dönerdi — "flash of wrong theme". Bu yüzden satır içi ve senkron.
+    -->
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('charcre5e:theme')
+          var dark =
+            saved === 'dark' ||
+            ((saved === null || saved === 'system') &&
+              matchMedia('(prefers-color-scheme: dark)').matches)
+          document.documentElement.dataset.theme = dark ? 'dark' : 'light'
+        } catch (e) {
+          document.documentElement.dataset.theme = 'light'
+        }
+      })()
+    </script>
   </head>
   <body>
     <div id="root">

@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { Issues } from './fields.tsx'
+import { btnPrimary, btnSecondary } from '../../components/ui.ts'
 
 /**
  * Tüm homebrew düzenleyicilerinin ortak çerçevesi: başlık, alanlar, eksik
@@ -25,23 +26,23 @@ export default function EditorShell({
         e.preventDefault()
         if (issues.length === 0) onSave()
       }}
-      className="space-y-4 rounded-lg border border-slate-200 bg-white p-5"
+      className="space-y-4 rounded-lg border border-border bg-surface p-5"
     >
-      <h3 className="text-lg font-semibold">{title}</h3>
+      <h3 className="font-display text-lg font-semibold">{title}</h3>
       {children}
       <Issues issues={issues} />
-      <div className="flex gap-2 border-t border-slate-100 pt-4">
+      <div className="flex gap-2 border-t border-border pt-4">
         <button
           type="submit"
           disabled={issues.length > 0}
-          className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:opacity-90 disabled:opacity-40"
+          className={btnPrimary}
         >
           Kaydet
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="rounded-md border border-slate-300 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+          className={btnSecondary}
         >
           Vazgeç
         </button>

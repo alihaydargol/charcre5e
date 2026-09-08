@@ -18,6 +18,7 @@ import {
   SelectField,
   TextField,
 } from './fields.tsx'
+import { btnSmallSecondary } from '../../components/ui.ts'
 
 const HIT_DICE = [6, 8, 10, 12]
 
@@ -197,8 +198,8 @@ export default function ClassEditor({
         }
       />
 
-      <details className="rounded-md border border-slate-200 p-3">
-        <summary className="cursor-pointer text-sm font-medium text-slate-700">
+      <details className="rounded-md border border-border p-3">
+        <summary className="cursor-pointer text-sm font-medium text-ink">
           Zırh, silah ve alet yeterlilikleri ({profIds.length} seçili)
         </summary>
         <div className="mt-3">
@@ -256,8 +257,8 @@ export default function ClassEditor({
                 title={standard ? 'Standart ASI seviyesi' : undefined}
                 className={`rounded py-1 text-xs ${
                   active
-                    ? 'bg-accent text-white'
-                    : 'border border-slate-200 text-slate-500 hover:bg-slate-50'
+                    ? 'bg-accent text-on-accent'
+                    : 'border border-border text-muted hover:bg-surface-muted'
                 } ${standard ? 'opacity-70' : ''}`}
               >
                 {level}
@@ -268,9 +269,9 @@ export default function ClassEditor({
       </Field>
 
       <fieldset className="space-y-3">
-        <legend className="text-xs font-medium text-slate-500">Seviye özellikleri</legend>
+        <legend className="text-xs font-medium text-muted">Seviye özellikleri</legend>
         {features.map((feature) => (
-          <div key={feature.key} className="space-y-2 rounded-md border border-slate-200 p-3">
+          <div key={feature.key} className="space-y-2 rounded-md border border-border p-3">
             <div className="flex items-end gap-2">
               <div className="w-24">
                 <NumberField
@@ -292,7 +293,7 @@ export default function ClassEditor({
               <button
                 type="button"
                 onClick={() => setFeatures(features.filter((f) => f.key !== feature.key))}
-                className="pb-2 text-sm text-slate-500 underline hover:text-accent"
+                className="pb-2 text-sm text-muted underline hover:text-accent"
               >
                 kaldır
               </button>
@@ -313,7 +314,7 @@ export default function ClassEditor({
               { key: crypto.randomUUID(), level: 1, name: '', desc: [] },
             ])
           }
-          className="rounded-md border border-slate-300 px-3 py-1.5 text-sm hover:bg-slate-50"
+          className={btnSmallSecondary}
         >
           Özellik ekle
         </button>

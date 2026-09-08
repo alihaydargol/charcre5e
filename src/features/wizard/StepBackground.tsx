@@ -5,6 +5,7 @@ import { getValidChoices } from '../../rules/choices.ts'
 import { useCharacterStore } from '../../state/characterStore.ts'
 import OptionGrid from './OptionGrid.tsx'
 import Section from './Section.tsx'
+import { input } from '../../components/ui.ts'
 
 const EMPTY_CUSTOM: CustomBackground = {
   name: '',
@@ -66,11 +67,11 @@ export default function StepBackground({ character }: { character: Character }) 
             'mt-2 w-full rounded-lg border p-3 text-left transition-colors',
             isCustom
               ? 'border-accent bg-accent-soft'
-              : 'border-dashed border-slate-300 bg-white hover:bg-slate-50',
+              : 'border-dashed border-border-strong bg-surface hover:bg-surface-muted',
           ].join(' ')}
         >
           <span className="font-medium">Kendi geçmişimi tanımlayacağım</span>
-          <span className="mt-0.5 block text-sm text-slate-500">
+          <span className="mt-0.5 block text-sm text-muted">
             SRD yalnızca Acolyte içerir. Kendi geçmişini yazmak resmî kurallara aykırı değil;
             oyun kitabı da bunu önerir.
           </span>
@@ -79,25 +80,25 @@ export default function StepBackground({ character }: { character: Character }) 
 
       {srdBackground && (
         <Section title={`${srdBackground.name} ayrıntıları`}>
-          <ul className="space-y-2 text-sm text-slate-600">
+          <ul className="space-y-2 text-sm text-muted">
             <li>
-              <span className="font-medium text-slate-900">Beceriler:</span>{' '}
+              <span className="font-medium text-ink">Beceriler:</span>{' '}
               {srdBackground.proficiencies
                 .map((id) => skills.get(id)?.name ?? id)
                 .join(', ')}
             </li>
             {srdBackground.languageChoiceCount > 0 && (
               <li>
-                <span className="font-medium text-slate-900">Dil:</span> istediğin{' '}
+                <span className="font-medium text-ink">Dil:</span> istediğin{' '}
                 {srdBackground.languageChoiceCount} dil
               </li>
             )}
             <li>
-              <span className="font-medium text-slate-900">Başlangıç altını:</span>{' '}
+              <span className="font-medium text-ink">Başlangıç altını:</span>{' '}
               {srdBackground.startingGold} gp
             </li>
             <li>
-              <span className="font-medium text-slate-900">{srdBackground.feature.name}:</span>{' '}
+              <span className="font-medium text-ink">{srdBackground.feature.name}:</span>{' '}
               {srdBackground.feature.desc[0]}
             </li>
           </ul>
@@ -114,7 +115,7 @@ export default function StepBackground({ character }: { character: Character }) 
                 value={custom.name}
                 onChange={(e) => updateCustom({ name: e.target.value })}
                 placeholder="ör. Şehir Muhafızı, Gezgin Tüccar"
-                className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+                className={input}
               />
             </label>
 
@@ -141,7 +142,7 @@ export default function StepBackground({ character }: { character: Character }) 
                 value={custom.featureName}
                 onChange={(e) => updateCustom({ featureName: e.target.value })}
                 placeholder="ör. Kapı Ağzı"
-                className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+                className={input}
               />
             </label>
 
@@ -152,7 +153,7 @@ export default function StepBackground({ character }: { character: Character }) 
                 onChange={(e) => updateCustom({ featureDesc: e.target.value })}
                 rows={3}
                 placeholder="Bu geçmişin sana oyunda ne sağladığını yaz."
-                className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+                className={input}
               />
             </label>
           </div>

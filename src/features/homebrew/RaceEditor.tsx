@@ -13,6 +13,7 @@ import {
   TextField,
   inputClass,
 } from './fields.tsx'
+import { btnSmallSecondary } from '../../components/ui.ts'
 
 const SIZES: Size[] = ['Tiny', 'Small', 'Medium', 'Large', 'Huge', 'Gargantuan']
 
@@ -160,7 +161,7 @@ export default function RaceEditor({
         <div className="grid grid-cols-3 gap-3 sm:grid-cols-6">
           {ABILITY_IDS.map((ability) => (
             <label key={ability} className="text-center">
-              <span className="mb-1 block text-[11px] font-semibold text-slate-400">
+              <span className="mb-1 block text-[11px] font-semibold text-faint">
                 {ability.toUpperCase()}
               </span>
               <input
@@ -197,9 +198,9 @@ export default function RaceEditor({
       </div>
 
       <fieldset className="space-y-3">
-        <legend className="text-xs font-medium text-slate-500">Irk özellikleri</legend>
+        <legend className="text-xs font-medium text-muted">Irk özellikleri</legend>
         {traits.map((trait) => (
-          <div key={trait.key} className="space-y-2 rounded-md border border-slate-200 p-3">
+          <div key={trait.key} className="space-y-2 rounded-md border border-border p-3">
             <div className="flex items-end gap-2">
               <div className="flex-1">
                 <TextField
@@ -221,7 +222,7 @@ export default function RaceEditor({
               <button
                 type="button"
                 onClick={() => setTraits(traits.filter((t) => t.key !== trait.key))}
-                className="pb-2 text-sm text-slate-500 underline hover:text-accent"
+                className="pb-2 text-sm text-muted underline hover:text-accent"
               >
                 kaldır
               </button>
@@ -242,7 +243,7 @@ export default function RaceEditor({
               { key: crypto.randomUUID(), name: '', desc: [], skillChoice: 0 },
             ])
           }
-          className="rounded-md border border-slate-300 px-3 py-1.5 text-sm hover:bg-slate-50"
+          className={btnSmallSecondary}
         >
           Özellik ekle
         </button>

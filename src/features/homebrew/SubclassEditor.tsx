@@ -4,6 +4,7 @@ import type { Feature, Subclass } from '../../data/schema.ts'
 import EditorShell from './EditorShell.tsx'
 import { childId, slugify } from './text.ts'
 import { NumberField, ParagraphsField, SelectField, TextField } from './fields.tsx'
+import { btnSmallSecondary } from '../../components/ui.ts'
 
 /**
  * Alt sınıf düzenleyicisi.
@@ -105,9 +106,9 @@ export default function SubclassEditor({
       <ParagraphsField label="Açıklama" value={desc} onChange={setDesc} rows={3} />
 
       <fieldset className="space-y-3">
-        <legend className="text-xs font-medium text-slate-500">Seviye özellikleri</legend>
+        <legend className="text-xs font-medium text-muted">Seviye özellikleri</legend>
         {features.map((feature) => (
-          <div key={feature.key} className="space-y-2 rounded-md border border-slate-200 p-3">
+          <div key={feature.key} className="space-y-2 rounded-md border border-border p-3">
             <div className="flex items-end gap-2">
               <div className="w-24">
                 <NumberField
@@ -128,7 +129,7 @@ export default function SubclassEditor({
               <button
                 type="button"
                 onClick={() => setFeatures(features.filter((f) => f.key !== feature.key))}
-                className="pb-2 text-sm text-slate-500 underline hover:text-accent"
+                className="pb-2 text-sm text-muted underline hover:text-accent"
               >
                 kaldır
               </button>
@@ -154,7 +155,7 @@ export default function SubclassEditor({
               },
             ])
           }
-          className="rounded-md border border-slate-300 px-3 py-1.5 text-sm hover:bg-slate-50"
+          className={btnSmallSecondary}
         >
           Özellik ekle
         </button>

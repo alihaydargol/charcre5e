@@ -10,6 +10,7 @@ import { maxHitPoints, averageHitDie, rollHitDie } from '../../rules/hitpoints.t
 import { createRng, randomSeed } from '../../rules/dice.ts'
 import { useCharacterStore } from '../../state/characterStore.ts'
 import LevelDecision from './LevelDecision.tsx'
+import { btnPrimary, btnSmallPrimary, btnSmallSecondary } from '../../components/ui.ts'
 
 /**
  * Seviye atlama ve seviye geçmişi.
@@ -59,7 +60,7 @@ export default function LevelUpPage() {
     return (
       <div className="space-y-4">
         <h1 className="text-2xl font-semibold">Karakter bulunamadı</h1>
-        <p className="text-slate-600">
+        <p className="text-muted">
           Bu bağlantıdaki karakter kayıtlı değil. Silinmiş ya da başka bir tarayıcıda
           oluşturulmuş olabilir.
         </p>
@@ -74,7 +75,7 @@ export default function LevelUpPage() {
     return (
       <div className="space-y-4">
         <h1 className="text-2xl font-semibold">Seviye atlama</h1>
-        <p className="text-slate-600">Bu karakterin sınıfı yok. Önce sihirbazı tamamla.</p>
+        <p className="text-muted">Bu karakterin sınıfı yok. Önce sihirbazı tamamla.</p>
         <Link to="/olustur" className="text-accent underline">
           Sihirbaza git
         </Link>
@@ -92,40 +93,40 @@ export default function LevelUpPage() {
     <div className="space-y-6">
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">
+          <h1 className="font-display text-3xl font-semibold text-ink">
             {draft.name || 'İsimsiz karakter'}
           </h1>
-          <p className="mt-1 text-sm text-slate-600">
+          <p className="mt-1 text-sm text-muted">
             {cls.name} · {level}. seviye · {hp.total} HP
           </p>
         </div>
         <button
           type="button"
           onClick={save}
-          className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:opacity-90"
+          className={btnPrimary}
         >
           Kaydet
         </button>
       </header>
 
       {pending.length > 0 && (
-        <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
-          <p className="font-medium text-amber-900">
+        <div className="rounded-lg border border-warn bg-warn-soft p-4">
+          <p className="font-medium text-warn-ink">
             {pending.length} seçim bekliyor
           </p>
-          <p className="mt-1 text-sm text-amber-900">
+          <p className="mt-1 text-sm text-warn-ink">
             Aşağıdaki seviye kartlarında sarı işaretli olanları tamamla.
           </p>
         </div>
       )}
 
-      <section className="flex flex-wrap items-center gap-3 rounded-lg border border-slate-200 bg-white p-4">
+      <section className="flex flex-wrap items-center gap-3 rounded-lg border border-border bg-surface p-4">
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={() => setLevel(level - 1)}
             disabled={level <= 1}
-            className="rounded-md border border-slate-300 px-3 py-1.5 text-sm disabled:opacity-40"
+            className={btnSmallSecondary}
           >
             − Seviye düşür
           </button>
@@ -134,12 +135,12 @@ export default function LevelUpPage() {
             type="button"
             onClick={() => setLevel(level + 1)}
             disabled={level >= 20}
-            className="rounded-md bg-accent px-3 py-1.5 text-sm font-medium text-white hover:opacity-90 disabled:opacity-40"
+            className={btnSmallPrimary}
           >
             + Seviye atla
           </button>
         </div>
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-muted">
           Seviye düşürürsen o seviyenin üstündeki seçimler silinir.
         </p>
       </section>
@@ -155,7 +156,7 @@ export default function LevelUpPage() {
       />
 
       <section className="space-y-3">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">
           Seviye geçmişi
         </h2>
         <ol className="space-y-3">
@@ -191,10 +192,10 @@ function HitPointsPanel({
   const setHpManualTotal = useCharacterStore((s) => s.setHpManualTotal)
 
   return (
-    <section className="space-y-3 rounded-lg border border-slate-200 bg-white p-4">
+    <section className="space-y-3 rounded-lg border border-border bg-surface p-4">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h2 className="font-semibold">Hit Points: {hp.total}</h2>
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-muted">
           d{hp.hitDie} maks {hp.firstLevel}
           {hp.laterLevels > 0 && ` + ${hp.laterLevels}`}
           {hp.constitution !== 0 && ` + CON ${formatModifier(hp.constitution)}`}
@@ -219,7 +220,7 @@ function HitPointsPanel({
               'rounded-md border px-3 py-1.5 text-sm transition-colors',
               character.hp.method === method
                 ? 'border-accent bg-accent-soft text-accent'
-                : 'border-slate-300 text-slate-600 hover:bg-slate-50',
+                : 'border-border-strong text-muted hover:bg-surface-muted',
             ].join(' ')}
           >
             {label}
@@ -232,14 +233,14 @@ function HitPointsPanel({
           <button
             type="button"
             onClick={onRollAll}
-            className="rounded-md border border-slate-300 px-3 py-1.5 text-sm hover:bg-slate-50"
+            className={btnSmallSecondary}
           >
             Hepsini yeniden at
           </button>
           <ul className="flex flex-wrap gap-2">
             {Array.from({ length: level - 1 }, (_, i) => (
               <li key={i} className="flex items-center gap-1 text-sm">
-                <label className="text-xs text-slate-500">sv{i + 2}</label>
+                <label className="text-xs text-muted">sv{i + 2}</label>
                 <input
                   type="number"
                   min={1}
@@ -248,12 +249,12 @@ function HitPointsPanel({
                   placeholder={String(averageHitDie(hp.hitDie))}
                   onChange={(e) => onRollChange(i, Number(e.target.value))}
                   aria-label={`${i + 2}. seviye hit die`}
-                  className="w-14 rounded border border-slate-300 px-2 py-1 text-center"
+                  className="w-14 rounded border border-border-strong px-2 py-1 text-center"
                 />
               </li>
             ))}
           </ul>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-muted">
             Boş bırakılan seviyeler ortalama değerle hesaplanır.
           </p>
         </div>
@@ -268,7 +269,7 @@ function HitPointsPanel({
             onChange={(e) =>
               setHpManualTotal(e.target.value === '' ? undefined : Number(e.target.value))
             }
-            className="w-24 rounded border border-slate-300 px-2 py-1"
+            className="w-24 rounded border border-border-strong px-2 py-1"
           />
         </label>
       )}
@@ -314,13 +315,13 @@ function LevelCard({
   return (
     <li
       className={[
-        'rounded-lg border bg-white p-4',
-        hasPending ? 'border-amber-300 bg-amber-50/40' : 'border-slate-200',
+        'rounded-lg border bg-surface p-4',
+        hasPending ? 'border-warn bg-warn-soft/40' : 'border-border',
       ].join(' ')}
     >
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h3 className="font-semibold">{level}. seviye</h3>
-        <span className="text-xs text-slate-500">
+        <span className="text-xs text-muted">
           Proficiency bonus {formatModifier(row?.profBonus ?? 2)}
           {row?.spellcasting &&
             ` · slot ${row.spellcasting.spellSlots
@@ -331,11 +332,11 @@ function LevelCard({
       </div>
 
       {featureNames.length > 0 && (
-        <p className="mt-1 text-sm capitalize text-slate-600">{featureNames.join(', ')}</p>
+        <p className="mt-1 text-sm capitalize text-muted">{featureNames.join(', ')}</p>
       )}
 
       {(newSpells > 0 || newCantrips > 0) && (
-        <p className="mt-1 text-sm text-slate-500">
+        <p className="mt-1 text-sm text-muted">
           {newCantrips > 0 && `+${newCantrips} cantrip`}
           {newCantrips > 0 && newSpells > 0 && ' · '}
           {newSpells > 0 && `+${newSpells} büyü öğrenirsin`}
@@ -343,7 +344,7 @@ function LevelCard({
       )}
 
       {decisions.length > 0 && (
-        <div className="mt-3 space-y-3 border-t border-slate-100 pt-3">
+        <div className="mt-3 space-y-3 border-t border-border pt-3">
           {decisions.map((decision) => (
             <LevelDecision
               key={`${decision.kind}-${level}`}
@@ -385,7 +386,7 @@ function SubclassFeatures({
   if (gained.length === 0) return null
 
   return (
-    <p className="mt-2 text-sm text-slate-600">
+    <p className="mt-2 text-sm text-muted">
       <span className="font-medium">{subclasses.get(id)?.name}:</span>{' '}
       {gained.map((f) => f.name).join(', ')}
     </p>

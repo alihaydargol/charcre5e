@@ -12,6 +12,7 @@ import {
 } from '../../rules/spellcasting.ts'
 import { useCharacterStore } from '../../state/characterStore.ts'
 import Section from './Section.tsx'
+import { btnPrimary } from '../../components/ui.ts'
 
 /**
  * Büyü seçimi.
@@ -49,7 +50,7 @@ export default function StepSpells({
 
   if (!info || !cls) {
     return (
-      <p className="rounded-md bg-slate-100 px-3 py-2 text-sm text-slate-600">
+      <p className="rounded-md bg-surface-hover px-3 py-2 text-sm text-muted">
         Bu sınıf 1. seviyede büyü yapmıyor.
       </p>
     )
@@ -88,7 +89,7 @@ export default function StepSpells({
         <button
           type="button"
           onClick={pickRandom}
-          className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:opacity-90"
+          className={btnPrimary}
         >
           Benim yerime seç
         </button>
@@ -97,7 +98,7 @@ export default function StepSpells({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Büyü ara"
-          className="min-w-48 flex-1 rounded-md border border-slate-300 px-3 py-2 text-sm"
+          className="min-w-48 flex-1 rounded-md border border-border-strong px-3 py-2 text-sm"
         />
       </div>
 
@@ -134,7 +135,7 @@ export default function StepSpells({
       )}
 
       {prepares && (
-        <p className="rounded-md bg-slate-100 px-3 py-2 text-sm text-slate-600">
+        <p className="rounded-md bg-surface-hover px-3 py-2 text-sm text-muted">
           {cls.name} büyü <em>hazırlar</em>: sınıfın tüm büyü listesine erişirsin ve her uzun
           dinlenmede yeniden hazırlarsın. Bu yüzden burada büyü seçmene gerek yok — bugün
           hazırlayabileceğin büyü sayısı <strong>{info.preparedCount}</strong>.
@@ -156,11 +157,11 @@ function SpellList({
   full: boolean
 }) {
   if (spells.length === 0) {
-    return <p className="text-sm text-slate-500">Aramaya uyan büyü yok.</p>
+    return <p className="text-sm text-muted">Aramaya uyan büyü yok.</p>
   }
 
   return (
-    <ul className="grid max-h-96 gap-1.5 overflow-y-auto rounded-lg border border-slate-200 bg-white p-2 sm:grid-cols-2">
+    <ul className="grid max-h-96 gap-1.5 overflow-y-auto rounded-lg border border-border bg-surface p-2 sm:grid-cols-2">
       {spells.map((spell) => {
         const isSelected = selected.includes(spell.id)
         return (
@@ -175,12 +176,12 @@ function SpellList({
                 isSelected
                   ? 'border-accent bg-accent-soft'
                   : full
-                    ? 'cursor-not-allowed border-slate-100 opacity-50'
-                    : 'border-slate-200 hover:bg-slate-50',
+                    ? 'cursor-not-allowed border-border opacity-50'
+                    : 'border-border hover:bg-surface-muted',
               ].join(' ')}
             >
               <span className="font-medium">{spell.name}</span>
-              <span className="mt-0.5 block text-xs capitalize text-slate-500">
+              <span className="mt-0.5 block text-xs capitalize text-muted">
                 {spell.level === 0 ? 'Cantrip' : `${spell.level}. seviye`} · {spell.school}
                 {spell.concentration && ' · Conc.'}
               </span>

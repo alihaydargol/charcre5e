@@ -132,7 +132,7 @@ export default function SpellEditor({
       )}
 
       <div className="flex gap-6">
-        <label className="flex items-center gap-2 text-sm text-slate-700">
+        <label className="flex items-center gap-2 text-sm text-ink">
           <input
             type="checkbox"
             checked={concentration}
@@ -141,7 +141,7 @@ export default function SpellEditor({
           />
           Concentration
         </label>
-        <label className="flex items-center gap-2 text-sm text-slate-700">
+        <label className="flex items-center gap-2 text-sm text-ink">
           <input
             type="checkbox"
             checked={ritual}

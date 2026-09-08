@@ -4,6 +4,7 @@ import { classes } from '../../data/registry.ts'
 import type { Spell } from '../../data/schema.ts'
 import Pagination from '../../components/Pagination.tsx'
 import { SourceBadge } from '../homebrew/fields.tsx'
+import { input } from '../../components/ui.ts'
 
 const PAGE_SIZE = 12
 
@@ -51,7 +52,7 @@ export default function SpellBrowser({ spells }: { spells: Collection<Spell> }) 
   }
 
   const selectClass =
-    'rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700'
+    'rounded-md border border-border-strong bg-surface px-3 py-2 text-sm text-ink'
 
   return (
     <div className="space-y-4">
@@ -63,7 +64,7 @@ export default function SpellBrowser({ spells }: { spells: Collection<Spell> }) 
             value={query}
             onChange={(e) => resetTo(setQuery)(e.target.value)}
             placeholder="Büyü ara (ör. Fireball)"
-            className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+            className={input}
           />
         </label>
 
@@ -105,7 +106,7 @@ export default function SpellBrowser({ spells }: { spells: Collection<Spell> }) 
         </label>
       </div>
 
-      <p className="text-xs text-slate-500" role="status">
+      <p className="text-xs text-muted" role="status">
         {matches.length === all.length
           ? `${all.length} büyü`
           : `${matches.length} sonuç (toplam ${all.length} büyü)`}
@@ -113,7 +114,7 @@ export default function SpellBrowser({ spells }: { spells: Collection<Spell> }) 
       </p>
 
       {/* Aradığı büyüyü bulamayan kullanıcı bunun bir hata olduğunu sanmasın. */}
-      <details className="rounded-md bg-slate-100 px-3 py-2 text-xs text-slate-600">
+      <details className="rounded-md bg-surface-hover px-3 py-2 text-xs text-muted">
         <summary className="cursor-pointer font-medium">
           Aradığın büyüyü bulamıyor musun?
         </summary>
@@ -127,7 +128,7 @@ export default function SpellBrowser({ spells }: { spells: Collection<Spell> }) 
       </details>
 
       {matches.length === 0 ? (
-        <p className="rounded-lg border border-dashed border-slate-300 p-6 text-center text-sm text-slate-500">
+        <p className="rounded-lg border border-dashed border-border-strong p-6 text-center text-sm text-muted">
           Bu filtrelere uyan büyü yok. Aramayı veya filtreleri gevşetmeyi dene.
         </p>
       ) : (
@@ -165,31 +166,31 @@ function SpellCard({
   const classNames = spell.classes.map((id) => classes.get(id)?.name ?? id).join(', ')
 
   return (
-    <li className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+    <li className="overflow-hidden rounded-lg border border-border bg-surface">
       <button
         type="button"
         onClick={onToggle}
         aria-expanded={open}
-        className="flex w-full items-start justify-between gap-3 p-4 text-left hover:bg-slate-50"
+        className="flex w-full items-start justify-between gap-3 p-4 text-left hover:bg-surface-muted"
       >
         <span>
           <span className="flex items-baseline gap-1.5 font-semibold">
             {spell.name}
             <SourceBadge source={spell.source} />
           </span>
-          <span className="mt-0.5 block text-sm capitalize text-slate-500">
+          <span className="mt-0.5 block text-sm capitalize text-muted">
             {levelLabel(spell.level)} · {spell.school}
             {spell.concentration && ' · Concentration'}
             {spell.ritual && ' · Ritual'}
           </span>
         </span>
-        <span aria-hidden="true" className="shrink-0 pt-1 text-slate-400">
+        <span aria-hidden="true" className="shrink-0 pt-1 text-faint">
           {open ? '−' : '+'}
         </span>
       </button>
 
       {open && (
-        <div className="border-t border-slate-200 px-4 py-4">
+        <div className="border-t border-border px-4 py-4">
           <dl className="grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
             <Field label="CASTING TIME" value={spell.castingTime} />
             <Field label="RANGE" value={spell.range} />
@@ -213,14 +214,14 @@ function SpellCard({
             <Field label="SINIFLAR" value={classNames} />
           </dl>
 
-          <div className="mt-4 space-y-2 text-sm leading-relaxed text-slate-700">
+          <div className="mt-4 space-y-2 text-sm leading-relaxed text-ink">
             {spell.desc.map((paragraph, i) => (
               <p key={i}>{paragraph}</p>
             ))}
           </div>
 
           {spell.higherLevel.length > 0 && (
-            <div className="mt-4 rounded-md bg-accent-soft/60 p-3 text-sm leading-relaxed text-slate-700">
+            <div className="mt-4 rounded-md bg-accent-soft/60 p-3 text-sm leading-relaxed text-ink">
               <p className="mb-1 font-semibold">Daha yüksek seviyede</p>
               {spell.higherLevel.map((paragraph, i) => (
                 <p key={i}>{paragraph}</p>
@@ -260,8 +261,8 @@ function Field({ label, value }: { label: string; value: string }) {
     <div>
       {/* CSS uppercase, sayfa lang="tr" olduğu için İngilizce terimleri
           bozardı ("CASTİNG TİME"). Etiketler istenen büyüklükte yazılır. */}
-      <dt className="text-xs tracking-wide text-slate-400">{label}</dt>
-      <dd className="text-slate-700">{value}</dd>
+      <dt className="text-xs tracking-wide text-faint">{label}</dt>
+      <dd className="text-ink">{value}</dd>
     </div>
   )
 }
@@ -279,16 +280,16 @@ function DamageTable({
   return (
     <div className="mt-4 overflow-x-auto">
       <table className="w-full min-w-64 text-sm">
-        <caption className="mb-1 text-left text-xs tracking-wide text-slate-400">
+        <caption className="mb-1 text-left text-xs tracking-wide text-faint">
           {caption}
         </caption>
         <tbody>
           {entries.map(([key, value]) => (
-            <tr key={key} className="border-t border-slate-100">
-              <th scope="row" className="py-1 pr-4 text-left font-normal text-slate-500">
+            <tr key={key} className="border-t border-border">
+              <th scope="row" className="py-1 pr-4 text-left font-normal text-muted">
                 {rowLabel(key)}
               </th>
-              <td className="py-1 font-medium text-slate-700">{value}</td>
+              <td className="py-1 font-medium text-ink">{value}</td>
             </tr>
           ))}
         </tbody>

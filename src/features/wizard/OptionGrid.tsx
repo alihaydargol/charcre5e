@@ -36,10 +36,10 @@ export default function OptionGrid({
               className={[
                 'w-full rounded-lg border p-3 text-left transition-colors',
                 isSelected
-                  ? 'border-accent bg-accent-soft'
+                  ? 'border-accent bg-accent-soft ring-1 ring-accent'
                   : disabled
-                    ? 'cursor-not-allowed border-slate-200 bg-slate-50 opacity-60'
-                    : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50',
+                    ? 'cursor-not-allowed border-border bg-surface-muted opacity-60'
+                    : 'border-border bg-surface hover:border-accent hover:bg-accent-soft/40',
               ].join(' ')}
             >
               <span className="flex items-baseline justify-between gap-2">
@@ -54,10 +54,10 @@ export default function OptionGrid({
                 )}
               </span>
               {option.description && (
-                <span className="mt-0.5 block text-sm text-slate-500">{option.description}</span>
+                <span className="mt-0.5 block text-sm text-muted">{option.description}</span>
               )}
               {disabled && (
-                <span className="mt-1 block text-xs text-slate-400">{option.disabledReason}</span>
+                <span className="mt-1 block text-xs text-faint">{option.disabledReason}</span>
               )}
             </button>
           </li>

@@ -6,21 +6,7 @@ import { useCharacterStore } from '../state/characterStore.ts'
 import { storageUsage } from '../state/storage.ts'
 import { buildExport, downloadJson, parseImport } from '../state/transfer.ts'
 import CharacterCard from '../features/roster/CharacterCard.tsx'
-
-const roadmap = [
-  { label: 'İskelet ve yayın hattı', done: true },
-  { label: 'SRD 5.1 veri katmanı', done: true },
-  { label: 'Kural motoru (HP, AC, büyü slotları)', done: true },
-  { label: 'Silah/zırh mekanikleri ve ekipman kategorileri', done: true },
-  { label: 'Karakter oluşturma sihirbazı', done: true },
-  { label: 'Seviye atlama (1-20)', done: true },
-  { label: 'Karakter sayfası, yazdırma, JSON aktarımı', done: true },
-  { label: 'Karakter listesi ve depolama yönetimi', done: true },
-  { label: 'Mobil uyum, erişilebilirlik, tema', done: false },
-  { label: 'Rastgele karakter oluşturma', done: true },
-  { label: 'Homebrew içerik desteği', done: true },
-  { label: 'Görsel tasarım ve arayüz yenilemesi', done: false },
-]
+import { btnPrimary, btnSecondary, card, sectionLabel } from '../components/ui.ts'
 
 type SortKey = 'updated' | 'name' | 'level'
 
@@ -37,6 +23,33 @@ function searchText(character: Character): string {
   const cls = character.classes[0] ? classes.get(character.classes[0].classId)?.name : ''
   return [character.name, race, subrace, cls].filter(Boolean).join(' ').toLocaleLowerCase('tr')
 }
+
+/**
+ * Kayıtlı karakteri olmayan kullanıcıya üç yol.
+ *
+ * D&D bilmeyen biri "Yeni karakter oluştur" düğmesine basmaya çekinebilir;
+ * rastgele oluşturma tam da onun için var ve burada eşit ağırlıkta duruyor.
+ */
+const STARTING_POINTS = [
+  {
+    to: '/olustur',
+    title: 'Sihirbazla oluştur',
+    desc: 'Adım adım ilerle; her adımda ne seçtiğin ve neden önemli olduğu yazar.',
+    action: 'Sihirbazı aç',
+  },
+  {
+    to: '/rastgele',
+    title: 'Benim için seç',
+    desc: 'D&D oynamadıysan buradan başla. Tek tuşla oynanabilir bir karakter çıkar.',
+    action: 'Karakter at',
+  },
+  {
+    to: '/icerik',
+    title: 'Önce içeriğe bak',
+    desc: 'Irklar, sınıflar, 319 büyü ve ekipman tablolarını karakter yapmadan incele.',
+    action: 'İçeriğe göz at',
+  },
+]
 
 export default function HomePage() {
   const saved = useCharacterStore((s) => s.saved)
@@ -73,36 +86,44 @@ export default function HomePage() {
     )
   }
 
-  const buttonClass =
-    'rounded-md border border-slate-300 px-4 py-2 text-sm text-slate-600 hover:bg-slate-50'
-
   return (
     <div className="space-y-10">
       <section className="space-y-3">
-        <h1 className="text-3xl font-semibold tracking-tight">Karakterlerim</h1>
-        <p className="max-w-2xl text-slate-600">
-          SRD 5.1 kurallarına göre D&amp;D 5e karakteri oluştur. Tamamen tarayıcıda çalışır:
-          hesap gerekmez, karakterlerin kendi cihazında kalır.
+        {/* Hiç karakteri olmayana "Karakterlerim" demek boş bir vaat. */}
+        <h1 className="font-display text-3xl font-semibold text-ink sm:text-4xl">
+          {saved.length > 0 ? 'Karakterlerim' : 'D&D 5e karakter oluşturucu'}
+        </h1>
+        <p className="max-w-2xl text-muted">
+          SRD 5.1 kurallarına göre seviye 1&ndash;20 karakter oluştur. Tamamen tarayıcıda
+          çalışır: hesap gerekmez, karakterlerin kendi cihazında kalır.
         </p>
         <div className="flex flex-wrap gap-2">
-          <Link
-            to="/olustur"
-            className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:opacity-90"
-          >
-            {hasDraft ? 'Yarım kalan karaktere devam et' : 'Yeni karakter oluştur'}
-          </Link>
-          <Link
-            to="/rastgele"
-            className="rounded-md border border-accent px-4 py-2 text-sm font-medium text-accent hover:bg-accent-soft"
-          >
-            Benim için rastgele oluştur
-          </Link>
-          <Link to="/icerik" className={buttonClass}>
-            SRD içeriğine göz at
-          </Link>
-          <button type="button" onClick={() => fileInput.current?.click()} className={buttonClass}>
-            JSON&apos;dan içe aktar
-          </button>
+          {/*
+            Kayıtlı karakter varken eylemler burada; yokken aşağıdaki kartlar
+            aynı işi daha açıklayıcı yapıyor, ikisini birden göstermek tekrardı.
+          */}
+          {(saved.length > 0 || hasDraft) && (
+            <Link to="/olustur" className={btnPrimary}>
+              {hasDraft ? 'Yarım kalan karaktere devam et' : 'Yeni karakter oluştur'}
+            </Link>
+          )}
+          {saved.length > 0 && (
+            <Link
+              to="/rastgele"
+              className={`${btnSecondary} border-accent text-accent hover:bg-accent-soft`}
+            >
+              Rastgele oluştur
+            </Link>
+          )}
+          {saved.length > 0 && (
+            <button
+              type="button"
+              onClick={() => fileInput.current?.click()}
+              className={btnSecondary}
+            >
+              JSON&apos;dan içe aktar
+            </button>
+          )}
           {saved.length > 0 && (
             <button
               type="button"
@@ -112,7 +133,7 @@ export default function HomePage() {
                   buildExport(saved),
                 )
               }
-              className={buttonClass}
+              className={btnSecondary}
             >
               Tümünü dışa aktar
             </button>
@@ -132,12 +153,12 @@ export default function HomePage() {
         </div>
 
         {importMessage && (
-          <p role="status" className="rounded-md bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
+          <p role="status" className="rounded-md bg-surface-muted px-3 py-2 text-sm text-good">
             {importMessage}
           </p>
         )}
         {importErrors.length > 0 && (
-          <div className="rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-900">
+          <div className="rounded-md bg-warn-soft px-3 py-2 text-sm text-warn-ink">
             <p className="font-medium">İçe aktarılamayan kayıtlar:</p>
             <ul className="mt-1 list-disc space-y-0.5 pl-5">
               {importErrors.map((error, i) => (
@@ -149,9 +170,9 @@ export default function HomePage() {
       </section>
 
       {loadErrors.length > 0 && (
-        <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
-          <p className="font-medium text-amber-900">Bazı kayıtlar yüklenemedi:</p>
-          <ul className="mt-1 list-disc space-y-0.5 pl-5 text-sm text-amber-900">
+        <div className="rounded-lg border border-warn bg-warn-soft p-4">
+          <p className="font-medium text-warn-ink">Bazı kayıtlar yüklenemedi:</p>
+          <ul className="mt-1 list-disc space-y-0.5 pl-5 text-sm text-warn-ink">
             {loadErrors.map((error, i) => (
               <li key={i}>{error.message}</li>
             ))}
@@ -160,7 +181,7 @@ export default function HomePage() {
       )}
 
       {persistenceFailed && (
-        <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+        <div className="rounded-lg border border-warn bg-warn-soft p-4 text-sm text-warn-ink">
           <p className="font-medium">Kayıt yazılamadı.</p>
           <p className="mt-1">
             Tarayıcının depolama alanı dolmuş olabilir. Karakterlerini kaybetmemek için
@@ -169,12 +190,51 @@ export default function HomePage() {
         </div>
       )}
 
+      {saved.length === 0 && (
+        <section aria-labelledby="baslangic" className="space-y-3">
+          <h2 id="baslangic" className={sectionLabel}>
+            Nereden başlamalı
+          </h2>
+          <ul className="grid gap-3 sm:grid-cols-3">
+            {STARTING_POINTS.map((point) => (
+              <li key={point.to}>
+                {/*
+                  Kartın tamamı bağlantı: küçük bir başlığa nişan almak yerine
+                  kartın herhangi bir yerine basmak yetiyor.
+                */}
+                <Link
+                  to={point.to}
+                  className={`${card} flex h-full flex-col gap-2 p-5 transition-colors hover:border-accent hover:bg-accent-soft/40`}
+                >
+                  <span className="font-display text-lg font-semibold text-ink">
+                    {point.title}
+                  </span>
+                  <span className="text-sm text-muted">{point.desc}</span>
+                  <span aria-hidden="true" className="mt-auto pt-2 text-sm font-medium text-accent">
+                    {point.action} →
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <p className="text-sm text-muted">
+            Daha önce dışa aktardığın bir dosya varsa{' '}
+            <button
+              type="button"
+              onClick={() => fileInput.current?.click()}
+              className="font-medium text-accent underline underline-offset-2 hover:no-underline"
+            >
+              JSON&apos;dan içe aktarabilirsin
+            </button>
+            .
+          </p>
+        </section>
+      )}
+
       {saved.length > 0 && (
         <section className="space-y-3">
           <div className="flex flex-wrap items-center gap-2">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
-              Kayıtlı karakterler ({saved.length})
-            </h2>
+            <h2 className={sectionLabel}>Kayıtlı karakterler ({saved.length})</h2>
             <div className="ml-auto flex flex-wrap gap-2">
               {saved.length > 3 && (
                 <label>
@@ -184,7 +244,8 @@ export default function HomePage() {
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder="İsim, ırk veya sınıf ara"
-                    className="rounded-md border border-slate-300 px-3 py-1.5 text-sm"
+                    className="min-h-8 rounded-md border border-border-strong bg-surface px-3 text-sm text-ink placeholder:text-faint"
+
                   />
                 </label>
               )}
@@ -194,7 +255,7 @@ export default function HomePage() {
                   <select
                     value={sort}
                     onChange={(e) => setSort(e.target.value as SortKey)}
-                    className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-700"
+                    className="rounded-md border border-border-strong bg-surface px-3 py-1.5 text-sm text-ink"
                   >
                     {SORTS.map((s) => (
                       <option key={s.id} value={s.id}>
@@ -208,7 +269,7 @@ export default function HomePage() {
           </div>
 
           {visible.length === 0 ? (
-            <p className="rounded-lg border border-dashed border-slate-300 p-6 text-center text-sm text-slate-500">
+            <p className="rounded-lg border border-dashed border-border-strong p-6 text-center text-sm text-muted">
               &ldquo;{query}&rdquo; aramasına uyan karakter yok.
             </p>
           ) : (
@@ -221,7 +282,7 @@ export default function HomePage() {
 
           {/* Kota dolmadan önce uyar; sonrasında karakter kaybı olur. */}
           {usage.ratio > 0.6 && (
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-muted">
               Tarayıcı depolamasının yaklaşık %{Math.round(usage.ratio * 100)}&apos;i kullanılıyor (
               {Math.round(usage.bytes / 1024)} KB). Yedek almak için &ldquo;Tümünü dışa
               aktar&rdquo;ı kullanabilirsin.
@@ -230,28 +291,6 @@ export default function HomePage() {
         </section>
       )}
 
-      <section className="rounded-lg border border-slate-200 bg-white p-6">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
-          Yol haritası
-        </h2>
-        <ul className="mt-4 space-y-2">
-          {roadmap.map((step) => (
-            <li key={step.label} className="flex items-center gap-3 text-sm">
-              <span
-                aria-hidden="true"
-                className={[
-                  'inline-flex size-5 shrink-0 items-center justify-center rounded-full text-xs font-bold',
-                  step.done ? 'bg-accent text-white' : 'border border-slate-300 text-slate-400',
-                ].join(' ')}
-              >
-                {step.done ? '✓' : ''}
-              </span>
-              <span className={step.done ? 'text-slate-900' : 'text-slate-500'}>{step.label}</span>
-              <span className="sr-only">{step.done ? '(tamamlandı)' : '(bekliyor)'}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
     </div>
   )
 }

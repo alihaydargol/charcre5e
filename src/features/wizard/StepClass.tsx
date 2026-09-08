@@ -27,27 +27,27 @@ export default function StepClass({ character }: { character: Character }) {
 
       {selected && (
         <Section title={`${selected.name} — 1. seviye`}>
-          <ul className="space-y-2 text-sm text-slate-600">
+          <ul className="space-y-2 text-sm text-muted">
             <li>
-              <span className="font-medium text-slate-900">Hit die:</span> d{selected.hitDie} ·{' '}
-              <span className="font-medium text-slate-900">Kurtarma atışı:</span>{' '}
+              <span className="font-medium text-ink">Hit die:</span> d{selected.hitDie} ·{' '}
+              <span className="font-medium text-ink">Kurtarma atışı:</span>{' '}
               {selected.savingThrows.map((s) => s.toUpperCase()).join(', ')}
             </li>
             <li>
-              <span className="font-medium text-slate-900">Alt sınıf:</span>{' '}
+              <span className="font-medium text-ink">Alt sınıf:</span>{' '}
               {selected.subclassLevel}. seviyede seçilir
               {selected.subclassLevel > 1 && ' (şimdi değil)'}
             </li>
             {selected.spellcasting && (
               <li>
-                <span className="font-medium text-slate-900">Büyü:</span>{' '}
+                <span className="font-medium text-ink">Büyü:</span>{' '}
                 {selected.spellcasting.ability.toUpperCase()} kullanır,{' '}
                 {selected.spellcasting.startLevel}. seviyede başlar
                 {selected.spellcasting.pactMagic && ' (Pact Magic)'}
               </li>
             )}
             <li>
-              <span className="font-medium text-slate-900">1. seviye özellikleri:</span>{' '}
+              <span className="font-medium text-ink">1. seviye özellikleri:</span>{' '}
               {getClassLevel(selected.id, 1)?.features.length
                 ? getClassLevel(selected.id, 1)!
                     .features.map((id) => id.replace(`${selected.id}-`, '').replaceAll('-', ' '))
@@ -56,7 +56,7 @@ export default function StepClass({ character }: { character: Character }) {
             </li>
           </ul>
           {selected.subclassLevel === 1 && (
-            <p className="rounded-md bg-slate-100 px-3 py-2 text-sm text-slate-600">
+            <p className="rounded-md bg-surface-hover px-3 py-2 text-sm text-muted">
               {selected.name} alt sınıfını 1. seviyede seçer. Alt sınıf seçimi seviye atlama
               ekranında yapılacak.
             </p>

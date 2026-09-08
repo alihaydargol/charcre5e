@@ -35,8 +35,8 @@ export default function Pagination({ page, pageCount, onChange, label }: Props) 
     [
       'min-w-9 rounded-md px-2.5 py-1.5 text-sm font-medium transition-colors',
       active
-        ? 'bg-accent text-white'
-        : 'border border-slate-300 text-slate-600 hover:bg-slate-100 disabled:opacity-40 disabled:hover:bg-transparent',
+        ? 'bg-accent text-on-accent'
+        : 'border border-border-strong text-muted hover:bg-surface-hover disabled:opacity-40 disabled:hover:bg-transparent',
     ].join(' ')
 
   return (
@@ -52,7 +52,7 @@ export default function Pagination({ page, pageCount, onChange, label }: Props) 
 
       {pageItems(page, pageCount).map((p, i) =>
         p === null ? (
-          <span key={`gap-${i}`} aria-hidden="true" className="px-1 text-slate-400">
+          <span key={`gap-${i}`} aria-hidden="true" className="px-1 text-faint">
             …
           </span>
         ) : (

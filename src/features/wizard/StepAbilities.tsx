@@ -15,6 +15,7 @@ import { ABILITY_IDS, type AbilityMethod, type Character } from '../../rules/cha
 import { createRng, randomSeed } from '../../rules/dice.ts'
 import { useCharacterStore } from '../../state/characterStore.ts'
 import Section from './Section.tsx'
+import { btnPrimary } from '../../components/ui.ts'
 
 const METHODS: { id: AbilityMethod; label: string; hint: string }[] = [
   {
@@ -82,11 +83,11 @@ export default function StepAbilities({ character }: { character: Character }) {
                   'w-full rounded-lg border p-3 text-left transition-colors',
                   character.abilityMethod === method.id
                     ? 'border-accent bg-accent-soft'
-                    : 'border-slate-200 bg-white hover:bg-slate-50',
+                    : 'border-border bg-surface hover:bg-surface-muted',
                 ].join(' ')}
               >
                 <span className="font-medium">{method.label}</span>
-                <span className="mt-0.5 block text-sm text-slate-500">{method.hint}</span>
+                <span className="mt-0.5 block text-sm text-muted">{method.hint}</span>
               </button>
             </li>
           ))}
@@ -99,10 +100,10 @@ export default function StepAbilities({ character }: { character: Character }) {
           className={[
             'rounded-md px-3 py-2 text-sm',
             pointBuy.remaining === 0
-              ? 'bg-emerald-50 text-emerald-800'
+              ? 'bg-surface-muted text-good'
               : pointBuy.remaining < 0
                 ? 'bg-accent-soft text-accent'
-                : 'bg-slate-100 text-slate-700',
+                : 'bg-surface-hover text-ink',
           ].join(' ')}
         >
           {pointBuy.remaining >= 0
@@ -113,7 +114,7 @@ export default function StepAbilities({ character }: { character: Character }) {
       )}
 
       {character.abilityMethod === 'standard' && (
-        <p className="rounded-md bg-slate-100 px-3 py-2 text-sm text-slate-700">
+        <p className="rounded-md bg-surface-hover px-3 py-2 text-sm text-ink">
           Dağıtılacak değerler: {STANDARD_ARRAY.join(', ')}
         </p>
       )}
@@ -123,21 +124,21 @@ export default function StepAbilities({ character }: { character: Character }) {
           <button
             type="button"
             onClick={rollNew}
-            className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:opacity-90"
+            className={btnPrimary}
           >
             {rolls ? 'Yeniden at' : '4d6 at (en düşüğü çıkar)'}
           </button>
           {rolls && (
-            <ul className="flex flex-wrap gap-2 text-xs text-slate-500">
+            <ul className="flex flex-wrap gap-2 text-xs text-muted">
               {rolls.map((roll, i) => (
-                <li key={i} className="rounded border border-slate-200 px-2 py-1">
+                <li key={i} className="rounded border border-border px-2 py-1">
                   {roll.dice.map((d, j) => (
                     <span key={j} className={d === roll.dropped && roll.dice.indexOf(d) === j ? 'line-through opacity-50' : ''}>
                       {d}
                       {j < 3 && ' '}
                     </span>
                   ))}
-                  <span className="ml-1 font-semibold text-slate-700">= {roll.total}</span>
+                  <span className="ml-1 font-semibold text-ink">= {roll.total}</span>
                 </li>
               ))}
             </ul>
@@ -161,11 +162,11 @@ export default function StepAbilities({ character }: { character: Character }) {
             return (
               <li
                 key={ability}
-                className="flex items-center gap-3 rounded-lg border border-slate-200 bg-white p-3"
+                className="flex items-center gap-3 rounded-lg border border-border bg-surface p-3"
               >
                 <span className="w-32 shrink-0">
                   <span className="block font-medium">{ABILITY_NAMES[ability]}</span>
-                  <span className="block text-xs text-slate-400">{ability.toUpperCase()}</span>
+                  <span className="block text-xs text-faint">{ability.toUpperCase()}</span>
                 </span>
 
                 <span className="flex items-center gap-1">
@@ -174,7 +175,7 @@ export default function StepAbilities({ character }: { character: Character }) {
                     onClick={() => setAbility(ability, base - 1)}
                     disabled={base <= minimum}
                     aria-label={`${ABILITY_NAMES[ability]} azalt`}
-                    className="size-8 rounded border border-slate-300 text-slate-600 disabled:opacity-30"
+                    className="size-8 rounded border border-border-strong text-muted disabled:opacity-30"
                   >
                     −
                   </button>
@@ -183,14 +184,14 @@ export default function StepAbilities({ character }: { character: Character }) {
                     value={base}
                     onChange={(e) => setAbility(ability, Number(e.target.value))}
                     aria-label={`${ABILITY_NAMES[ability]} puanı`}
-                    className="w-14 rounded border border-slate-300 px-2 py-1 text-center"
+                    className="w-14 rounded border border-border-strong px-2 py-1 text-center"
                   />
                   <button
                     type="button"
                     onClick={() => setAbility(ability, base + 1)}
                     disabled={!canIncrease}
                     aria-label={`${ABILITY_NAMES[ability]} artır`}
-                    className="size-8 rounded border border-slate-300 text-slate-600 disabled:opacity-30"
+                    className="size-8 rounded border border-border-strong text-muted disabled:opacity-30"
                   >
                     +
                   </button>

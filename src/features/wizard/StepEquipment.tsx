@@ -13,6 +13,7 @@ import {
 } from '../../rules/equipment.ts'
 import { useCharacterStore } from '../../state/characterStore.ts'
 import Section from './Section.tsx'
+import { btnPrimary, btnSecondary } from '../../components/ui.ts'
 
 /**
  * Ekipman adımı.
@@ -79,7 +80,7 @@ export default function StepEquipment({
         <button
           type="button"
           onClick={rollRandom}
-          className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:opacity-90"
+          className={btnPrimary}
         >
           Benim yerime seç
         </button>
@@ -89,11 +90,11 @@ export default function StepEquipment({
             setPicked({})
             setEquipment([])
           }}
-          className="rounded-md border border-slate-300 px-4 py-2 text-sm text-slate-600 hover:bg-slate-50"
+          className={btnSecondary}
         >
           Temizle
         </button>
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-muted">
           Ekipman zorunlu değil — masan sonra dağıtacaksa boş bırakabilirsin.
         </p>
       </div>
@@ -111,7 +112,7 @@ export default function StepEquipment({
                     'w-full rounded-lg border p-3 text-left transition-colors',
                     picked[groupIndex]?.option === optionIndex
                       ? 'border-accent bg-accent-soft'
-                      : 'border-slate-200 bg-white hover:bg-slate-50',
+                      : 'border-border bg-surface hover:bg-surface-muted',
                   ].join(' ')}
                 >
                   {optionLabel(option)}
@@ -121,14 +122,14 @@ export default function StepEquipment({
                   <div className="mt-2 space-y-2 pl-4">
                     {Array.from({ length: option.pendingChoice.choose }, (_, slot) => (
                       <label key={slot} className="block">
-                        <span className="mb-1 block text-sm text-slate-600">
+                        <span className="mb-1 block text-sm text-muted">
                           {option.pendingChoice!.label}
                           {option.pendingChoice!.choose > 1 && ` (${slot + 1}.)`}
                         </span>
                         <select
                           value={picked[groupIndex]?.sub[slot] ?? ''}
                           onChange={(e) => chooseSub(groupIndex, e.target.value, slot)}
-                          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                          className="w-full rounded-md border border-border-strong bg-surface px-3 py-2 text-sm"
                         >
                           <option value="">Seç…</option>
                           {option.pendingChoice!.from.map((id) => (
@@ -152,12 +153,12 @@ export default function StepEquipment({
         hint={`${weight.total} lb / ${weight.capacity} lb taşıma kapasitesi${gold > 0 ? ` · ${gold} gp` : ''}`}
       >
         {character.equipment.length === 0 ? (
-          <p className="rounded-lg border border-dashed border-slate-300 p-6 text-center text-sm text-slate-500">
+          <p className="rounded-lg border border-dashed border-border-strong p-6 text-center text-sm text-muted">
             Henüz eşya yok.
           </p>
         ) : (
           <>
-            <ul className="divide-y divide-slate-100 rounded-lg border border-slate-200 bg-white">
+            <ul className="divide-y divide-border rounded-lg border border-border bg-surface">
               {character.equipment.map((entry) => {
                 const item = equipment.get(entry.itemId)
                 const equippable = item?.category === 'armor' || item?.category === 'weapon'
@@ -166,16 +167,16 @@ export default function StepEquipment({
                     <span className="flex-1">
                       {item?.name ?? entry.itemId}
                       {entry.quantity > 1 && (
-                        <span className="text-slate-500"> ×{entry.quantity}</span>
+                        <span className="text-muted"> ×{entry.quantity}</span>
                       )}
                     </span>
                     {item?.weight !== undefined && (
-                      <span className="text-xs text-slate-400">
+                      <span className="text-xs text-faint">
                         {item.weight * entry.quantity} lb
                       </span>
                     )}
                     {equippable && (
-                      <label className="flex items-center gap-1.5 text-xs text-slate-600">
+                      <label className="flex items-center gap-1.5 text-xs text-muted">
                         <input
                           type="checkbox"
                           checked={entry.equipped}

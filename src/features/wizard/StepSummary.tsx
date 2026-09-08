@@ -46,23 +46,23 @@ export default function StepSummary({
   return (
     <div className="space-y-6">
       {ready ? (
-        <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4">
-          <p className="font-medium text-emerald-900">Karakterin hazır.</p>
-          <p className="mt-1 text-sm text-emerald-800">
+        <div className="rounded-lg border border-border bg-surface-muted p-4">
+          <p className="font-medium text-good">Karakterin hazır.</p>
+          <p className="mt-1 text-sm text-good">
             Kaydettiğinde tarayıcına yazılacak; hiçbir yere gönderilmiyor.
           </p>
           <button
             type="button"
             onClick={onSave}
-            className="mt-3 rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:opacity-90"
+            className="mt-3 rounded-md bg-accent px-4 py-2 text-sm font-medium text-on-accent hover:opacity-90"
           >
             Karakteri kaydet
           </button>
         </div>
       ) : (
-        <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
-          <p className="font-medium text-amber-900">Kaydetmeden önce şunlar eksik:</p>
-          <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-amber-900">
+        <div className="rounded-lg border border-warn bg-warn-soft p-4">
+          <p className="font-medium text-warn-ink">Kaydetmeden önce şunlar eksik:</p>
+          <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-warn-ink">
             {issues.map((issue, i) => (
               <li key={i}>{issue}</li>
             ))}
@@ -100,11 +100,11 @@ export default function StepSummary({
       <Section title="Yetenekler ve kurtarma atışları">
         <ul className="grid gap-2 sm:grid-cols-3">
           {ABILITY_IDS.map((ability) => (
-            <li key={ability} className="rounded-lg border border-slate-200 bg-white p-3">
-              <span className="text-xs font-semibold text-slate-400">{ability.toUpperCase()}</span>
+            <li key={ability} className="rounded-lg border border-border bg-surface p-3">
+              <span className="text-xs font-semibold text-faint">{ability.toUpperCase()}</span>
               <span className="block text-xl font-semibold">
                 {scores[ability].total}{' '}
-                <span className="text-base font-normal text-slate-500">
+                <span className="text-base font-normal text-muted">
                   ({formatModifier(scores[ability].modifier)})
                 </span>
               </span>
@@ -112,7 +112,7 @@ export default function StepSummary({
                 className={
                   saves[ability].proficient
                     ? 'text-xs font-medium text-accent'
-                    : 'text-xs text-slate-400'
+                    : 'text-xs text-faint'
                 }
               >
                 Save {formatModifier(saves[ability].value)}
@@ -144,7 +144,7 @@ export default function StepSummary({
 
       {racialTraitIds(character).length > 0 && (
         <Section title="Irk özellikleri">
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-muted">
             {racialTraitIds(character)
               .map((id) => id.replaceAll('-', ' '))
               .join(', ')}
@@ -153,7 +153,7 @@ export default function StepSummary({
       )}
 
       <Section title="Diller">
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-muted">
           {[...knownLanguages(character)]
             .map((id) => languages.get(id)?.name ?? id)
             .sort((a, b) => a.localeCompare(b, 'tr'))
@@ -164,7 +164,7 @@ export default function StepSummary({
       {casting.length > 0 && (
         <Section title="Büyücülük">
           {casting.map((info) => (
-            <p key={info.classId} className="text-sm text-slate-600">
+            <p key={info.classId} className="text-sm text-muted">
               Save DC <strong>{info.saveDC}</strong> · Saldırı{' '}
               <strong>{formatModifier(info.spellAttackBonus)}</strong> ·{' '}
               {character.spells.cantrips.length} cantrip, {character.spells.known.length} büyü
@@ -175,7 +175,7 @@ export default function StepSummary({
 
       {character.equipment.length > 0 && (
         <Section title="Ekipman">
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-muted">
             {character.equipment
               .map((entry) => {
                 const item = equipment.get(entry.itemId)
@@ -194,7 +194,7 @@ export default function StepSummary({
 function Row({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <dt className="text-xs tracking-wide text-slate-400">{label}</dt>
+      <dt className="text-xs tracking-wide text-faint">{label}</dt>
       <dd className="font-medium">{value}</dd>
     </div>
   )
@@ -202,8 +202,8 @@ function Row({ label, value }: { label: string; value: string }) {
 
 function Tile({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-3 text-center">
-      <dt className="text-xs tracking-wide text-slate-400">{label}</dt>
+    <div className="rounded-lg border border-border bg-surface p-3 text-center">
+      <dt className="text-xs tracking-wide text-faint">{label}</dt>
       <dd className="text-2xl font-semibold">{value}</dd>
     </div>
   )

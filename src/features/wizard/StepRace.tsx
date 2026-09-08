@@ -31,17 +31,17 @@ export default function StepRace({ character }: { character: Character }) {
 
       {race && (
         <Section title={`${race.name} özellikleri`}>
-          <ul className="space-y-2 text-sm text-slate-600">
+          <ul className="space-y-2 text-sm text-muted">
             <li>
-              <span className="font-medium text-slate-900">Hız:</span> {race.speed} ft ·{' '}
-              <span className="font-medium text-slate-900">Boyut:</span> {race.size}
+              <span className="font-medium text-ink">Hız:</span> {race.speed} ft ·{' '}
+              <span className="font-medium text-ink">Boyut:</span> {race.size}
             </li>
             {race.traits.map((id) => {
               const trait = traits.get(id)
               if (!trait) return null
               return (
                 <li key={id}>
-                  <span className="font-medium text-slate-900">{trait.name}:</span>{' '}
+                  <span className="font-medium text-ink">{trait.name}:</span>{' '}
                   {trait.desc[0]}
                 </li>
               )

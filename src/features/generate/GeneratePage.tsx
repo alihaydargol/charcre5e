@@ -17,6 +17,7 @@ import { generateCharacter } from '../../rules/generate.ts'
 import { maxHitPoints } from '../../rules/hitpoints.ts'
 import { spellcasting } from '../../rules/spellcasting.ts'
 import { useCharacterStore } from '../../state/characterStore.ts'
+import { btnPrimary, btnSecondary, input } from '../../components/ui.ts'
 
 /**
  * Rastgele karakter oluşturma.
@@ -79,23 +80,23 @@ export default function GeneratePage() {
   }
 
   const selectClass =
-    'rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700'
+    'rounded-md border border-border-strong bg-surface px-3 py-2 text-sm text-ink'
 
   return (
     <div className="space-y-6">
       <header className="space-y-2">
-        <h1 className="text-2xl font-semibold tracking-tight">Rastgele karakter</h1>
-        <p className="max-w-2xl text-sm text-slate-600">
+        <h1 className="font-display text-3xl font-semibold text-ink">Rastgele karakter</h1>
+        <p className="max-w-2xl text-sm text-muted">
           D&amp;D&apos;yi hiç oynamadıysan buradan başla. Tek tuşla kurallara uygun ve
           oynanabilir bir karakter üretilir; beğenmezsen yeniden at, beğenirsen kaydet ve
           istediğin yerini değiştir.
         </p>
       </header>
 
-      <section className="space-y-3 rounded-lg border border-slate-200 bg-white p-4">
+      <section className="space-y-3 rounded-lg border border-border bg-surface p-4">
         <div className="flex flex-wrap items-end gap-3">
           <label>
-            <span className="mb-1 block text-xs font-medium text-slate-500">Seviye</span>
+            <span className="mb-1 block text-xs font-medium text-muted">Seviye</span>
             <select
               value={level}
               onChange={(e) => setLevel(Number(e.target.value))}
@@ -110,7 +111,7 @@ export default function GeneratePage() {
           </label>
 
           <label>
-            <span className="mb-1 block text-xs font-medium text-slate-500">Sınıf</span>
+            <span className="mb-1 block text-xs font-medium text-muted">Sınıf</span>
             <select
               value={classId}
               onChange={(e) => setClassId(e.target.value)}
@@ -126,7 +127,7 @@ export default function GeneratePage() {
           </label>
 
           <label>
-            <span className="mb-1 block text-xs font-medium text-slate-500">Irk</span>
+            <span className="mb-1 block text-xs font-medium text-muted">Irk</span>
             <select value={raceId} onChange={(e) => setRaceId(e.target.value)} className={selectClass}>
               <option value="">Rastgele</option>
               {races.all().map((r) => (
@@ -138,7 +139,7 @@ export default function GeneratePage() {
           </label>
 
           <label className="min-w-40 flex-1">
-            <span className="mb-1 block text-xs font-medium text-slate-500">
+            <span className="mb-1 block text-xs font-medium text-muted">
               Tohum (isteğe bağlı)
             </span>
             <input
@@ -146,7 +147,7 @@ export default function GeneratePage() {
               value={seedText}
               onChange={(e) => setSeedText(e.target.value)}
               placeholder="Aynı tohum aynı karakteri verir"
-              className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+              className={input}
             />
           </label>
         </div>
@@ -156,7 +157,7 @@ export default function GeneratePage() {
             type="button"
             onClick={() => roll()}
             disabled={!spells || !equipment}
-            className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:opacity-90 disabled:opacity-40"
+            className={btnPrimary}
           >
             {character ? 'Yeniden at' : 'Karakter üret'}
           </button>
@@ -164,7 +165,7 @@ export default function GeneratePage() {
             <button
               type="button"
               onClick={save}
-              className="rounded-md border border-slate-300 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+              className={btnSecondary}
             >
               Bunu kaydet
             </button>
@@ -173,7 +174,7 @@ export default function GeneratePage() {
       </section>
 
       {!spells || !equipment ? (
-        <p role="status" className="text-sm text-slate-500">
+        <p role="status" className="text-sm text-muted">
           Büyü ve ekipman verisi yükleniyor…
         </p>
       ) : character ? (
@@ -199,14 +200,14 @@ function Preview({
   const proficient = [...skillProficiencies(character)].map((id) => skills.get(id)?.name ?? id)
 
   return (
-    <section className="space-y-4 rounded-lg border border-slate-200 bg-white p-5">
+    <section className="space-y-4 rounded-lg border border-border bg-surface p-5">
       <div>
-        <h2 className="text-xl font-semibold">{character.name}</h2>
-        <p className="text-sm text-slate-600">
+        <h2 className="font-display text-2xl font-semibold">{character.name}</h2>
+        <p className="text-sm text-muted">
           {race?.name} {cls?.name} · {totalLevel(character)}. seviye ·{' '}
           {character.notes.alignment}
         </p>
-        <p className="mt-1 text-xs text-slate-400">Tohum: {character.seed}</p>
+        <p className="mt-1 text-xs text-faint">Tohum: {character.seed}</p>
       </div>
 
       <dl className="grid grid-cols-2 gap-2 sm:grid-cols-4">
@@ -216,8 +217,8 @@ function Preview({
           ['Hız', `${race?.speed ?? 30} ft`],
           ['Hit dice', `${totalLevel(character)}d${hp.hitDie}`],
         ].map(([label, value]) => (
-          <div key={label} className="rounded-md bg-slate-50 px-3 py-2 text-center">
-            <dt className="text-[10px] font-semibold tracking-wide text-slate-400">{label}</dt>
+          <div key={label} className="rounded-md bg-surface-muted px-3 py-2 text-center">
+            <dt className="text-[10px] font-semibold tracking-wide text-faint">{label}</dt>
             <dd className="text-lg font-semibold">{value}</dd>
           </div>
         ))}
@@ -225,14 +226,14 @@ function Preview({
 
       <ul className="grid grid-cols-3 gap-2 sm:grid-cols-6">
         {ABILITY_IDS.map((ability) => (
-          <li key={ability} className="rounded-md border border-slate-200 px-2 py-1.5 text-center">
-            <span className="block text-[10px] font-semibold text-slate-400">
+          <li key={ability} className="rounded-md border border-border px-2 py-1.5 text-center">
+            <span className="block text-[10px] font-semibold text-faint">
               {ability.toUpperCase()}
             </span>
             <span className="block text-lg font-semibold leading-tight">
               {scores[ability].total}
             </span>
-            <span className="block text-[11px] text-slate-500">
+            <span className="block text-[11px] text-muted">
               {formatModifier(scores[ability].modifier)}
             </span>
           </li>
@@ -240,21 +241,21 @@ function Preview({
       </ul>
 
       {proficient.length > 0 && (
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-muted">
           <span className="font-medium">Beceriler:</span>{' '}
           {proficient.join(', ')}
         </p>
       )}
 
       {casting.length > 0 && (
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-muted">
           <span className="font-medium">Büyü:</span> Save DC {casting[0].saveDC} ·{' '}
           {character.spells.cantrips.length} cantrip, {character.spells.known.length} büyü
         </p>
       )}
 
       {character.equipment.length > 0 && (
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-muted">
           <span className="font-medium">Ekipman:</span>{' '}
           {character.equipment
             .map((e) => {

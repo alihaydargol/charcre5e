@@ -35,15 +35,15 @@ export default function LivePreview({
   const heading = [subrace?.name ?? race?.name, cls?.name].filter(Boolean).join(' ')
 
   return (
-    <aside className="space-y-4 rounded-lg border border-slate-200 bg-white p-4">
+    <aside className="space-y-4 rounded-lg border border-border bg-surface p-4">
       <div>
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">
           Canlı önizleme
         </h2>
         <p className="mt-1 font-semibold">
           {character.name || 'İsimsiz karakter'}
         </p>
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-muted">
           {heading ? `${heading}${hasClass ? ` · ${level}. seviye` : ''}` : 'Henüz ırk ve sınıf seçilmedi'}
         </p>
       </div>
@@ -58,7 +58,7 @@ export default function LivePreview({
       </dl>
 
       <div>
-        <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
+        <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-faint">
           Yetenekler
         </h3>
         <ul className="grid grid-cols-3 gap-2">
@@ -67,15 +67,15 @@ export default function LivePreview({
             return (
               <li
                 key={ability}
-                className="rounded-md border border-slate-200 px-2 py-1.5 text-center"
+                className="rounded-md border border-border px-2 py-1.5 text-center"
               >
-                <span className="block text-[10px] font-semibold text-slate-400">
+                <span className="block text-[10px] font-semibold text-faint">
                   {ability.toUpperCase()}
                 </span>
                 <span className="block text-lg font-semibold leading-tight">
                   {formatModifier(score.modifier)}
                 </span>
-                <span className="block text-[11px] text-slate-500">
+                <span className="block text-[11px] text-muted">
                   {score.total}
                   {score.racial > 0 && (
                     <span className="text-accent"> (+{score.racial})</span>
@@ -89,14 +89,14 @@ export default function LivePreview({
 
       {hasClass && (
         <div>
-          <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
+          <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-faint">
             Kurtarma atışları
           </h3>
           <ul className="grid grid-cols-3 gap-1 text-sm">
             {ABILITY_IDS.map((ability) => (
               <li
                 key={ability}
-                className={saves[ability].proficient ? 'font-semibold text-accent' : 'text-slate-500'}
+                className={saves[ability].proficient ? 'font-semibold text-accent' : 'text-muted'}
               >
                 {ability.toUpperCase()} {formatModifier(saves[ability].value)}
               </li>
@@ -107,16 +107,16 @@ export default function LivePreview({
 
       {casting.length > 0 && (
         <div>
-          <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
+          <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-faint">
             Büyücülük
           </h3>
           {casting.map((info) => (
-            <div key={info.classId} className="text-sm text-slate-600">
+            <div key={info.classId} className="text-sm text-muted">
               <p>
                 Save DC <span className="font-semibold">{info.saveDC}</span> · Saldırı{' '}
                 <span className="font-semibold">{formatModifier(info.spellAttackBonus)}</span>
               </p>
-              <p className="mt-1 text-xs text-slate-500">
+              <p className="mt-1 text-xs text-muted">
                 {info.pactMagic ? 'Pact Magic: ' : 'Slotlar: '}
                 {info.spellSlots
                   .map((count, i) => (count > 0 ? `${count}×${i + 1}.sv` : null))
@@ -129,7 +129,7 @@ export default function LivePreview({
       )}
 
       {hasClass && hp.total > 0 && (
-        <p className="border-t border-slate-100 pt-3 text-xs leading-relaxed text-slate-400">
+        <p className="border-t border-border pt-3 text-xs leading-relaxed text-faint">
           HP: d{hp.hitDie} maks {hp.firstLevel}
           {hp.laterLevels > 0 && ` + ${hp.laterLevels}`}
           {hp.constitution !== 0 && ` + CON ${formatModifier(hp.constitution)}`}
@@ -142,8 +142,8 @@ export default function LivePreview({
 
 function Stat({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className="rounded-md bg-slate-50 px-2 py-2">
-      <dt className="text-[10px] font-semibold tracking-wide text-slate-400">{label}</dt>
+    <div className="rounded-md bg-surface-muted px-2 py-2">
+      <dt className="text-[10px] font-semibold tracking-wide text-faint">{label}</dt>
       <dd className="text-lg font-semibold leading-tight">{value}</dd>
     </div>
   )

@@ -20,6 +20,7 @@ import RaceEditor from './RaceEditor.tsx'
 import SpellEditor from './SpellEditor.tsx'
 import SubclassEditor from './SubclassEditor.tsx'
 import { traitIdPrefix } from './text.ts'
+import { btnPrimary } from '../../components/ui.ts'
 
 /**
  * Homebrew içerik yönetimi.
@@ -83,18 +84,18 @@ export default function HomebrewPage() {
   }
 
   const buttonClass =
-    'rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50'
+    'rounded-md border border-border-strong px-3 py-1.5 text-sm text-ink hover:bg-surface-muted'
 
   return (
     <div className="space-y-6">
       <header className="space-y-2">
-        <h1 className="text-2xl font-semibold tracking-tight">Homebrew içerik</h1>
-        <p className="max-w-3xl text-sm text-slate-600">
+        <h1 className="font-display text-3xl font-semibold text-ink">Homebrew içerik</h1>
+        <p className="max-w-3xl text-sm text-muted">
           Kendi ırk, sınıf, alt sınıf, geçmiş, feat, büyü ve eşyanı tanımla. Burada
           tanımladıkların sihirbazda, seviye atlamada ve rastgele oluşturmada SRD içeriğiyle
           birlikte görünür. Her şey senin tarayıcında durur; paylaşmak için dışa aktar.
         </p>
-        <p className="max-w-3xl text-xs text-slate-400">
+        <p className="max-w-3xl text-xs text-faint">
           Bu araç SRD 5.1 dışındaki resmî içeriği (PHB, Xanathar&apos;s, Tasha&apos;s)
           barındırmaz. Kendi masanda ne kullandığın senin tercihin; depoya konulan içerik
           SRD ile sınırlıdır.
@@ -107,13 +108,13 @@ export default function HomebrewPage() {
         </p>
       )}
       {persistenceFailed && (
-        <p role="alert" className="rounded-md border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900">
+        <p role="alert" className="rounded-md border border-warn bg-warn-soft p-3 text-sm text-warn-ink">
           Homebrew içerik tarayıcıya kaydedilemedi (depolama dolu ya da erişim engelli).
           Kaybetmemek için dışa aktar.
         </p>
       )}
 
-      <section className="flex flex-wrap items-center gap-2 rounded-lg border border-slate-200 bg-white p-4">
+      <section className="flex flex-wrap items-center gap-2 rounded-lg border border-border bg-surface p-4">
         <button
           type="button"
           onClick={() =>
@@ -145,7 +146,7 @@ export default function HomebrewPage() {
         )}
       </section>
 
-      <nav className="flex flex-wrap gap-1 border-b border-slate-200">
+      <nav className="flex flex-wrap gap-1 border-b border-border">
         {TABS.map((entry) => {
           const count = (pack[entry.id] as unknown[]).length
           return (
@@ -159,11 +160,11 @@ export default function HomebrewPage() {
               className={`rounded-t-md px-3 py-2 text-sm font-medium ${
                 tab === entry.id
                   ? 'border-b-2 border-accent text-accent'
-                  : 'text-slate-500 hover:text-slate-800'
+                  : 'text-muted hover:text-ink'
               }`}
             >
               {entry.label}
-              {count > 0 && <span className="ml-1.5 text-xs text-slate-400">{count}</span>}
+              {count > 0 && <span className="ml-1.5 text-xs text-faint">{count}</span>}
             </button>
           )
         })}
@@ -234,13 +235,13 @@ export default function HomebrewPage() {
           <button
             type="button"
             onClick={() => setCreating(true)}
-            className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:opacity-90"
+            className={btnPrimary}
           >
             Yeni {TABS.find((t) => t.id === tab)?.singular} ekle
           </button>
 
           {records.length === 0 ? (
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-muted">
               Henüz {TABS.find((t) => t.id === tab)?.singular} tanımlamadın.
             </p>
           ) : (
@@ -248,11 +249,11 @@ export default function HomebrewPage() {
               {records.map((record) => (
                 <li
                   key={record.id}
-                  className="flex items-center justify-between gap-3 rounded-lg border border-slate-200 bg-white px-4 py-3"
+                  className="flex items-center justify-between gap-3 rounded-lg border border-border bg-surface px-4 py-3"
                 >
                   <div>
                     <p className="font-medium">{record.name}</p>
-                    <p className="text-xs text-slate-400">{record.id}</p>
+                    <p className="text-xs text-faint">{record.id}</p>
                   </div>
                   <div className="flex gap-2">
                     <button
@@ -269,7 +270,7 @@ export default function HomebrewPage() {
                           remove(tab, record.id)
                         }
                       }}
-                      className="rounded-md px-3 py-1.5 text-sm text-slate-500 hover:bg-slate-100 hover:text-accent"
+                      className="rounded-md px-3 py-1.5 text-sm text-muted hover:bg-surface-hover hover:text-accent"
                     >
                       Sil
                     </button>

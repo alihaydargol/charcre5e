@@ -4,6 +4,7 @@ import { weaponProperties } from '../../data/registry.ts'
 import type { Equipment } from '../../data/schema.ts'
 import Pagination from '../../components/Pagination.tsx'
 import { SourceBadge } from '../homebrew/fields.tsx'
+import { input } from '../../components/ui.ts'
 
 const PAGE_SIZE = 16
 
@@ -74,7 +75,7 @@ export default function EquipmentBrowser({ equipment }: { equipment: Collection<
               setPage(1)
             }}
             placeholder="Eşya ara (ör. Longsword)"
-            className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+            className={input}
           />
         </label>
         <label>
@@ -85,7 +86,7 @@ export default function EquipmentBrowser({ equipment }: { equipment: Collection<
               setCategory(e.target.value)
               setPage(1)
             }}
-            className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700"
+            className="rounded-md border border-border-strong bg-surface px-3 py-2 text-sm text-ink"
           >
             {CATEGORIES.map((c) => (
               <option key={c.id} value={c.id}>
@@ -96,7 +97,7 @@ export default function EquipmentBrowser({ equipment }: { equipment: Collection<
         </label>
       </div>
 
-      <p className="text-xs text-slate-500" role="status">
+      <p className="text-xs text-muted" role="status">
         {matches.length === all.length
           ? `${all.length} eşya`
           : `${matches.length} sonuç (toplam ${all.length} eşya)`}
@@ -104,7 +105,7 @@ export default function EquipmentBrowser({ equipment }: { equipment: Collection<
       </p>
 
       {matches.length === 0 ? (
-        <p className="rounded-lg border border-dashed border-slate-300 p-6 text-center text-sm text-slate-500">
+        <p className="rounded-lg border border-dashed border-border-strong p-6 text-center text-sm text-muted">
           Bu filtrelere uyan eşya yok.
         </p>
       ) : (
@@ -146,29 +147,29 @@ function EquipmentCard({
     item.weight !== undefined
 
   return (
-    <li className="overflow-hidden rounded-lg border border-slate-200 bg-white">
+    <li className="overflow-hidden rounded-lg border border-border bg-surface">
       <button
         type="button"
         onClick={onToggle}
         aria-expanded={open}
         disabled={!hasDetail}
-        className="flex w-full items-start justify-between gap-3 p-4 text-left hover:bg-slate-50 disabled:hover:bg-transparent"
+        className="flex w-full items-start justify-between gap-3 p-4 text-left hover:bg-surface-muted disabled:hover:bg-transparent"
       >
         <span>
           <span className="flex items-baseline gap-1.5 font-semibold">
             {item.name}
             <SourceBadge source={item.source} />
           </span>
-          <span className="mt-0.5 block text-sm capitalize text-slate-500">{summarize(item)}</span>
+          <span className="mt-0.5 block text-sm capitalize text-muted">{summarize(item)}</span>
         </span>
-        <span className="shrink-0 text-right text-xs text-slate-500">
+        <span className="shrink-0 text-right text-xs text-muted">
           {item.cost && (
             <span className="block">
               {item.cost.quantity} {item.cost.unit}
             </span>
           )}
           {hasDetail && (
-            <span aria-hidden="true" className="mt-1 block text-slate-400">
+            <span aria-hidden="true" className="mt-1 block text-faint">
               {open ? '−' : '+'}
             </span>
           )}
@@ -176,9 +177,9 @@ function EquipmentCard({
       </button>
 
       {open && (
-        <div className="space-y-2 border-t border-slate-200 px-4 py-3 text-sm text-slate-700">
+        <div className="space-y-2 border-t border-border px-4 py-3 text-sm text-ink">
           {item.weight !== undefined && (
-            <p className="text-slate-500">Ağırlık: {item.weight} lb</p>
+            <p className="text-muted">Ağırlık: {item.weight} lb</p>
           )}
 
           {item.category === 'weapon' && (

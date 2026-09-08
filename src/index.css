@@ -1,23 +1,122 @@
 @import 'tailwindcss';
 
-/* Uygulama genelinde kullanılan renk ve yüzey jetonları. Tailwind v4'te tema
-   değişkenleri doğrudan CSS'te tanımlanır ve `bg-surface` gibi sınıflara döner. */
-@theme {
-  --color-ink: oklch(0.22 0.02 265);
-  --color-parchment: oklch(0.98 0.01 85);
-  --color-accent: oklch(0.52 0.17 25);
-  --color-accent-soft: oklch(0.94 0.03 25);
+/*
+ * Renk sistemi.
+ *
+ * Jetonlar rol adıyla anılır (`surface`, `border`, `muted`), ton adıyla değil
+ * (`slate-200`). Karanlık tema tek başına bunu zorunlu kılıyor: `bg-white`
+ * yazan bir kart koyu temada beyaz kalır, `bg-surface` yazan kart temayla
+ * birlikte döner.
+ *
+ * `@theme inline` jetonu değişkene *bağlar* — `bg-surface` doğrudan
+ * `var(--surface)` üretir, dolayısıyla değişken çalışma anında değişince renk
+ * de değişir. Düz `@theme` olsaydı değer derleme anında sabitlenirdi.
+ */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-alt: var(--bg-alt);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-surface-hover: var(--surface-hover);
+
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-disabled: var(--disabled);
+
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
+  --color-on-accent: var(--on-accent);
+
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-warn-ink: var(--warn-ink);
+
+  --color-good: var(--good);
+
+  --font-display: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia,
+    ui-serif, serif;
 }
 
 /*
- * Uygulamanın şu an yalnızca aydınlık teması var (karanlık tema Aşama 8'de).
- * `light dark` demek tarayıcıya "koyu temayı destekliyorum" der ve zemini
- * siyah boyar; React yüklenene kadar ekran simsiyah kalırdı.
+ * Aydınlık tema. Zemin sıcak bir parşömen; kartlar ondan bir ton açık, böylece
+ * ayrım gölge olmadan da okunur.
+ *
+ * Renkler oklch: aynı L değerini paylaşan tonlar gerçekten aynı açıklıkta
+ * görünür, sRGB hex'te olmadığı gibi.
  */
 :root {
   color-scheme: light;
-  /* --color-parchment'in sRGB karşılığı; JS yüklenmeden önce de zemin doğru. */
-  background-color: #fbf8f1;
+
+  --bg: oklch(0.972 0.008 85);
+  --bg-alt: oklch(0.988 0.005 85);
+  --surface: oklch(0.995 0.003 85);
+  --surface-muted: oklch(0.965 0.008 85);
+  --surface-hover: oklch(0.945 0.012 80);
+
+  --border: oklch(0.895 0.012 80);
+  --border-strong: oklch(0.83 0.016 75);
+
+  --ink: oklch(0.26 0.02 60);
+  --muted: oklch(0.48 0.018 65);
+  --faint: oklch(0.605 0.015 70);
+  --disabled: oklch(0.76 0.012 75);
+
+  --accent: oklch(0.5 0.16 27);
+  --accent-hover: oklch(0.44 0.17 27);
+  --accent-soft: oklch(0.945 0.03 30);
+  --on-accent: oklch(0.99 0.005 85);
+
+  --warn: oklch(0.72 0.13 75);
+  --warn-soft: oklch(0.955 0.04 85);
+  --warn-ink: oklch(0.42 0.09 65);
+
+  --good: oklch(0.52 0.11 150);
+
+  /* JS inmeden önceki ilk kare için; --bg'nin sRGB karşılığı. */
+  background-color: #f8f4ea;
+}
+
+/*
+ * Karanlık tema.
+ *
+ * Saf siyah değil: koyu ama sıcak bir zemin, uzun oturumlarda gözü daha az
+ * yoruyor ve parşömen kimliğini koruyor. Vurgu rengi koyu zeminde kontrastı
+ * tutabilmek için açılıyor — aynı kırmızı koyuda okunmaz.
+ */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg: oklch(0.19 0.008 60);
+  --bg-alt: oklch(0.225 0.009 60);
+  --surface: oklch(0.245 0.01 60);
+  --surface-muted: oklch(0.285 0.011 60);
+  --surface-hover: oklch(0.325 0.012 60);
+
+  --border: oklch(0.36 0.012 60);
+  --border-strong: oklch(0.46 0.015 60);
+
+  --ink: oklch(0.94 0.008 80);
+  --muted: oklch(0.78 0.012 75);
+  --faint: oklch(0.65 0.014 70);
+  --disabled: oklch(0.45 0.012 65);
+
+  --accent: oklch(0.7 0.15 30);
+  --accent-hover: oklch(0.78 0.14 32);
+  --accent-soft: oklch(0.32 0.06 28);
+  --on-accent: oklch(0.16 0.02 40);
+
+  --warn: oklch(0.72 0.13 75);
+  --warn-soft: oklch(0.3 0.05 75);
+  --warn-ink: oklch(0.88 0.08 85);
+
+  --good: oklch(0.72 0.13 150);
+
+  background-color: #16130f;
 }
 
 html,
@@ -28,11 +127,43 @@ body,
 
 body {
   margin: 0;
-  background-color: #fbf8f1;
+  background-color: var(--bg);
+  color: var(--ink);
   font-family:
-    'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
     'Helvetica Neue', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/*
+ * Odak halkası.
+ *
+ * Tarayıcının varsayılanı bazı zeminlerde kayboluyor. `:focus-visible`
+ * kullanılıyor: fareyle tıklayana halka çıkmaz, klavyeyle gezene çıkar.
+ */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+/* Hareket azaltma tercihi olan kullanıcılarda geçişler kapanır. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Başlıklar serif; oyun kitabı hissi verir ve arayüz metninden ayrılır. */
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
 }
 
 /*
@@ -48,6 +179,25 @@ body {
   @page {
     size: A4;
     margin: 12mm;
+  }
+
+  /* Kâğıt her zaman aydınlık: koyu tema mürekkep harcar ve okunmaz. */
+  :root,
+  :root[data-theme='dark'] {
+    --bg: #fff;
+    --bg-alt: #fff;
+    --surface: #fff;
+    --surface-muted: #fff;
+    --surface-hover: #fff;
+    --border: #cbc9c4;
+    --border-strong: #9b9892;
+    --ink: #111;
+    --muted: #333;
+    --faint: #555;
+    --accent: #8a2318;
+    --accent-soft: #fff;
+    --on-accent: #fff;
+    color-scheme: light;
   }
 
   html,
@@ -66,12 +216,6 @@ body {
   .break-inside-avoid {
     break-inside: avoid;
     page-break-inside: avoid;
-  }
-
-  /* Kâğıtta gri zemin mürekkep harcar; kenarlık yeterli. */
-  .bg-white,
-  .bg-slate-50 {
-    background: #fff !important;
   }
 
   a[href]::after {

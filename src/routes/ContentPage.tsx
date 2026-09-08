@@ -4,6 +4,7 @@ import { getClassLevel } from '../data/classLevels.ts'
 import SpellBrowser from '../features/content/SpellBrowser.tsx'
 import EquipmentBrowser from '../features/content/EquipmentBrowser.tsx'
 import MagicItemBrowser from '../features/content/MagicItemBrowser.tsx'
+import { cardPadded } from '../components/ui.ts'
 
 /**
  * SRD içeriğini gözden geçirmek için tarayıcı.
@@ -29,14 +30,14 @@ export default function ContentPage() {
   return (
     <div className="space-y-6">
       <header className="space-y-2">
-        <h1 className="text-2xl font-semibold tracking-tight">SRD içeriği</h1>
-        <p className="text-sm text-slate-600">
+        <h1 className="font-display text-3xl font-semibold text-ink">SRD içeriği</h1>
+        <p className="text-sm text-muted">
           Uygulamanın kullandığı SRD 5.1 verisi. Oyun terimleri özgün İngilizce hâliyle
           bırakılmıştır. Ayrıntı için kartlara tıkla.
         </p>
       </header>
 
-      <div className="flex flex-wrap gap-1 border-b border-slate-200">
+      <div className="flex flex-wrap gap-1 border-b border-border">
         {TABS.map((t) => (
           <button
             key={t.id}
@@ -47,7 +48,7 @@ export default function ContentPage() {
               '-mb-px border-b-2 px-3 py-2 text-sm font-medium transition-colors',
               tab === t.id
                 ? 'border-accent text-accent'
-                : 'border-transparent text-slate-500 hover:text-slate-800',
+                : 'border-transparent text-muted hover:text-ink',
             ].join(' ')}
           >
             {t.label}
@@ -74,12 +75,12 @@ function Card({
   children?: React.ReactNode
 }) {
   return (
-    <li className="rounded-lg border border-slate-200 bg-white p-4">
+    <li className={cardPadded}>
       <div className="flex items-baseline justify-between gap-3">
         <h2 className="font-semibold">{title}</h2>
-        {subtitle && <span className="text-xs text-slate-500">{subtitle}</span>}
+        {subtitle && <span className="text-xs text-muted">{subtitle}</span>}
       </div>
-      {children && <div className="mt-2 text-sm text-slate-600">{children}</div>}
+      {children && <div className="mt-2 text-sm text-muted">{children}</div>}
     </li>
   )
 }
@@ -102,7 +103,7 @@ function RaceList() {
               </p>
             )}
             {subraceNames.length > 0 && (
-              <p className="mt-1 text-slate-500">Alt ırk: {subraceNames.join(', ')}</p>
+              <p className="mt-1 text-muted">Alt ırk: {subraceNames.join(', ')}</p>
             )}
           </Card>
         )
@@ -128,7 +129,7 @@ function ClassList() {
               {cls.skillChoice ? ` · ${cls.skillChoice.choose} beceri seçilir` : ''}
             </p>
             {cls.spellcasting && (
-              <p className="mt-1 text-slate-500">
+              <p className="mt-1 text-muted">
                 {cls.spellcasting.pactMagic ? 'Pact Magic' : 'Büyü'} ·{' '}
                 {cls.spellcasting.ability.toUpperCase()} · {cls.spellcasting.startLevel}. seviyede
                 başlar{topSlot ? ` · en yüksek ${topSlot}. seviye slot` : ''}
@@ -162,7 +163,7 @@ function useLazy<T>(load: () => Promise<T>) {
 function Loading({ error }: { error?: string }) {
   if (error) return <p className="text-sm text-accent">Veri yüklenemedi: {error}</p>
   return (
-    <p role="status" className="text-sm text-slate-500">
+    <p role="status" className="text-sm text-muted">
       Yükleniyor…
     </p>
   )

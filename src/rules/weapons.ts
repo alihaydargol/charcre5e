@@ -1,8 +1,9 @@
-import { classes, proficiencies } from '../data/registry.ts'
+import { proficiencies } from '../data/registry.ts'
 import { getClassLevel } from '../data/classLevels.ts'
 import type { AbilityId, Armor, Equipment, Weapon } from '../data/schema.ts'
 import { levelIn, type Character } from './character.ts'
 import { abilityModifiers, abilityScores } from './abilities.ts'
+import { classProficiencies } from './multiclass.ts'
 import { characterProficiencyBonus } from './progression.ts'
 
 /**
@@ -81,10 +82,7 @@ export function isVersatile(weapon: Weapon): boolean {
  * kategori olarak (`simple-weapons`, `martial-weapons`).
  */
 export function isProficientWithWeapon(character: Character, weapon: Weapon): boolean {
-  const owned = new Set<string>()
-  for (const cls of character.classes) {
-    for (const id of classes.get(cls.classId)?.proficiencies ?? []) owned.add(id)
-  }
+  const owned = classProficiencies(character)
 
   if (owned.has('simple-weapons') && weapon.weaponCategory === 'Simple') return true
   if (owned.has('martial-weapons') && weapon.weaponCategory === 'Martial') return true
@@ -103,12 +101,12 @@ export function isProficientWithWeapon(character: Character, weapon: Weapon): bo
  * 5e'de ağır zırh yeterliliği hafif zırhı kapsamaz; sınıflar hangi kategorilere
  * yeterli olduklarını tek tek sayar (Fighter'da bu `all-armor` olarak gelir).
  * Kalkan ayrı bir yeterliliktir.
+ *
+ * Multiclass'ta sonradan girilen sınıf tam listesini vermez (bkz.
+ * `classProficiencies`).
  */
 export function isProficientWithArmor(character: Character, armor: Armor): boolean {
-  const owned = new Set<string>()
-  for (const cls of character.classes) {
-    for (const id of classes.get(cls.classId)?.proficiencies ?? []) owned.add(id)
-  }
+  const owned = classProficiencies(character)
 
   if (armor.armorCategory === 'Shield') return owned.has('shields')
   if (owned.has('all-armor')) return true

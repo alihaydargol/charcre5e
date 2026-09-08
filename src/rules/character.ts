@@ -50,6 +50,19 @@ export const levelChoiceSchema = z.discriminatedUnion('kind', [
     proficiencyIds: z.array(z.string()),
   }),
   z.object({
+    /**
+     * Multiclass ile bir sınıfa girerken kazanılan beceri seçimi.
+     *
+     * Yalnızca Bard, Ranger ve Rogue verir. Sınıfın normal beceri seçiminden
+     * ayrı tutuluyor: o seçim yalnızca birinci sınıfa aittir ve sayısı farklı
+     * doğrulanıyor (bkz. features/wizard/steps.ts).
+     */
+    kind: z.literal('multiclassSkill'),
+    classId: z.string(),
+    level: z.number().int().min(1).max(20),
+    skillIds: z.array(z.string()),
+  }),
+  z.object({
     kind: z.literal('spellsLearned'),
     classId: z.string(),
     level: z.number().int().min(1).max(20),

@@ -12,6 +12,7 @@ import { getClassLevelsUpTo } from '../../data/classLevels.ts'
 import type { Equipment, Feature } from '../../data/schema.ts'
 import { abilityScores } from '../../rules/abilities.ts'
 import { ABILITY_IDS, subclassOf, totalLevel, type Character } from '../../rules/character.ts'
+import { classSummary } from '../../rules/multiclass.ts'
 import {
   armorClass,
   carryingCapacity,
@@ -39,7 +40,6 @@ export function buildSheet(character: Character, equipment: Map<string, Equipmen
   const level = totalLevel(character)
   const primary = character.classes[0]
   const cls = primary ? classes.get(primary.classId) : undefined
-  const subclassId = primary ? subclassOf(character, primary.classId) : undefined
 
   const race = character.raceId ? races.get(character.raceId) : undefined
   const subrace = character.subraceId ? subraces.get(character.subraceId) : undefined
@@ -79,28 +79,43 @@ export function buildSheet(character: Character, equipment: Map<string, Equipmen
     .map((id) => traits.get(id))
     .filter((t) => t !== undefined)
 
-  const classFeatures = primary
-    ? getClassLevelsUpTo(primary.classId, primary.level).flatMap((row) =>
-        row.features.map((id) => ({
-          level: row.level,
-          name: features?.get(id)?.name ?? id.replaceAll('-', ' '),
-          desc: features?.get(id)?.desc ?? [],
-        })),
-      )
-    : []
+  // Sınıf özellikleri her sınıftan toplanır; multiclass'ta hepsi karakterin.
+  const classFeatures = character.classes.flatMap((cls) =>
+    getClassLevelsUpTo(cls.classId, cls.level).flatMap((row) =>
+      row.features.map((id) => ({
+        level: row.level,
+        name: features?.get(id)?.name ?? id.replaceAll('-', ' '),
+        desc: features?.get(id)?.desc ?? [],
+      })),
+    ),
+  )
 
-  const subclassFeatures =
-    subclassId && features
-      ? [...features.values()]
-          .filter((f) => f.subclassId === subclassId && f.level <= (primary?.level ?? 0))
+  /*
+   * Alt sınıf özellikleri her sınıf için ayrı toplanır: multiclass bir karakter
+   * Fighter'ın Champion'ı ile Wizard'ın Evocation'ını birlikte taşıyabilir.
+   */
+  const subclassFeatures = features
+    ? character.classes.flatMap((cls) => {
+        const id = subclassOf(character, cls.classId)
+        if (!id) return []
+        return [...features.values()]
+          .filter((f) => f.subclassId === id && f.level <= cls.level)
           .sort((a, b) => a.level - b.level)
-      : []
+      })
+    : []
 
   return {
     level,
-    className: cls?.name ?? '—',
+    // Multiclass'ta "Fighter 3 / Wizard 2"; tek sınıfta sadece sınıf adı.
+    className: character.classes.length > 1 ? classSummary(character) : (cls?.name ?? '—'),
     classId: primary?.classId,
-    subclassName: subclassId ? subclasses.get(subclassId)?.name : undefined,
+    subclassName: character.classes
+      .map((c) => {
+        const id = subclassOf(character, c.classId)
+        return id ? subclasses.get(id)?.name : undefined
+      })
+      .filter(Boolean)
+      .join(', ') || undefined,
     raceName: subrace ? `${subrace.name} (${race?.name})` : (race?.name ?? '—'),
     backgroundName: backgroundName ?? '—',
     backgroundFeature,

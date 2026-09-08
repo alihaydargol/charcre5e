@@ -180,7 +180,11 @@ function CoreStats({ sheet }: { sheet: ReturnType<typeof buildSheet> }) {
       <dl className="grid grid-cols-3 gap-3 print:gap-1.5 sm:grid-cols-6">
         <Box label="ARMOR CLASS" value={sheet.ac.value} hint={sheet.ac.options[0]?.label} />
         <Box label="HIT POINTS" value={sheet.hp.total} />
-        <Box label="HIT DICE" value={`${sheet.hitDice.count}d${sheet.hitDice.die}`} />
+        {/* Multiclass'ta zar boyutuna göre ayrı havuzlar: "3d10 + 2d6". */}
+        <Box
+          label="HIT DICE"
+          value={sheet.hitDice.map((p) => `${p.count}d${p.die}`).join(' + ') || '—'}
+        />
         <Box label="INITIATIVE" value={formatModifier(sheet.initiative)} />
         <Box
           label="HIZ"

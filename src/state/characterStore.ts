@@ -6,6 +6,7 @@ import {
   type Character,
   type CustomBackground,
   type HpMethod,
+  totalLevel,
   type LevelChoice,
 } from '../rules/character.ts'
 import { clearDraft, loadCharacters, loadDraft, saveCharacters, saveDraft } from './storage.ts'
@@ -51,6 +52,10 @@ interface CharacterState {
   setNote: (key: keyof Character['notes'], value: string) => void
 
   setLevel: (level: number) => void
+  /** Bir sınıfa seviye verir; sınıf yoksa multiclass olarak eklenir. */
+  addClassLevel: (classId: string) => void
+  /** Son kazanılan seviyeyi geri alır. */
+  removeLastLevel: () => void
   setLevelChoice: (choice: LevelChoice) => void
   clearLevelChoice: (kind: LevelChoice['kind'], classId: string, level: number) => void
   setHpMethod: (method: HpMethod) => void
@@ -255,8 +260,39 @@ export const useCharacterStore = create<CharacterState>((set, get) => ({
       if (!primary) return
       const next = Math.min(20, Math.max(1, level))
       primary.level = next
-      draft.levelChoices = draft.levelChoices.filter((c) => c.level <= next)
-      draft.hp.rolls = draft.hp.rolls.slice(0, Math.max(0, next - 1))
+      draft.levelChoices = draft.levelChoices.filter(
+        (c) => c.classId !== primary.classId || c.level <= next,
+      )
+      draft.hp.rolls = draft.hp.rolls.slice(0, Math.max(0, totalLevel(draft) - 1))
+    }),
+
+  addClassLevel: (classId) =>
+    get().update((draft) => {
+      if (totalLevel(draft) >= 20) return
+      const existing = draft.classes.find((c) => c.classId === classId)
+      if (existing) existing.level += 1
+      else draft.classes.push({ classId, level: 1 })
+    }),
+
+  removeLastLevel: () =>
+    get().update((draft) => {
+      // Kanonik sıra `classes` dizisinin sırası (bkz. rules/multiclass.ts),
+      // yani en son kazanılan seviye son sınıfın en üst seviyesidir.
+      const last = draft.classes[draft.classes.length - 1]
+      if (!last) return
+      // Karakter en az 1. seviye kalmalı.
+      if (totalLevel(draft) <= 1) return
+
+      // O sınıfın kaybedilen seviyesindeki ve üstündeki seçimler düşer;
+      // aksi hâlde artık sahip olunmayan bir seviyenin seçimi kalırdı.
+      draft.levelChoices = draft.levelChoices.filter(
+        (c) => c.classId !== last.classId || c.level < last.level,
+      )
+
+      last.level -= 1
+      if (last.level === 0) draft.classes.pop()
+
+      draft.hp.rolls = draft.hp.rolls.slice(0, Math.max(0, totalLevel(draft) - 1))
     }),
 
   /** Bir karar noktasının cevabını kaydeder; aynı noktanın eski cevabı düşer. */

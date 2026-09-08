@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { feats, subclasses, type Collection } from '../../data/registry.ts'
+import { classes, feats, subclasses, type Collection } from '../../data/registry.ts'
 import type { Spell } from '../../data/schema.ts'
 import type { AbilityId } from '../../data/schema.ts'
 import { abilityScores } from '../../rules/abilities.ts'
@@ -34,6 +34,8 @@ export default function LevelDecision({
       return <SimpleDecision character={character} decision={decision} title="Fighting Style" />
     case 'expertise':
       return <ExpertiseDecision character={character} decision={decision} />
+    case 'multiclassSkill':
+      return <MulticlassSkillDecision character={character} decision={decision} />
     default:
       void spells
       return null
@@ -296,6 +298,53 @@ function AsiOrFeatDecision({
           />
         </>
       )}
+    </div>
+  )
+}
+
+/**
+ * Multiclass ile Bard, Ranger ya da Rogue'a girerken kazanılan beceri.
+ *
+ * Sınıfın normal beceri seçiminden ayrı bir karar: o seçim yalnızca birinci
+ * sınıfa aittir ve daha fazla beceri verir. Multiclass girişi tek beceri verir.
+ */
+function MulticlassSkillDecision({
+  character,
+  decision,
+}: {
+  character: Character
+  decision: Extract<PendingDecision, { kind: 'multiclassSkill' }>
+}) {
+  const setLevelChoice = useCharacterStore((s) => s.setLevelChoice)
+  const point = { kind: 'multiclassSkill' as const, classId: decision.classId }
+  const choices = getValidChoices(character, point)
+
+  const current = character.levelChoices.find(
+    (c) => c.kind === 'multiclassSkill' && c.classId === decision.classId,
+  )
+  const selected = current?.kind === 'multiclassSkill' ? current.skillIds : []
+
+  const pick = (skillId: string) =>
+    setLevelChoice({
+      kind: 'multiclassSkill',
+      classId: decision.classId,
+      level: decision.level,
+      skillIds: [skillId],
+    })
+
+  if (!choices.applicable) return null
+
+  return (
+    <div className="space-y-2">
+      <Header
+        title="Multiclass becerisi"
+        hint={`${classes.get(decision.classId)?.name} sınıfına sonradan girmek bir beceri verir.`}
+        onRandom={() => {
+          const [id] = chooseRandomly(character, point, createRng(randomSeed()))
+          if (id) pick(id)
+        }}
+      />
+      <OptionButtons options={choices.options} selected={selected} onSelect={pick} />
     </div>
   )
 }

@@ -1,5 +1,6 @@
 import { classes, races, subraces, traits } from '../data/registry.ts'
-import { primaryClass, totalLevel, type Character } from './character.ts'
+import { type Character } from './character.ts'
+import { levelTrack } from './multiclass.ts'
 import { abilityModifiers } from './abilities.ts'
 import { rollDie, type Rng } from './dice.ts'
 
@@ -48,6 +49,22 @@ export function hpPerLevelBonus(character: Character): number {
   }, 0)
 }
 
+/**
+ * Karakter seviyesi sırasına göre hit dice — index 0 = 1. seviye.
+ *
+ * Multiclass'ta her seviye, o seviyenin verildiği sınıfın zarını kullanır.
+ * Seviyelerin hangi SIRAYLA alındığı karakterde saklanmıyor; `classes`
+ * dizisinin sırası kanonik kabul ediliyor (önce ilk sınıfın tüm seviyeleri,
+ * sonra ikincininki).
+ *
+ * Bu bir basitleştirme ama toplam HP'yi etkilemiyor: hangi sırayla alınırsa
+ * alınsın aynı zarlardan aynı sayıda atılır. Yalnızca "7. seviyede hangi zarı
+ * atacağım" sorusunun cevabı sıraya bağlı.
+ */
+export function hitDiceByLevel(character: Character): number[] {
+  return levelTrack(character).map((entry) => classes.get(entry.classId)?.hitDie ?? 0)
+}
+
 export interface HitPointBreakdown {
   total: number
   /** 1. seviyeden gelen taban (hit die max). */
@@ -68,26 +85,26 @@ export interface HitPointBreakdown {
  * masalar kendi kurallarını uygular ve aracın buna karışmaması gerekir.
  */
 export function maxHitPoints(character: Character): HitPointBreakdown {
-  const primary = primaryClass(character)
-  const level = totalLevel(character)
+  const dice = hitDiceByLevel(character)
+  const level = dice.length
 
-  if (!primary || level === 0) {
+  if (level === 0) {
     return { total: 0, firstLevel: 0, laterLevels: 0, constitution: 0, traits: 0, hitDie: 0 }
   }
 
-  const hitDie = classes.require(primary.classId).hitDie
   const conMod = abilityModifiers(character).con
   const traits = hpPerLevelBonus(character) * level
 
-  const firstLevel = hitDie
+  // 1. seviye her zaman ilk sınıfın zarının maksimumu.
+  const firstLevel = dice[0]
   let laterLevels = 0
 
-  for (let l = 2; l <= level; l += 1) {
+  for (let i = 1; i < dice.length; i += 1) {
     if (character.hp.method === 'roll') {
       // Zar atılmamışsa ortalamaya düşeriz; kullanıcı henüz atmamış olabilir.
-      laterLevels += character.hp.rolls[l - 2] ?? averageHitDie(hitDie)
+      laterLevels += character.hp.rolls[i - 1] ?? averageHitDie(dice[i])
     } else {
-      laterLevels += averageHitDie(hitDie)
+      laterLevels += averageHitDie(dice[i])
     }
   }
 
@@ -103,22 +120,34 @@ export function maxHitPoints(character: Character): HitPointBreakdown {
     laterLevels,
     constitution,
     traits,
-    hitDie,
+    hitDie: dice[0],
   }
 }
 
-/** Seviye atlarken atılacak hit die. Sonuç `character.hp.rolls` içine yazılır. */
-export function rollHitDie(character: Character, rng: Rng): number {
-  const primary = primaryClass(character)
-  if (!primary) throw new Error('Sınıfı olmayan karakter için hit die atılamaz')
-  return rollDie(classes.require(primary.classId).hitDie, rng)
+/**
+ * Belirli bir karakter seviyesinde atılacak hit die.
+ * Seviye verilmezse en son kazanılan seviye kullanılır.
+ */
+export function rollHitDie(character: Character, rng: Rng, level?: number): number {
+  const dice = hitDiceByLevel(character)
+  if (dice.length === 0) throw new Error('Sınıfı olmayan karakter için hit die atılamaz')
+  const die = dice[(level ?? dice.length) - 1] ?? dice[dice.length - 1]
+  return rollDie(die, rng)
 }
 
-/** Kısa dinlenmede harcanabilecek hit dice sayısı (seviye kadar). */
-export function hitDicePool(character: Character): { count: number; die: number } {
-  const primary = primaryClass(character)
-  return {
-    count: totalLevel(character),
-    die: primary ? classes.require(primary.classId).hitDie : 0,
+/**
+ * Kısa dinlenmede harcanabilecek hit dice.
+ *
+ * Multiclass'ta tek bir havuz değil, zar boyutuna göre ayrı havuzlar vardır:
+ * Fighter 3 / Wizard 2 bir karakterin 3d10 ve 2d6'sı olur, 5 tane aynı zarı
+ * değil.
+ */
+export function hitDicePool(character: Character): { die: number; count: number }[] {
+  const counts = new Map<number, number>()
+  for (const die of hitDiceByLevel(character)) {
+    if (die > 0) counts.set(die, (counts.get(die) ?? 0) + 1)
   }
+  return [...counts.entries()]
+    .sort((a, b) => b[0] - a[0])
+    .map(([die, count]) => ({ die, count }))
 }

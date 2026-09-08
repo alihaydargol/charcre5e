@@ -26,6 +26,10 @@ export function skillProficiencies(character: Character): Set<string> {
   const result = new Set([
     ...character.proficiencies.skills,
     ...character.proficiencies.raceSkills,
+    // Multiclass ile girilen sınıfın verdiği beceri (Bard, Ranger, Rogue).
+    ...character.levelChoices.flatMap((c) =>
+      c.kind === 'multiclassSkill' ? c.skillIds : [],
+    ),
   ])
 
   // Geçmişten gelen beceriler.

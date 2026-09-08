@@ -5,11 +5,16 @@ import { getClassLevel } from '../../data/classLevels.ts'
 import type { Feature, Spell } from '../../data/schema.ts'
 import { formatModifier } from '../../rules/abilities.ts'
 import { totalLevel, type Character, type LevelChoice } from '../../rules/character.ts'
+import { classSummary, isMulticlass, levelTrack } from '../../rules/multiclass.ts'
+import { characterProficiencyBonus } from '../../rules/progression.ts'
+import { spellcasting } from '../../rules/spellcasting.ts'
 import { decisionsAtLevel, pendingDecisions } from '../../rules/progression.ts'
 import { maxHitPoints, averageHitDie, rollHitDie } from '../../rules/hitpoints.ts'
 import { createRng, randomSeed } from '../../rules/dice.ts'
 import { useCharacterStore } from '../../state/characterStore.ts'
 import LevelDecision from './LevelDecision.tsx'
+import OptionGrid from '../wizard/OptionGrid.tsx'
+import { getValidChoices } from '../../rules/choices.ts'
 import { btnPrimary, btnSmallPrimary, btnSmallSecondary } from '../../components/ui.ts'
 
 /**
@@ -28,7 +33,8 @@ export default function LevelUpPage() {
   const draft = useCharacterStore((s) => s.draft)
   const loadForEditing = useCharacterStore((s) => s.loadForEditing)
   const saveDraftAsCharacter = useCharacterStore((s) => s.saveDraftAsCharacter)
-  const setLevel = useCharacterStore((s) => s.setLevel)
+  const addClassLevel = useCharacterStore((s) => s.addClassLevel)
+  const removeLastLevel = useCharacterStore((s) => s.removeLastLevel)
   const setHpMethod = useCharacterStore((s) => s.setHpMethod)
   const setHpRoll = useCharacterStore((s) => s.setHpRoll)
 
@@ -83,7 +89,6 @@ export default function LevelUpPage() {
     )
   }
 
-  const cls = classes.require(primary.classId)
   const save = () => {
     saveDraftAsCharacter()
     navigate('/')
@@ -97,7 +102,7 @@ export default function LevelUpPage() {
             {draft.name || 'İsimsiz karakter'}
           </h1>
           <p className="mt-1 text-sm text-muted">
-            {cls.name} · {level}. seviye · {hp.total} HP
+            {classSummary(draft)} · {level}. seviye · {hp.total} HP
           </p>
         </div>
         <button
@@ -120,30 +125,11 @@ export default function LevelUpPage() {
         </div>
       )}
 
-      <section className="flex flex-wrap items-center gap-3 rounded-lg border border-border bg-surface p-4">
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => setLevel(level - 1)}
-            disabled={level <= 1}
-            className={btnSmallSecondary}
-          >
-            − Seviye düşür
-          </button>
-          <span className="min-w-16 text-center text-lg font-semibold">{level}</span>
-          <button
-            type="button"
-            onClick={() => setLevel(level + 1)}
-            disabled={level >= 20}
-            className={btnSmallPrimary}
-          >
-            + Seviye atla
-          </button>
-        </div>
-        <p className="text-sm text-muted">
-          Seviye düşürürsen o seviyenin üstündeki seçimler silinir.
-        </p>
-      </section>
+      <LevelControls
+        character={draft}
+        onAdd={addClassLevel}
+        onRemove={removeLastLevel}
+      />
 
       <HitPointsPanel
         character={draft}
@@ -160,12 +146,14 @@ export default function LevelUpPage() {
           Seviye geçmişi
         </h2>
         <ol className="space-y-3">
-          {Array.from({ length: level }, (_, i) => i + 1).map((l) => (
+          {levelTrack(draft).map((entry) => (
             <LevelCard
-              key={l}
+              key={entry.characterLevel}
               character={draft}
-              classId={primary.classId}
-              level={l}
+              classId={entry.classId}
+              level={entry.classLevel}
+              characterLevel={entry.characterLevel}
+              multiclassEntry={entry.classId !== draft.classes[0]?.classId}
               features={features}
               spells={spells}
             />
@@ -277,21 +265,113 @@ function HitPointsPanel({
   )
 }
 
+/**
+ * Seviye ekleme ve geri alma.
+ *
+ * Multiclass'ın girişi burası: seviye tek bir sınıfa değil, SEÇİLEN sınıfa
+ * veriliyor. Mevcut sınıflar kısayol olarak duruyor; başka bir sınıfa geçmek
+ * `getValidChoices` katmanından geliyor, yani ön koşul kuralı burada
+ * tekrarlanmıyor (bkz. CLAUDE.md §3).
+ */
+function LevelControls({
+  character,
+  onAdd,
+  onRemove,
+}: {
+  character: Character
+  onAdd: (classId: string) => void
+  onRemove: () => void
+}) {
+  const [open, setOpen] = useState(false)
+  const level = totalLevel(character)
+  const choices = getValidChoices(character, { kind: 'newClass' })
+
+  return (
+    <section className="space-y-3 rounded-lg border border-border bg-surface p-4">
+      <div className="flex flex-wrap items-center gap-2">
+        <button
+          type="button"
+          onClick={onRemove}
+          disabled={level <= 1}
+          className={btnSmallSecondary}
+        >
+          − Seviye düşür
+        </button>
+        <span className="min-w-10 text-center text-lg font-semibold">{level}</span>
+
+        {/* Mevcut sınıflara seviye vermek en sık yapılan şey; kısayol olsun. */}
+        {character.classes.map((cls) => (
+          <button
+            key={cls.classId}
+            type="button"
+            onClick={() => onAdd(cls.classId)}
+            disabled={level >= 20}
+            className={btnSmallPrimary}
+          >
+            + {classes.get(cls.classId)?.name ?? cls.classId}
+          </button>
+        ))}
+
+        {choices.applicable && (
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
+            className={btnSmallSecondary}
+          >
+            {open ? 'Kapat' : '+ Başka sınıf (multiclass)'}
+          </button>
+        )}
+      </div>
+
+      <p className="text-sm text-muted">
+        Seviye düşürmek son kazanılan seviyeyi geri alır ve o seviyenin seçimlerini siler.
+      </p>
+
+      {open && (
+        <div className="space-y-2 border-t border-border pt-3">
+          <p className="text-sm text-muted">
+            Multiclass için hem yeni sınıfın hem mevcut sınıflarının yetenek eşiğini
+            karşılamalısın. Girdiğin sınıf yeterliliklerinin tamamını değil, kısıtlı bir
+            bölümünü verir.
+          </p>
+          <OptionGrid
+            options={choices.options}
+            selected={[]}
+            onToggle={(classId) => {
+              onAdd(classId)
+              setOpen(false)
+            }}
+            columns={3}
+          />
+        </div>
+      )}
+    </section>
+  )
+}
+
 function LevelCard({
   character,
   classId,
   level,
+  characterLevel,
+  multiclassEntry,
   features,
   spells,
 }: {
   character: Character
   classId: string
+  /** Sınıf içindeki seviye — özellikler ve karar noktaları buna bağlı. */
   level: number
+  /** Karakterin toplam seviyesi bu kartta kaçıncı — PB buna bağlı. */
+  characterLevel: number
+  /** Bu sınıfa multiclass ile mi girildi? İlk sınıf için false. */
+  multiclassEntry: boolean
   features?: Collection<Feature>
   spells?: Collection<Spell>
 }) {
   const row = getClassLevel(classId, level)
-  const decisions = decisionsAtLevel(classId, level)
+  const decisions = decisionsAtLevel(classId, level, { multiclassEntry })
   const answered = new Set(
     character.levelChoices
       .filter((c) => c.level === level && c.classId === classId)
@@ -304,6 +384,21 @@ function LevelCard({
   const featureNames = (row?.features ?? []).map(
     (id) => features?.get(id)?.name ?? id.replaceAll('-', ' '),
   )
+
+  const multiclass = isMulticlass(character)
+
+  /*
+   * Slot gösterimi: multiclass'ta sınıfın kendi tablosu yanıltıcı olur —
+   * slotlar birleşik havuzdan gelir (bkz. rules/multiclass.ts). Bu yüzden
+   * karakterin gerçek slotları gösteriliyor, satırınki değil.
+   */
+  const slotSource = multiclass
+    ? spellcasting(character).find((info) => !info.pactMagic)?.spellSlots
+    : row?.spellcasting?.spellSlots
+  const slots = slotSource
+    ?.map((n, i) => (n > 0 ? `${n}×${i + 1}` : null))
+    .filter(Boolean)
+    .join(' ')
 
   // Bu seviyede büyü sayısı arttıysa göster.
   const previous = level > 1 ? getClassLevel(classId, level - 1) : undefined
@@ -320,14 +415,22 @@ function LevelCard({
       ].join(' ')}
     >
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h3 className="font-semibold">{level}. seviye</h3>
+        <h3 className="font-semibold">
+          {characterLevel}. seviye
+          {multiclass && (
+            <span className="ml-2 font-normal text-muted">
+              {classes.get(classId)?.name} {level}
+            </span>
+          )}
+        </h3>
         <span className="text-xs text-muted">
-          Proficiency bonus {formatModifier(row?.profBonus ?? 2)}
-          {row?.spellcasting &&
-            ` · slot ${row.spellcasting.spellSlots
-              .map((n, i) => (n > 0 ? `${n}×${i + 1}` : null))
-              .filter(Boolean)
-              .join(' ')}`}
+          {/*
+            Proficiency bonus KARAKTER seviyesinden gelir, sınıf seviyesinden
+            değil. Sınıf tablosunun satırındaki değer yalnızca tek sınıflı bir
+            karakter için doğrudur.
+          */}
+          Proficiency bonus {formatModifier(characterProficiencyBonus(character))}
+          {slots && ` · slot ${slots}`}
         </span>
       </div>
 

@@ -1,6 +1,7 @@
 import { classes } from '../data/registry.ts'
 import { getClassLevel, getClassLevelsUpTo } from '../data/classLevels.ts'
 import { subclassOf, totalLevel, type Character, type LevelChoice } from './character.ts'
+import { multiclassSkillChoice } from './multiclass.ts'
 
 /**
  * Seviye ilerlemesi: proficiency bonus, ASI hakları, seviyede kazanılan
@@ -91,9 +92,24 @@ export type PendingDecision =
   | { kind: 'asiOrFeat'; classId: string; level: number }
   | { kind: 'fightingStyle'; classId: string; level: number }
   | { kind: 'expertise'; classId: string; level: number }
+  | { kind: 'multiclassSkill'; classId: string; level: number }
 
-export function decisionsAtLevel(classId: string, level: number): PendingDecision[] {
+export function decisionsAtLevel(
+  classId: string,
+  level: number,
+  options: {
+    /**
+     * Bu sınıfa multiclass ile mi girildi? Yalnızca 1. sınıf seviyesinde
+     * anlamlı: Bard, Ranger ve Rogue orada bir beceri seçtirir.
+     */
+    multiclassEntry?: boolean
+  } = {},
+): PendingDecision[] {
   const decisions: PendingDecision[] = []
+
+  if (options.multiclassEntry && level === 1 && multiclassSkillChoice(classId)) {
+    decisions.push({ kind: 'multiclassSkill', classId, level })
+  }
 
   if (subclassLevel(classId) === level && hasSubclasses(classId)) {
     decisions.push({ kind: 'subclass', classId, level })
@@ -120,9 +136,12 @@ export function pendingDecisions(character: Character): PendingDecision[] {
   )
 
   const pending: PendingDecision[] = []
-  for (const cls of character.classes) {
+  character.classes.forEach((cls, index) => {
     for (let level = 1; level <= cls.level; level += 1) {
-      for (const decision of decisionsAtLevel(cls.classId, level)) {
+      // Birinci sınıf multiclass girişi sayılmaz; onun beceri seçimi
+      // sihirbazın normal beceri adımında yapılır.
+      const options = { multiclassEntry: index > 0 }
+      for (const decision of decisionsAtLevel(cls.classId, level, options)) {
         // ASI ve feat aynı karar noktasının iki cevabıdır.
         const keys =
           decision.kind === 'asiOrFeat'
@@ -131,6 +150,6 @@ export function pendingDecisions(character: Character): PendingDecision[] {
         if (!keys.some((key) => answered.has(key))) pending.push(decision)
       }
     }
-  }
+  })
   return pending
 }

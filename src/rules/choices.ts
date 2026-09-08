@@ -11,9 +11,14 @@ import {
   traits,
 } from '../data/registry.ts'
 import type { AbilityId, Source } from '../data/schema.ts'
-import { ABILITY_IDS, levelIn, type Character } from './character.ts'
+import { ABILITY_IDS, levelIn, totalLevel, type Character } from './character.ts'
 import { abilityScores } from './abilities.ts'
 import { skillProficiencies } from './derived.ts'
+import {
+  meetsMulticlassPrerequisite,
+  multiclassProficiencies,
+  multiclassSkillChoice,
+} from './multiclass.ts'
 import { grantsAbilityScoreImprovement, subclassLevel } from './progression.ts'
 import { pickMany, type Rng } from './dice.ts'
 
@@ -41,6 +46,8 @@ export type DecisionPoint =
   | { kind: 'feat'; classId: string; level: number }
   | { kind: 'fightingStyle'; classId: string; level: number }
   | { kind: 'expertise'; classId: string; level: number }
+  | { kind: 'newClass' }
+  | { kind: 'multiclassSkill'; classId: string }
 
 export interface ChoiceOption {
   id: string
@@ -132,6 +139,67 @@ export function getValidChoices(character: Character, point: DecisionPoint): Val
           description: `d${cls.hitDie} · ${cls.savingThrows.map((s) => s.toUpperCase()).join('/')}`,
         })),
       }
+
+    /**
+     * Multiclass: yeni bir sınıfa seviye verme.
+     *
+     * Zaten sahip olunan sınıflar listede kalır — kullanıcı "hangi sınıflara
+     * girebilirim" sorusunun tam cevabını görsün diye; seçilemeyenler
+     * `disabledReason` ile işaretlenir.
+     */
+    case 'newClass': {
+      if (character.classes.length === 0) {
+        return NOT_APPLICABLE('Önce bir sınıf seçilmeli.')
+      }
+      if (totalLevel(character) >= 20) {
+        return NOT_APPLICABLE('20. seviye üst sınırdır.')
+      }
+
+      return {
+        choose: 1,
+        applicable: true,
+        options: classes.all().map((cls) => {
+          const current = levelIn(character, cls.id)
+          const prerequisite = meetsMulticlassPrerequisite(character, cls.id)
+          return {
+            id: cls.id,
+            name: cls.name,
+            source: cls.source,
+            description:
+              current > 0
+                ? `Şu an ${current}. seviye · d${cls.hitDie}`
+                : `d${cls.hitDie} · ${multiclassSummary(cls.id)}`,
+            disabledReason: prerequisite.met ? undefined : prerequisite.reason,
+          }
+        }),
+      }
+    }
+
+    /** Multiclass ile Bard, Ranger ya da Rogue'a girerken kazanılan beceri. */
+    case 'multiclassSkill': {
+      const choice = multiclassSkillChoice(point.classId)
+      const cls = classes.get(point.classId)
+      if (!choice) {
+        return NOT_APPLICABLE(`${cls?.name ?? point.classId} multiclass'ta beceri vermez.`)
+      }
+
+      const alreadyHave = skillProficiencies(character)
+      return {
+        choose: choice.choose,
+        applicable: true,
+        options: choice.from.map((id) => {
+          const skill = skills.require(id)
+          return {
+            id: skill.id,
+            name: skill.name,
+            description: skill.ability.toUpperCase(),
+            disabledReason: alreadyHave.has(id)
+              ? 'Bu beceri zaten başka bir kaynaktan geliyor.'
+              : undefined,
+          }
+        }),
+      }
+    }
 
     case 'subclass': {
       const cls = classes.get(point.classId)
@@ -459,4 +527,16 @@ export function randomAbilityIncreases(
     ability,
     amount: 1 as const,
   }))
+}
+
+/**
+ * Multiclass ile bir sınıfa girince ne kazanılacağının kısa özeti.
+ *
+ * Yeterlilikler sınıfın tam listesi değildir; kullanıcı seçmeden önce ne
+ * alacağını görmeli.
+ */
+function multiclassSummary(classId: string): string {
+  const gained = multiclassProficiencies(classId)
+  if (gained.length === 0) return 'yeterlilik vermez'
+  return gained.map((id) => proficiencies.get(id)?.name ?? id).join(', ')
 }

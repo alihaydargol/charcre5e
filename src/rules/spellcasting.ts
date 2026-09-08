@@ -3,6 +3,10 @@ import { getClassLevel } from '../data/classLevels.ts'
 import type { AbilityId } from '../data/schema.ts'
 import type { Character } from './character.ts'
 import { abilityModifiers } from './abilities.ts'
+import {
+  combinedCasterLevel,
+  hasMultipleSpellcastingClasses,
+} from './multiclass.ts'
 import { characterProficiencyBonus } from './progression.ts'
 
 /**
@@ -91,6 +95,13 @@ export function spellcasting(character: Character): SpellcastingInfo[] {
   const mods = abilityModifiers(character)
   const result: SpellcastingInfo[] = []
 
+  // Birden fazla büyü yapan sınıf varsa slotlar birleşik kaster seviyesinden
+  // okunur. Tek sınıfta bu hesap sınıfın kendi satırıyla aynı sonucu verirdi
+  // ama gereksiz; yalnızca gerçekten gerekince devreye giriyor.
+  const multiclassSlots = hasMultipleSpellcastingClasses(character)
+    ? combinedSpellSlots(combinedCasterLevel(character))
+    : undefined
+
   for (const cls of character.classes) {
     const definition = classes.get(cls.classId)
     const casting = definition?.spellcasting
@@ -99,8 +110,15 @@ export function spellcasting(character: Character): SpellcastingInfo[] {
     if (cls.level < casting.startLevel) continue
 
     const row = getClassLevel(cls.classId, cls.level)
-    const slots = row?.spellcasting?.spellSlots ?? new Array<number>(9).fill(0)
     const abilityMod = mods[casting.ability]
+
+    // Multiclass'ta büyü yapan sınıflar AYRI slot tabloları kullanmaz; tek bir
+    // birleşik havuzları olur (bkz. multiclass.ts). Pact Magic bu havuza
+    // girmez — ayrı bir kaynaktır ve kısa dinlenmede yenilenir.
+    const slots =
+      !casting.pactMagic && multiclassSlots
+        ? multiclassSlots
+        : (row?.spellcasting?.spellSlots ?? new Array<number>(9).fill(0))
 
     const info: SpellcastingInfo = {
       classId: cls.classId,
@@ -174,4 +192,17 @@ export function wizardSpellbookSize(classLevel: number): number {
 export function maxSpellLevelFor(classId: string, classLevel: number): number {
   const row = getClassLevel(classId, classLevel)
   return row?.spellcasting ? highestSlotLevel(row.spellcasting.spellSlots) : 0
+}
+
+/**
+ * Birleşik kaster seviyesine karşılık gelen slot dizisi.
+ *
+ * Tablo veriden okunur: tam kaster bir SRD sınıfının (Wizard) o seviyedeki
+ * satırı, tanım gereği tam kaster slot tablosudur. Tabloyu ayrıca elle yazmak
+ * ikinci bir doğruluk kaynağı yaratırdı.
+ */
+export function combinedSpellSlots(casterLevel: number): number[] {
+  if (casterLevel <= 0) return new Array<number>(9).fill(0)
+  const row = getClassLevel('wizard', Math.min(20, casterLevel))
+  return row?.spellcasting?.spellSlots ?? new Array<number>(9).fill(0)
 }

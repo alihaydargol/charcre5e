@@ -4,7 +4,12 @@ import { classes, races, subraces } from '../../data/registry.ts'
 import { totalLevel, type Character } from '../../rules/character.ts'
 import { useCharacterStore } from '../../state/characterStore.ts'
 import { buildExport, downloadJson, safeFileName } from '../../state/transfer.ts'
-import { btnSmallPrimary, cardPadded } from '../../components/ui.ts'
+import {
+  btnSmallGhost,
+  btnSmallPrimary,
+  btnSmallSecondary,
+  cardPadded,
+} from '../../components/ui.ts'
 
 /**
  * Karakter listesindeki tek kart.
@@ -42,9 +47,6 @@ export default function CharacterCard({ character }: { character: Character }) {
   const subrace = character.subraceId ? subraces.get(character.subraceId) : undefined
   const cls = character.classes[0] ? classes.get(character.classes[0].classId) : undefined
 
-  const buttonClass =
-    'rounded-md border border-border-strong px-3 py-1.5 text-sm text-ink hover:bg-surface-muted'
-
   return (
     <li className={cardPadded}>
       {editing ? (
@@ -58,10 +60,10 @@ export default function CharacterCard({ character }: { character: Character }) {
             if (e.key === 'Escape') cancel()
           }}
           aria-label="Karakter adı"
-          className="w-full rounded border border-border-strong px-2 py-1 font-semibold"
+          className="w-full rounded-md border border-border-strong bg-surface px-2 py-1 font-semibold"
         />
       ) : (
-        <h3 className="flex items-center gap-2 font-semibold">
+        <h3 className="flex flex-wrap items-baseline gap-2 font-display text-lg font-semibold">
           {character.name || 'İsimsiz'}
           <button
             type="button"
@@ -90,11 +92,11 @@ export default function CharacterCard({ character }: { character: Character }) {
           Karakter sayfası
         </Link>
         {cls && (
-          <Link to={`/seviye/${character.id}`} className={buttonClass}>
+          <Link to={`/seviye/${character.id}`} className={btnSmallSecondary}>
             Seviye
           </Link>
         )}
-        <button type="button" onClick={() => duplicateCharacter(character.id)} className={buttonClass}>
+        <button type="button" onClick={() => duplicateCharacter(character.id)} className={btnSmallSecondary}>
           Kopyala
         </button>
         <button
@@ -102,7 +104,7 @@ export default function CharacterCard({ character }: { character: Character }) {
           onClick={() =>
             downloadJson(`${safeFileName(character.name)}.json`, buildExport([character]))
           }
-          className={buttonClass}
+          className={btnSmallSecondary}
         >
           Dışa aktar
         </button>
@@ -113,7 +115,7 @@ export default function CharacterCard({ character }: { character: Character }) {
               deleteCharacter(character.id)
             }
           }}
-          className="rounded-md px-3 py-1.5 text-sm text-muted hover:bg-surface-hover hover:text-accent"
+          className={btnSmallGhost}
         >
           Sil
         </button>

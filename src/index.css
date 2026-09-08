@@ -63,7 +63,9 @@
 
   --ink: oklch(0.26 0.02 60);
   --muted: oklch(0.48 0.018 65);
-  --faint: oklch(0.605 0.015 70);
+  /* 4.5:1'i hem bg hem surface üzerinde geçmeli: küçük punto ipucu
+     metinleri bu jetonu kullanıyor. */
+  --faint: oklch(0.535 0.016 70);
   --disabled: oklch(0.76 0.012 75);
 
   --accent: oklch(0.5 0.16 27);

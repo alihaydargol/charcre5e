@@ -18,6 +18,7 @@ import {
 import { chooseRandomly, getValidChoices } from './choices.ts'
 import { createRng, pick, pickMany, randomSeed, type Rng } from './dice.ts'
 import { randomStartingEquipment } from './equipment.ts'
+import { isProficientWithArmor } from './weapons.ts'
 import { decisionsAtLevel } from './progression.ts'
 import {
   maxSpellLevelFor,
@@ -412,6 +413,11 @@ function equipBest(character: Character, equipment: Map<string, Equipment>): voi
       continue
     }
     if (item.category !== 'armor') continue
+
+    // Yeterliliği olmayan zırh kuşandırılmaz: 5e'de STR ve DEX kullanan
+    // atışlarda dezavantaj verir ve BÜYÜ YAPMAYI engeller. Yüksek AC uğruna
+    // bir Cleric'i büyüsüz bırakmak kötü bir takas.
+    if (!isProficientWithArmor(character, item)) continue
 
     if (item.armorCategory === 'Shield') {
       entry.equipped = true

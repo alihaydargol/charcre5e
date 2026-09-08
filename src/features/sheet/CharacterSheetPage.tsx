@@ -43,7 +43,7 @@ export default function CharacterSheetPage() {
   if (!character) {
     return (
       <div className="space-y-4">
-        <h1 className="text-2xl font-semibold">Karakter bulunamadı</h1>
+        <h1 className="font-display text-2xl font-semibold">Karakter bulunamadı</h1>
         <p className="text-muted">
           Bu bağlantıdaki karakter kayıtlı değil. Silinmiş olabilir.
         </p>
@@ -79,10 +79,17 @@ function Sheet({
     <article className="space-y-6 print:space-y-3 print:text-[10pt]">
       <SheetHeader character={character} sheet={sheet} />
       <CoreStats sheet={sheet} />
-      <div className="grid gap-6 print:gap-3 lg:grid-cols-[18rem_1fr]">
+      {/*
+        Sol sütun kısa referans blokları, sağ sütun uzun metinler. Envanter ve
+        notlar sola alındı: yalnızca yetenek ve becerilerle sol sütun sağın
+        yarısı kadar bile sürmüyor ve ekranın altı boş kalıyordu.
+      */}
+      <div className="grid gap-6 print:gap-3 lg:grid-cols-[20rem_1fr] lg:items-start">
         <div className="space-y-6 print:space-y-3">
           <Abilities sheet={sheet} />
           <Skills sheet={sheet} />
+          <Inventory sheet={sheet} />
+          <Notes character={character} />
         </div>
         <div className="space-y-6 print:space-y-3">
           <Attacks sheet={sheet} />
@@ -90,8 +97,6 @@ function Sheet({
             <Spellcasting character={character} sheet={sheet} spells={spells} />
           )}
           <Features sheet={sheet} />
-          <Inventory sheet={sheet} />
-          <Notes character={character} />
         </div>
       </div>
     </article>
@@ -108,7 +113,7 @@ function SheetHeader({
   return (
     <header className="flex flex-wrap items-start justify-between gap-3 border-b border-border pb-4">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight print:text-xl">
+        <h1 className="font-display text-3xl font-semibold text-ink print:text-xl">
           {character.name || 'İsimsiz karakter'}
         </h1>
         <p className="mt-1 text-sm text-muted">
@@ -198,7 +203,7 @@ function CoreStats({ sheet }: { sheet: ReturnType<typeof buildSheet> }) {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="break-inside-avoid rounded-lg border border-border bg-surface p-4 print:p-2">
+    <section className="break-inside-avoid rounded-xl border border-border bg-surface p-4 print:rounded-none print:p-2">
       <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted">{title}</h2>
       {children}
     </section>
@@ -447,7 +452,7 @@ function Inventory({ sheet }: { sheet: ReturnType<typeof buildSheet> }) {
         <p className="text-sm text-muted">Envanter boş.</p>
       ) : (
         <>
-          <ul className="grid gap-x-4 text-sm sm:grid-cols-2">
+          <ul className="grid gap-x-4 text-sm">
             {sheet.equipmentList.map((entry) => (
               <li key={entry.itemId} className="flex gap-2">
                 <span>{entry.item?.name ?? entry.itemId}</span>

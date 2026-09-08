@@ -3,6 +3,7 @@ import type { Equipment, EquipmentChoice, EquipmentOption } from '../data/schema
 import type { Character } from './character.ts'
 import { abilityScores } from './abilities.ts'
 import { pickMany, type Rng } from './dice.ts'
+import { isProficientWithArmor } from './weapons.ts'
 
 /**
  * Başlangıç ekipmanı ve para.
@@ -149,7 +150,13 @@ export function randomStartingEquipment(
   const chosen = [...fixedStartingEquipment(character)]
 
   for (const group of startingEquipmentChoices(character, equipment)) {
-    const available = group.options.filter((o) => o.items.length > 0 || o.pendingChoice)
+    const usable = group.options.filter((o) => o.items.length > 0 || o.pendingChoice)
+    // SRD metninde "(if proficient)" yazan seçenekler yapılı veride
+    // işaretlenmiyor: Cleric'in başlangıç listesinde chain mail, ağır zırh
+    // yeterliliği olmadığı hâlde diğerleriyle eşit görünüyor. Rastgele seçilse
+    // karakter zırhını kuşanamayan (ve büyü yapamayan) hâle gelirdi.
+    const proficient = usable.filter((o) => canUseAll(character, o.items, equipment))
+    const available = proficient.length > 0 ? proficient : usable
     if (available.length === 0) continue
 
     for (const option of pickMany(available, Math.min(group.choose, available.length), rng)) {
@@ -164,6 +171,25 @@ export function randomStartingEquipment(
   }
 
   return mergeQuantities(chosen)
+}
+
+/**
+ * Karakter bu eşyaların hepsini kullanabilir mi?
+ *
+ * Şu an yalnızca zırh yeterliliğine bakıyor; silahta yeterlilik eksikliği
+ * karakteri işlevsiz bırakmaz (saldırıya proficiency bonusu eklenmez, o kadar),
+ * zırhta ise büyü yapmayı engeller.
+ */
+function canUseAll(
+  character: Character,
+  items: { itemId: string }[],
+  equipment: Map<string, Equipment>,
+): boolean {
+  return items.every((entry) => {
+    const item = equipment.get(entry.itemId)
+    if (item?.category !== 'armor') return true
+    return isProficientWithArmor(character, item)
+  })
 }
 
 /** Aynı eşyanın birden çok girişini tek satırda toplar. */

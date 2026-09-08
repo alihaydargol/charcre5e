@@ -4,6 +4,7 @@ import type { Equipment, Spell } from '../src/data/schema.ts'
 import { abilityScores } from '../src/rules/abilities.ts'
 import { parseCharacter, totalLevel } from '../src/rules/character.ts'
 import { armorClass } from '../src/rules/derived.ts'
+import { isProficientWithArmor } from '../src/rules/weapons.ts'
 import { generateCharacter, randomName } from '../src/rules/generate.ts'
 import { maxHitPoints } from '../src/rules/hitpoints.ts'
 import { pendingDecisions } from '../src/rules/progression.ts'
@@ -258,5 +259,46 @@ describe('seçim çakışmaları', () => {
         .flatMap((c) => c.proficiencyIds)
       expect(new Set(expertise).size, `tohum ${seed}`).toBe(expertise.length)
     }
+  })
+})
+
+describe('zırh yeterliliği', () => {
+  it('yeterliliği olmayan zırh kuşandırılmaz', () => {
+    // SRD verisinde Cleric'in başlangıç seçenekleri arasında chain mail var
+    // ama metindeki "(if proficient)" koşulu yapılı veriye geçmemiş; Cleric
+    // ağır zırha yeterli değildir ve kuşanırsa büyü yapamaz.
+    for (let seed = 0; seed < 40; seed += 1) {
+      const character = generateCharacter({ seed, level: 1, spells, equipment })
+      for (const entry of character.equipment.filter((e) => e.equipped)) {
+        const item = equipment.get(entry.itemId)
+        if (item?.category !== 'armor') continue
+        expect(
+          isProficientWithArmor(character, item),
+          `tohum ${seed}: ${item.name} yeterlilik olmadan kuşanılmış`,
+        ).toBe(true)
+      }
+    }
+  })
+
+  it('Cleric ağır zırhla başlamaz', () => {
+    for (let seed = 0; seed < 40; seed += 1) {
+      const cleric = generateCharacter({ seed, level: 1, classId: 'cleric', spells, equipment })
+      const heavy = cleric.equipment
+        .map((e) => equipment.get(e.itemId))
+        .filter((item) => item?.category === 'armor' && item.armorCategory === 'Heavy')
+      expect(heavy, `tohum ${seed}`).toEqual([])
+    }
+  })
+
+  it('Fighter ağır zırh alabilir — yeterliliği var', () => {
+    const equipped = new Set<string>()
+    for (let seed = 0; seed < 40; seed += 1) {
+      const fighter = generateCharacter({ seed, level: 1, classId: 'fighter', spells, equipment })
+      for (const entry of fighter.equipment) {
+        const item = equipment.get(entry.itemId)
+        if (item?.category === 'armor') equipped.add(item.armorCategory)
+      }
+    }
+    expect(equipped.has('Heavy')).toBe(true)
   })
 })

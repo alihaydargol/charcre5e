@@ -12,6 +12,7 @@ import {
   type ResolvedOption,
 } from '../../rules/equipment.ts'
 import { useCharacterStore } from '../../state/characterStore.ts'
+import { isProficientWithArmor } from '../../rules/weapons.ts'
 import Section from './Section.tsx'
 import { btnPrimary, btnSecondary } from '../../components/ui.ts'
 
@@ -116,6 +117,12 @@ export default function StepEquipment({
                   ].join(' ')}
                 >
                   {optionLabel(option)}
+                  {unusableArmor(character, option, equipment).map((name) => (
+                    <span key={name} className="mt-1 block text-xs text-warn-ink">
+                      {name}: bu zırhta yeterliliğin yok — giyersen büyü yapamazsın ve STR/DEX
+                      atışlarında dezavantaj alırsın.
+                    </span>
+                  ))}
                 </button>
 
                 {picked[groupIndex]?.option === optionIndex && option.pendingChoice && (
@@ -204,4 +211,26 @@ export default function StepEquipment({
 function optionLabel(option: ResolvedOption): string {
   if (option.items.length === 0 && option.pendingChoice) return option.pendingChoice.label
   return option.label
+}
+
+/**
+ * Seçenekteki, karakterin kuşanamayacağı zırhların adları.
+ *
+ * SRD metninde bu koşul "(if proficient)" olarak yazıyor ama yapılı veriye
+ * geçmemiş: Cleric'in başlangıç listesinde chain mail diğerleriyle eşit
+ * görünüyor. Seçenek gizlenmiyor — bazı masalar yine de vermeyi seçebilir —
+ * ama sonucu yazıyor.
+ */
+function unusableArmor(
+  character: Character,
+  option: { items: { itemId: string }[] },
+  equipment: Map<string, Equipment>,
+): string[] {
+  const names: string[] = []
+  for (const entry of option.items) {
+    const item = equipment.get(entry.itemId)
+    if (item?.category !== 'armor') continue
+    if (!isProficientWithArmor(character, item)) names.push(item.name)
+  }
+  return names
 }

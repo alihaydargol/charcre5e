@@ -8,7 +8,7 @@ cihazında kalır.
 
 ## Durum
 
-Proje aşamalı olarak geliştiriliyor.
+Proje aşama aşama geliştirildi.
 
 - [x] **Aşama 1** &mdash; İskelet ve GitHub Pages yayın hattı
 - [x] **Aşama 2** &mdash; SRD 5.1 veri katmanı (ırk, sınıf, büyü, ekipman)
@@ -18,13 +18,12 @@ Proje aşamalı olarak geliştiriliyor.
 - [x] **Aşama 5** &mdash; Seviye atlama (1&ndash;20), ASI/feat, alt sınıflar
 - [x] **Aşama 6** &mdash; Karakter sayfası, yazdırma/PDF, JSON dışa/içe aktarma
 - [x] **Aşama 7** &mdash; Karakter listesi ve localStorage yönetimi
-- [ ] **Aşama 8** &mdash; Mobil uyum, erişilebilirlik, tema
 - [x] **Aşama 9** &mdash; Rastgele karakter oluşturma (yeni başlayanlar için tek tuş)
 - [x] **Aşama 10** &mdash; Homebrew içerik (kendi ırk/sınıf/büyü/eşyanı tanımla)
-- [ ] **Aşama 11** &mdash; Görsel tasarım ve arayüz yenilemesi
+- [x] **Aşama 8+11** &mdash; Mobil uyum, erişilebilirlik, karanlık tema, görsel tasarım
 
-Kalan aşamalar arayüz cilası; kural motoru ve içerik katmanı tamam.
-Mimari kararların gerekçesi için [CLAUDE.md](./CLAUDE.md).
+Yol haritası tamamlandı. Mimari kararların gerekçesi için
+[CLAUDE.md](./CLAUDE.md).
 
 ## Kapsam
 
@@ -38,6 +37,18 @@ telafi edilir: `/homebrew` sayfasından kendi ırk, sınıf, alt sınıf, geçmi
 feat, büyü ve eşyanı tanımlayabilir, paket olarak dışa/içe aktarabilirsin.
 Tanımladıkların sihirbazda, seviye atlamada ve rastgele oluşturmada SRD
 içeriğiyle birlikte görünür.
+
+## Arayüz
+
+- **Aydınlık / karanlık / sistem** teması; tercih tarayıcıda saklanır ve ilk
+  boyamadan önce uygulanır (tema geçişinde yanlış renk görünmez).
+- Renkler rol adıyla anılan jetonlar üzerinden gelir (`surface`, `border`,
+  `muted`), ton adıyla değil &mdash; ayrıntı için `src/index.css`.
+- Telefonda tek sütun; gezinme açılır menüye dönüşür.
+- Klavye erişimi: &ldquo;içeriğe atla&rdquo; bağlantısı, `:focus-visible` odak
+  halkası, `aria-*` etiketleri. Ölçülen 28 renk çiftinin tamamı iki temada da
+  WCAG AA (4.5:1) üstünde.
+- `prefers-reduced-motion` seçili kullanıcılarda geçişler kapanır.
 
 ## Teknolojiler
 
